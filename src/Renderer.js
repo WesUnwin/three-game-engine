@@ -1,4 +1,4 @@
-import Three from 'three'
+import * as THREE from 'three';
 import ThreeMeshUI from 'three-mesh-ui'
 
 import VRMode from './VR/VRMode';
@@ -12,9 +12,9 @@ class Renderer {
         this.width = this.options.width;
         this.height = this.options.height;
 
-        this.threeJSRenderer = new Three.WebGL1Renderer({ antialias: true });
+        this.threeJSRenderer = new THREE.WebGL1Renderer({ antialias: true });
         this.threeJSRenderer.gammaOutput = true;
-        this.threeJSRenderer.outputEncoding = Three.sRGBEncoding;
+        this.threeJSRenderer.outputEncoding = THREE.sRGBEncoding;
         this.threeJSRenderer.shadowMap.enabled = true;
         this.threeJSRenderer.shadowMap.type = 1;
 
@@ -25,11 +25,11 @@ class Renderer {
         this.threeJSRenderer.setPixelRatio(this.options.pixelRatio);
         this.threeJSRenderer.setSize(this.width, this.height);
 
-        this.threeJSCamera = new Three.PerspectiveCamera(50, this.width / this.height, 0.01, 1000);
+        this.threeJSCamera = new THREE.PerspectiveCamera(50, this.width / this.height, 0.01, 1000);
         this.threeJSCamera.aspect = this.width / this.height;
         this.threeJSCamera.updateProjectionMatrix();
 
-        this.threeJSCameraAudioListener = new Three.AudioListener();
+        this.threeJSCameraAudioListener = new THREE.AudioListener();
         this.threeJSCamera.add(this.threeJSCameraAudioListener);
 
         if (this.options.enableVR) {

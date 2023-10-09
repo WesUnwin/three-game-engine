@@ -1,9 +1,9 @@
-import Three from 'three'
+import * as THREE from 'three';
 
 class Scene {
     constructor() {
-        this.threeJSScene = new Three.Scene();
-        this.threeJSScene.background = new Three.Color('lightblue');
+        this.threeJSScene = new THREE.Scene();
+        this.threeJSScene.background = new THREE.Color('lightblue');
     }
 }
 

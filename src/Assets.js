@@ -1,4 +1,4 @@
-import Three from 'three'
+import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 class Assets {
@@ -52,7 +52,7 @@ class Assets {
 
       const fullURL =  Assets.getURL(url);
       if (url.endsWith('.json')) {
-        const fileLoader = new Three.FileLoader();
+        const fileLoader = new THREE.FileLoader();
         fileLoader.load(fullURL,
           function(text) {
             const json = JSON.parse(text);
@@ -62,7 +62,7 @@ class Assets {
           onError
         );
       } else if (['.png', '.jpg', '.bmp'].some(ext => url.endsWith(ext))) {
-        const textureLoader = new Three.TextureLoader();
+        const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
           fullURL,
           onSuccess, // receives a gltf object
@@ -78,7 +78,7 @@ class Assets {
           onError
         );
       } else if (['.wav', '.mp3', 'ogg'].some(ext => url.endsWith(ext))) {
-        const audioLoader = new Three.AudioLoader();
+        const audioLoader = new THREE.AudioLoader();
         audioLoader.load(
           fullURL,
           onSuccess, // receives an audioBuffer
@@ -86,7 +86,7 @@ class Assets {
           onError
         );
       } else if (url.includes('cube_textures')) {
-        const cubeTextureLoader = new Three.CubeTextureLoader();
+        const cubeTextureLoader = new THREE.CubeTextureLoader();
         cubeTextureLoader.setPath(fullURL)
                           .load(
                             [
