@@ -1,0 +1,43 @@
+{
+  "name": "reality-three",
+  "version": "0.0.0",
+  "description": "Simple light-weight game engine using three.js, three-mesh-ui and rapier",
+  "main": "dist/index.js",
+  "scripts": {
+    "lint": "eslint src/**",
+    "lint:fix": "eslint src/** --fix",
+    "build": "babel src -d dist",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WesUnwin/reality-three.git"
+  },
+  "keywords": [
+    "three.js",
+    "webgl",
+    "game",
+    "engine",
+    "rapier",
+    "three-mesh-ui"
+  ],
+  "author": "Wes Unwin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WesUnwin/reality-three/issues"
+  },
+  "homepage": "https://github.com/WesUnwin/reality-three#readme",
+  "dependencies": {
+    "events": "^3.3.0",
+    "three": "^0.136.0",
+    "three-mesh-ui": "^5.3.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "eslint": "^8.51.0"
+  }
+}
