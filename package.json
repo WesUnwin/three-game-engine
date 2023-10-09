@@ -1,6 +1,6 @@
 {
   "name": "reality-three",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Simple light-weight game engine using three.js, three-mesh-ui and rapier",
   "main": "dist/index.js",
   "scripts": {
