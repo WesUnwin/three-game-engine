@@ -17,6 +17,21 @@ describe('construction', () => {
             });
             expect(scene.getRootGameObjects().length).toBe(2);
         });
+
+        it('creates GameObjects of the given GameObject sub-class', () => {
+            class GameObjectSubClass extends GameObject {
+            }
+
+            const scene = new Scene({
+                gameObjects: [
+                    { klass: GameObjectSubClass, name: 'game-object-1' }
+                ]
+            });
+            expect(scene.getRootGameObjects().length).toBe(1);
+            const gameObject = scene.getRootGameObjects()[0];
+            expect(gameObject instanceof GameObject).toBe(true);
+            expect(gameObject instanceof GameObjectSubClass).toBe(true);
+        });
     });
 });
 

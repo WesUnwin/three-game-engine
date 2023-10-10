@@ -13,7 +13,8 @@ class Scene {
     createGameObject(parent, gameObjectData) {
         const options = { ...gameObjectData };
         delete options.children;
-        const gameObject = new GameObject(parent, options);
+        const GameObjectClass = gameObjectData.klass || GameObject;
+        const gameObject = new GameObjectClass(parent, options);
         parent.gameObjects.push(gameObject);
         (gameObjectData.gameObjects || []).forEach(childData => {
             this.createGameObject(gameObject, childData);
