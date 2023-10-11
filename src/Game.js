@@ -1,38 +1,26 @@
 import Renderer from './Renderer';
 
 class Game {
-    constructor(options) {
+    constructor(options = {}) {
         this.options = options;
         this.renderer = null;
         this.scene = null;
-        this.initialized = false;
-    }
-
-    _initialize() {
         this.renderer = new Renderer(this, this.options.rendererOptions);
-
-        if (this.options.enableVR) {
-            this._initVR();
-        }
-
-        this.initialized = true;
     }
 
     async loadScene(scene) {
-        if (!this.initialized) {
-            this._initialize();
-        }
+        // TODO tell the scene to load all its resources, and await on it
         this.scene = scene;
     }
 
-    async play() {
+    play() {
         if (!this.scene) {
             throw new Error('Game: you must call loadScene() before calling play()')
         }
         return this.renderer.play();
     }
 
-    async pause() {
+    pause() {
         return this.renderer.pause();
     }
 }
