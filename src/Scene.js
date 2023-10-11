@@ -23,12 +23,17 @@ class Scene {
 
     addGameObject(gameObject) {
         if (!this.gameObjects.some(g => g === gameObject)) {
+            gameObject.parent = this;
             this.gameObjects.push(gameObject);
         }
     }
 
     removeGameObject(gameObject) {
-        this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
+        if (this.gameObjects.some(g => g === gameObject)) {
+            // gameObject is indeed a child of this scene
+            this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
+            gameObject.parent = null;
+        }
     }
 
     getRootGameObjects() {
