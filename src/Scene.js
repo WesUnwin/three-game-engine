@@ -7,10 +7,10 @@ class Scene {
         this.threeJSScene.background = sceneData.background || new THREE.Color('lightblue');
 
         this.gameObjects = [];
-        (sceneData.gameObjects || []).forEach(g => this.createGameObject(this, g));
+        (sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
     }
 
-    createGameObject(parent, gameObjectData) {
+    _createGameObject(parent, gameObjectData) {
         const options = { ...gameObjectData };
         delete options.children;
         const GameObjectClass = gameObjectData.klass || GameObject;
@@ -18,7 +18,7 @@ class Scene {
         parent.addGameObject(gameObject);
         this.threeJSScene.add(gameObject.threeJSObject3D);
         (gameObjectData.gameObjects || []).forEach(childData => {
-            this.createGameObject(gameObject, childData);
+            this._createGameObject(gameObject, childData);
         });
     }
 

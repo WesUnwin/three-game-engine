@@ -41,6 +41,15 @@ A scene internally manages a Three.js Scene object.
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | constructor(sceneData)                       | Creates a 3D scene from the given data                                           |
+| addGameObject(gameObject)                    | Adds the given GameObject to the scene                                           |
+| removeGameObject(gameObject)                 | Removes the given GameObject from the scene                                      |
+| getRootGameObjects()                         | Returns all top level game objects in the scene                                  |
+| find(fn)                                     | Returns the first game object where the function fn(gameObject)                  |
+|                                              | returns true                                                                     |
+| findAll(fn)                                  | Returns an array of game objects where the given function fn(gameObject)         |
+|                                              | returns true                                                                     |
+| findByName(name)                             | Returns the first game object in the scene with the given name                   |
+| findAllByTag(tag)                            | Returns all game objects in the scene that have the given                        |
 
 ## GameObject API  (import GameObject from 'three-game-engine')
 A scene contains a hieriarchy of GameObjects.
@@ -49,3 +58,12 @@ Each GameObject corresponds to an Object3D (and its children) within the underly
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | constructor(parent, options)                 | Creates a GameObject as a child of either a scene or another GameObject.         |
+| addGameObject(gameObject)                    | Adds the given GameObject as a child of this GameObject                          |
+| removeGameObject(gameObject)                 | Removes the given GameObject if it is an immediate child of this GameObject      |
+| getRootGameObjects()                         | Returns all immediate child GameObjects of this GameObject                       |
+| find(fn)                                     | Returns the first game object where the function fn(gameObject)                  |
+|                                              | returns true                                                                     |
+| findAll(fn)                                  | Returns an array of game objects where the given function fn(gameObject)         |
+|                                              | returns true                                                                     |
+| findByName(name)                             | Returns the first descendent game object with the given name                     |
+| findAllByTag(tag)                            | Returns an array of all descendent game objects that have the given tag          |
