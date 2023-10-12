@@ -15,7 +15,8 @@ class Scene {
         delete options.children;
         const GameObjectClass = gameObjectData.klass || GameObject;
         const gameObject = new GameObjectClass(parent, options);
-        parent.gameObjects.push(gameObject);
+        parent.addGameObject(gameObject);
+        this.threeJSScene.add(gameObject.threeJSObject3D);
         (gameObjectData.gameObjects || []).forEach(childData => {
             this.createGameObject(gameObject, childData);
         });
@@ -25,6 +26,7 @@ class Scene {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
+            this.threeJSScene.add(gameObject.threeJSObject3D);
         }
     }
 
@@ -33,6 +35,7 @@ class Scene {
             // gameObject is indeed a child of this scene
             this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
             gameObject.parent = null;
+            this.threeJSScene.remove(gameObject.threeJSObject3D);
         }
     }
 

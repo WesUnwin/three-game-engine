@@ -6,12 +6,15 @@ class GameObject {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
+
+        this.threeJSObject3D = options.threeJSObject3D || new THREE.Group();
+
         parent.addGameObject(this);
         this.parent = parent;
 
         this.name = options.name || '';
         this.tags = options.tags || [];
-        this.threeJSObject3D = options.threeJSObject3D || new THREE.Group();
+
         // Make this GameObject's Object3D a child of the parent's Object3D/Scene
         if (this.parent instanceof Scene) {
             this.parent.threeJSScene.add(this.threeJSObject3D)
@@ -29,6 +32,7 @@ class GameObject {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
+            this.threeJSObject3D.add(gameObject.threeJSObject3D);
         }
     }
 
@@ -37,6 +41,7 @@ class GameObject {
             // gameObject is indeed a child of this GameObject
             this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
             gameObject.parent = null;
+            this.threeJSObject3D.remove(gameObject.threeJSObject3D);
         }
     }
 
