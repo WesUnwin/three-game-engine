@@ -17,6 +17,40 @@ This library simply ties together several well known, capable javascript librari
 
 MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
 
+# Example
+
+```
+    import { Game, Scene } from "three-game-engine";
+
+    const game = new Game({
+      rendererOptions: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        pixelRatio: window.devicePixelRatio
+      }
+    })
+  
+    // Get the canvas, attach it to the DOM, making it fill the viewport
+    const canvas = game.renderer.getCanvas();
+    canvas.style.width = window.innerWidth
+    canvas.style.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    document.body.style.margin = '0px';
+  
+    // on resizing the viewport, update the dimensions of the canvas to fill the viewport
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      game.renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const scene = new Scene();
+
+    await game.loadScene(scene);
+
+    // Will render the empty scene, displaying its default blue background
+    game.play();
+```
 
 # Library API
 
@@ -26,8 +60,9 @@ This is the top-level object that you typically create and configure just once.
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | constructor(options)                         | Creates a new game, with a WebGL1 renderer setup with the specified options      |
-|                                              |                                                                                  |
 | async loadScene(scene)                       | Async function that loads and switches to rendering a Scene (see Scene API)      |
+| play()                                       | Starts (or resumes) rendering of the game, rendering the currently loaded scene. |
+| pause()                                      | Pauses rendering of the game till play() is called again.                        |
 
 ## game.renderer
 A game object internally manages a Renderer object (accessed by game.renderer).
