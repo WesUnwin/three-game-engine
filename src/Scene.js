@@ -3,6 +3,7 @@ import GameObject from './GameObject';
 
 class Scene {
     constructor(sceneData = {}) {
+        this.name = sceneData.name || 'unnamed-scene';
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.background = sceneData.background || new THREE.Color('lightblue');
 
@@ -20,6 +21,15 @@ class Scene {
         (gameObjectData.gameObjects || []).forEach(childData => {
             this._createGameObject(gameObject, childData);
         });
+    }
+
+    getInitialAssetList() {
+        let initialAssets = [];
+        this.gameObjects.forEach(gameObject => {
+            const objAssets = gameObject.getInitialAssetListRecursively();
+            initialAssets = initialAssets.concat(objAssets);
+        });
+        return initialAssets
     }
 
     addGameObject(gameObject) {

@@ -24,6 +24,19 @@ class GameObject {
         this.gameObjects = [];
     }
 
+    getInitialAssetList() {
+        return this.options.initialAssetList || [];
+    }
+
+    getInitialAssetListRecursively() {
+        let initialAssets = this.getInitialAssetList();
+        this.gameObjects.forEach(gameObject => {
+            const objAssets = gameObject.getInitialAssetListRecursively();
+            initialAssets = initialAssets.concat(objAssets);
+        });
+        return initialAssets;
+    }
+
     hasTag(tag) {
         return this.tags.some(t => t === tag);
     }

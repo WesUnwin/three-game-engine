@@ -1,4 +1,5 @@
 import Renderer from './Renderer';
+import AssetStore from './assets/AssetStore';
 
 class Game {
     constructor(options = {}) {
@@ -9,7 +10,20 @@ class Game {
     }
 
     async loadScene(scene) {
-        // TODO tell the scene to load all its resources, and await on it
+        console.debug(`Game: loading scene: ${scene.name}`);
+        if (!this.assetStore || !this.options.assetOptions?.retainAssetsBetweenScenes) {
+            console.debug('Game: creating a new, empty AssetStore...');
+            this.assetStore = new AssetStore(this.options.assetOptions);
+            await this.assetStore.init();
+        }
+
+        console.debug(`Game: loading initial assets for scene: ${scene.name}`);
+        const initialAssetList = scene.getInitialAssetList();
+        for (let i = 0; i<initialAssetList.length; i++) {
+            await this.assetStore.load(initialAssetList[i])
+        }
+
+        console.debug(`Game: successfully loaded scene: ${scene.name}`);
         this.scene = scene;
     }
 
