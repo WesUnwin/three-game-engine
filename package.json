@@ -9,7 +9,7 @@
     "build": "babel src -d dist",
     "test": "jest",
     "prepublish": "npm run build",
-    "examples": "node ./examplesServer.js"
+    "examples": "node ./examples/examplesServer.js"
   },
   "repository": {
     "type": "git",
