@@ -1,7 +1,9 @@
 import runDemo1 from "./1_HelloWorld";
+import runDemo2 from "./2_GameObjects";
 
 const demos = [
-    { name: '1. Hello World!', run: runDemo1 }
+    { name: '1. Hello World!', run: runDemo1 },
+    { name: '2. Game Objects', run: runDemo2 }
 ];
 
 const desc = document.createElement('p');
