@@ -24,7 +24,7 @@ class Game {
         }
 
         this.scene = scene;
-        this.scene.onLoaded(game);
+        this.scene.onLoaded(this);
 
         console.debug(`Game: successfully loaded scene: ${scene.name}`);
     }
