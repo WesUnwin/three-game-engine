@@ -72,6 +72,46 @@ class GameObject {
     load() {
         this.threeJSGroup.clear() // Remove any existing child objects.
 
+        const setObject3DProps = (object3D, props) => {
+            for (const prop in props) {
+                const value = props[prop];
+                switch (prop) {
+                    case 'position':
+                        // Allow specifying the .position of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
+                        if (value instanceof THREE.Vector3) {
+                            object3D.position = value;
+                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                            object3D.position.set(value.x || 0, value.y || 0, value.z || 0);
+                        } else {
+                            throw new Error('GameObject: object3D position must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
+                        }
+                        break;
+                    case 'rotation':
+                        // Allow specifying the .rotation of things like models/lights/etc. by THREE.Euler or an object like: { x: _, y: _, z: _ }
+                        if (value instanceof THREE.Euler) {
+                            object3D.rotation = value;
+                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                            object3D.rotation.set(value.x || 0, value.y || 0, value.z || 0, value.order);
+                        } else {
+                            throw new Error('GameObject: object3D rotation must be either a THREE.Euler or an object with properties: x/y/z/order');
+                        }
+                        break;
+                    case 'scale':
+                        // Allow specifying the .scale of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
+                        if (value instanceof THREE.Vector3) {
+                            object3D.scale = value;
+                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                            object3D.scale.set(value.x || 0, value.y || 0, value.z || 0);
+                        } else {
+                            throw new Error('GameObject: object3D scale must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
+                        }
+                        break;
+                    default:
+                        object3D[prop] = value; 
+                }
+            }
+        };
+
         this.models.forEach(modelData => {
             // Instantiate a copy of the model asset, and attach the clone as child of this GameObject's threeJSGroup
             const assetStore = this.getScene().game.assetStore;
@@ -81,9 +121,9 @@ class GameObject {
             }
             const scene = clone(asset.data.scene);
             scene.children.forEach(object3D => {
-                if (modelData.name) {
-                    object3D.name = modelData.name;
-                }
+                const objectProps = { ...modelData };
+                delete objectProps.assetPath;
+                setObject3DProps(object3D, objectProps);
                 this.threeJSGroup.add(object3D);
             });
         });
@@ -106,59 +146,9 @@ class GameObject {
                 throw new Error(`GameObject: error creating ThreeJS light: unknown light type: ${lightData.type}`);
             }
 
-            for (const prop in lightData) {
-                const value = lightData[prop];
-                switch (prop) {
-                    case 'type':
-                        // Used above to identify which ThreeJS Light Class to use
-                        break;
-                    case 'color':
-                    case 'intensity':
-                        // These can be applied to any type of light
-                        light[prop] = value; 
-                        break;
-                    case 'position':
-                        light.position.set(value.x || 0, value.y || 0, value.z || 0);
-                        break;
-                    case 'shadow':
-                    case 'target':
-                        if (lightData.type !== 'DirectionalLight') {
-                            throw new Error(`GameObject: light property ${prop} is only applicable to DirectionalLight, tried to apply to light of type: ${lightData.type}`);
-                        }
-                        light[prop] = value;
-                        break;
-                    case 'skyColor':
-                    case 'groundColor':
-                        if (lightData.type !== 'HemisphereLight') {
-                            throw new Error(`GameObject: light property ${prop} is only applicable to HemisphereLight, tried to apply to light of type: ${lightData.type}`);
-                        }
-                        light[prop] = value;
-                        break;
-                    case 'distance':
-                    case 'decay':
-                        if (!['PointLight', 'SpotLight'].includes(lightData.type)) {
-                            throw new Error(`GameObject: light property ${prop} is only applicable to PointLight and SpotLight, tried to apply to light of type: ${lightData.type}`);
-                        }
-                        light[prop] = value;
-                        break;
-                    case 'width':
-                    case 'height':
-                        if (lightData.type !== 'RectAreaLight') {
-                            throw new Error(`GameObject: light property ${prop} is only applicable to RectAreaLight, tried to apply to light of type: ${lightData.type}`);
-                        }
-                        light[prop] = value;
-                        break;
-                    case 'angle':
-                    case 'penumbra':
-                        if (lightData.type !== 'SpotLight') {
-                            throw new Error(`GameObject: light property ${prop} is only applicable to SpotLight, tried to apply to light of type: ${lightData.type}`);
-                        }
-                        light[prop] = value;
-                        break;
-                    default:
-                        throw new Error(`GameObject: error configuring ThreeJS light, unknown property for light: ${prop}`);
-                }
-            }
+            const objectProps = { ...lightData };
+            delete objectProps.type;
+            setObject3DProps(light, objectProps);
 
             this.threeJSGroup.add(light);
         });
