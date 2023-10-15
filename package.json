@@ -8,7 +8,7 @@
     "lint:fix": "eslint src/** --fix",
     "build": "babel src -d dist",
     "test": "jest",
-    "prepublish": "npm run build",
+    "prepublish": "npm run lint:fix && npm run test && npm run build",
     "examples": "npm run build && node ./examples/examplesServer.js"
   },
   "repository": {
