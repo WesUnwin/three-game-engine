@@ -121,6 +121,15 @@ class GameObject {
                             throw new Error('GameObject: object3D scale must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
                         }
                         break;
+                    case 'color':
+                        if (value instanceof THREE.Color) {
+                            object3D.color = value;
+                        } else if (['number', 'string'].some(t => typeof value === t)) {
+                            object3D.color = new THREE.Color(value);
+                        } else {
+                            throw new Error('GameObject: object3D color must be set to either a THREE.Color instance or a string (which will be passed to the THREE.Color() constructor)');
+                        }
+                        break;
                     default:
                         object3D[prop] = value; 
                 }
