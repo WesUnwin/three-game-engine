@@ -17,7 +17,7 @@ class Scene {
         const GameObjectClass = gameObjectData.klass || GameObject;
         const gameObject = new GameObjectClass(parent, options);
         parent.addGameObject(gameObject);
-        this.threeJSScene.add(gameObject.threeJSObject3D);
+        this.threeJSScene.add(gameObject.threeJSGroup);
         (gameObjectData.gameObjects || []).forEach(childData => {
             this._createGameObject(gameObject, childData);
         });
@@ -36,7 +36,7 @@ class Scene {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
-            this.threeJSScene.add(gameObject.threeJSObject3D);
+            this.threeJSScene.add(gameObject.threeJSGroup);
         }
     }
 
@@ -45,7 +45,7 @@ class Scene {
             // gameObject is indeed a child of this scene
             this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
             gameObject.parent = null;
-            this.threeJSScene.remove(gameObject.threeJSObject3D);
+            this.threeJSScene.remove(gameObject.threeJSGroup);
         }
     }
 

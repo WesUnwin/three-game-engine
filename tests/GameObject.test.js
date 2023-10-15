@@ -3,10 +3,10 @@ const Scene = require('../src/Scene').default;
 const Group = require('three').Group;
 
 describe('construction', () => {
-    it('inits .threeJSObject3D to a THREE.Group (by default)', () => {
+    it('inits .threeJSGroup to a THREE.Group (by default)', () => {
         const scene = new Scene()
         const gameObject = new GameObject(scene)
-        expect(gameObject.threeJSObject3D instanceof Group).toBe(true)
+        expect(gameObject.threeJSGroup instanceof Group).toBe(true)
     })
 })
 

@@ -7,19 +7,20 @@ class GameObject {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
 
-        this.threeJSObject3D = options.threeJSObject3D || new THREE.Group();
+        this.name = options.name || '';
+        this.tags = options.tags || [];
+
+        this.threeJSGroup = new THREE.Group();
+        this.threeJSGroup.name = `gameObject-${this.name}`;
 
         parent.addGameObject(this);
         this.parent = parent;
 
-        this.name = options.name || '';
-        this.tags = options.tags || [];
-
-        // Make this GameObject's Object3D a child of the parent's Object3D/Scene
+        // Make this GameObject's threeJSGroup a child of the parent's threeJSGroup/threeJSScene
         if (this.parent instanceof Scene) {
-            this.parent.threeJSScene.add(this.threeJSObject3D)
+            this.parent.threeJSScene.add(this.threeJSGroup)
         } else {
-            this.parent.threeJSObject3D.add(this.threeJSObject3D);
+            this.parent.threeJSGroup.add(this.threeJSGroup);
         }
         this.gameObjects = [];
     }
@@ -45,7 +46,7 @@ class GameObject {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
-            this.threeJSObject3D.add(gameObject.threeJSObject3D);
+            this.threeJSGroup.add(gameObject.threeJSGroup);
         }
     }
 
@@ -54,7 +55,7 @@ class GameObject {
             // gameObject is indeed a child of this GameObject
             this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
             gameObject.parent = null;
-            this.threeJSObject3D.remove(gameObject.threeJSObject3D);
+            this.threeJSGroup.remove(gameObject.threeJSGroup);
         }
     }
 
