@@ -26,7 +26,7 @@ class GameObject {
         }
         this.gameObjects = [];
 
-        this.models = options.models || [];;
+        this.models = options.models || [];
         this.lights = options.lights || [];
     }
 
