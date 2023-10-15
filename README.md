@@ -7,7 +7,7 @@ Simple, lightweight game engine using:
 
 This library simply ties together several well known, capable javascript libraries resulting in a powerful yet simple game engine.
 
-![Screenshot](three-game-engine.png)
+![Screenshot](docs/three-game-engine.png)
 
 ## The vision
  - to create an easy-to-use, easy-to-setup versatile 3D game engine for developers that love and respect javascript
