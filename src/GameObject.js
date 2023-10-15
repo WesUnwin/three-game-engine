@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import Scene from './Scene';
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
+import GLTFAsset from './assets/GLTFAsset';
 
 class GameObject {
     constructor(parent, options = {}) {
@@ -23,10 +25,24 @@ class GameObject {
             this.parent.threeJSGroup.add(this.threeJSGroup);
         }
         this.gameObjects = [];
+
+        if (options.model) {
+            if (!typeof options.model.assetPath == 'string') {
+                throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
+            }
+            if (!options.model.assetPath.endsWith('.glb')) {
+                throw new Error('GameObject model.assetPath must end with .glb');
+            }
+            this.modelAssetPath = options.model.assetPath;
+        }
     }
 
     getInitialAssetList() {
-        return this.options.initialAssetList || [];
+        const assetPaths = [];
+        if (this.modelAssetPath) {
+            assetPaths.push(this.modelAssetPath)
+        }
+        return assetPaths;
     }
 
     getInitialAssetListRecursively() {
@@ -36,6 +52,41 @@ class GameObject {
             initialAssets = initialAssets.concat(objAssets);
         });
         return initialAssets;
+    }
+
+    getScene() {
+        const currentParent = this.parent;
+        // go up the hierachy untill you hit something that is not a GameObject
+        while(currentParent && currentParent instanceof GameObject) {
+            currentParent = currentParent.parent;
+        }
+        if (currentParent instanceof Scene) {
+            return currentParent
+        } else  {
+            return null;
+        }
+    }
+
+    load() {
+        if (this.modelAssetPath) {
+            // Instantiate a copy of the model asset, and attach the clone as child of this GameObject's threeJSGroup
+            const assetStore = this.getScene().game.assetStore;
+            const asset = assetStore.get(this.modelAssetPath);
+            if (asset) {
+                if (!(asset instanceof GLTFAsset)) {
+                    throw new Error(`GameObject: asset found at ${this.modelAssetPath} in AssetStore should be a GLTFAsset`);
+                }
+                const scene = clone(asset.data.scene);
+                scene.children.forEach(object3D => {
+                    this.threeJSGroup.add(object3D);
+                });
+            } else {
+                console.warn(`GameObject ${this.name} was unable to create its model as the required asset (${this.modelAssetPath}) was not found (or loaded) in the AssetStore`)
+            }
+        }
+        this.gameObjects.forEach(childGameObject => {
+            childGameObject.load()
+        });
     }
 
     hasTag(tag) {

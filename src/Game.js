@@ -23,8 +23,10 @@ class Game {
             await this.assetStore.load(initialAssetList[i])
         }
 
-        console.debug(`Game: successfully loaded scene: ${scene.name}`);
         this.scene = scene;
+        this.scene.onLoaded(game);
+
+        console.debug(`Game: successfully loaded scene: ${scene.name}`);
     }
 
     play() {

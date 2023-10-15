@@ -32,6 +32,13 @@ class Scene {
         return initialAssets
     }
 
+    onLoaded(game) {
+        this.game = game;
+        this.gameObjects.forEach(gameObject => {
+            gameObject.load();
+        });
+    }
+
     addGameObject(gameObject) {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
