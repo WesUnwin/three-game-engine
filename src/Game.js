@@ -29,6 +29,15 @@ class Game {
         console.debug(`Game: successfully loaded scene: ${scene.name}`);
     }
 
+    async loadAsset(assetPath) {
+        if (!this.assetStore) {
+            console.debug('Game: loadAsset(): AssetStore has not yet been created, creating a new empty AssetStore now...');
+            this.assetStore = new AssetStore(this.options.assetOptions);
+        }
+
+        await this.assetStore.load(assetPath);
+    }
+
     play() {
         if (!this.scene) {
             throw new Error('Game: you must call loadScene() before calling play()')
