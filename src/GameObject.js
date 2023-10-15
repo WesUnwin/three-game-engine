@@ -27,7 +27,7 @@ class GameObject {
         this.gameObjects = [];
 
         if (options.model) {
-            if (!typeof options.model.assetPath === 'string') {
+            if (!(typeof options.model.assetPath === 'string')) {
                 throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
             }
             if (!options.model.assetPath.endsWith('.glb')) {
@@ -73,7 +73,7 @@ class GameObject {
     }
 
     getScene() {
-        const currentParent = this.parent;
+        let currentParent = this.parent;
         // go up the hierachy untill you hit something that is not a GameObject
         while(currentParent && currentParent instanceof GameObject) {
             currentParent = currentParent.parent;
