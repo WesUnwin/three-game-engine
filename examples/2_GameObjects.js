@@ -30,9 +30,9 @@ const runDemo = async () => {
       gameObjects: [
         {
           name: 'ground',
-          model: {
-            assetPath: 'models/test_area.glb'
-          },
+          models: [
+            { assetPath: 'models/test_area.glb' }
+          ],
           lights: [
             { type: 'PointLight', position: { x: 0, y: 5, z: 0 } }
           ]

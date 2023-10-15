@@ -26,40 +26,24 @@ class GameObject {
         }
         this.gameObjects = [];
 
-        if (options.model) {
-            if (!(typeof options.model.assetPath === 'string')) {
-                throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
-            }
-            if (!options.model.assetPath.endsWith('.glb')) {
-                throw new Error('GameObject model.assetPath must end with .glb');
-            }
-            this.modelAssetPath = options.model.assetPath;
-        }
-
-        const lights = options.lights || [];
-        lights.forEach(lightData => {
-            let light = null;
-            const lightTypes = {
-                PointLight: THREE.PointLight
-            }
-            const LightClass = lightTypes[lightData.type];
-            if (LightClass) {
-                light = new LightClass();
-            } else {
-                throw new Error(`GameObject unknown light type: ${lightData.type}`);
-            }
-            this.threeJSGroup.add(light);
-            if (lightData.position) {
-                light.position.set(lightData.position.x || 0, lightData.position.y || 0, lightData.position.z || 0);
-            }
-        });
+        this.models = options.models || [];;
+        this.lights = options.lights || [];
     }
 
     getInitialAssetList() {
         const assetPaths = [];
-        if (this.modelAssetPath) {
-            assetPaths.push(this.modelAssetPath)
-        }
+
+        this.models.forEach(modelData => {
+            const { assetPath } = modelData;
+            if (!(typeof assetPath === 'string')) {
+                throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
+            }
+            if (!assetPath.endsWith('.glb')) {
+                throw new Error('GameObject model.assetPath must end with .glb');
+            }
+            assetPaths.push(assetPath);
+        });
+
         return assetPaths;
     }
 
@@ -86,22 +70,49 @@ class GameObject {
     }
 
     load() {
-        if (this.modelAssetPath) {
+        this.threeJSGroup.clear() // Remove any existing child objects.
+
+        this.models.forEach(modelData => {
             // Instantiate a copy of the model asset, and attach the clone as child of this GameObject's threeJSGroup
             const assetStore = this.getScene().game.assetStore;
-            const asset = assetStore.get(this.modelAssetPath);
-            if (asset) {
-                if (!(asset instanceof GLTFAsset)) {
-                    throw new Error(`GameObject: asset found at ${this.modelAssetPath} in AssetStore should be a GLTFAsset`);
-                }
-                const scene = clone(asset.data.scene);
-                scene.children.forEach(object3D => {
-                    this.threeJSGroup.add(object3D);
-                });
-            } else {
-                console.warn(`GameObject ${this.name} was unable to create its model as the required asset (${this.modelAssetPath}) was not found (or loaded) in the AssetStore`)
+            const asset = assetStore.get(modelData.assetPath);
+            if (!(asset instanceof GLTFAsset)) {
+                throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
             }
-        }
+            const scene = clone(asset.data.scene);
+            scene.children.forEach(object3D => {
+                this.threeJSGroup.add(object3D);
+            });
+        });
+
+        this.lights.forEach(lightData => {
+            let light = null;
+            const lightTypes = {
+                PointLight: THREE.PointLight
+            }
+            const LightClass = lightTypes[lightData.type];
+            if (LightClass) {
+                light = new LightClass();
+            } else {
+                throw new Error(`GameObject: error creating ThreeJS light: unknown light type: ${lightData.type}`);
+            }
+
+            for (const prop in lightData) {
+                const value = lightData[prop];
+                switch (prop) {
+                    case 'type':
+                        // Used above to identify which ThreeJS Light Class to use
+                        break;
+                    case 'position':
+                        light.position.set(value.x || 0, value.y || 0, value.z || 0);
+                        break;
+                    default:
+                        throw new Error(`GameObject: error configuring ThreeJS light, unknown property for light: ${prop}`);
+                }
+            }
+
+            this.threeJSGroup.add(light);
+        });
         
         this.gameObjects.forEach(childGameObject => {
             childGameObject.load()
