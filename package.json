@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WesUnwin/reality-three.git"
+    "url": "git+https://github.com/WesUnwin/three-game-engine.git"
   },
   "keywords": [
     "three.js",
@@ -26,9 +26,9 @@
   "author": "Wes Unwin",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/WesUnwin/reality-three/issues"
+    "url": "https://github.com/WesUnwin/three-game-engine/issues"
   },
-  "homepage": "https://github.com/WesUnwin/reality-three#readme",
+  "homepage": "https://github.com/WesUnwin/three-game-engine#readme",
   "dependencies": {
     "events": "^3.3.0",
     "three": "^0.136.0",
