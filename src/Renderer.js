@@ -26,6 +26,7 @@ class Renderer {
         this.threeJSRenderer.setSize(this.width, this.height);
 
         this.threeJSCamera = new THREE.PerspectiveCamera(50, this.width / this.height, 0.01, 1000);
+        this.threeJSCamera.position.set(0, 1.5, 5);
         this.threeJSCamera.aspect = this.width / this.height;
         this.threeJSCamera.updateProjectionMatrix();
 
