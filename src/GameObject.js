@@ -28,6 +28,9 @@ class GameObject {
 
         this.models = options.models || [];
         this.lights = options.lights || [];
+        this.cameras = options.cameras || [];
+
+        this.loaded = false;
     }
 
     getInitialAssetList() {
@@ -69,7 +72,19 @@ class GameObject {
         }
     }
 
-    load() {
+    // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
+    // The GameObject must be part of a scene that is loaded into a game.
+    // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
+    async load() {
+        const scene = this.getScene();
+        if (!scene) {
+            throw new Error('GameObject: load() this GameObject must be attached to a scene (directly or through its ancestor GameObjects) to be loaded');
+        }
+        if (!scene?.game) {
+            throw new Error('GameObject: load(): the scene containing this GameObject must be loaded into a game object first');
+        }
+        const assetStore = await scene.game.getAssetStore();
+
         this.threeJSGroup.clear() // Remove any existing child objects.
 
         const setObject3DProps = (object3D, props) => {
@@ -112,10 +127,9 @@ class GameObject {
             }
         };
 
-        this.models.forEach(modelData => {
-            // Instantiate a copy of the model asset, and attach the clone as child of this GameObject's threeJSGroup
-            const assetStore = this.getScene().game.assetStore;
-            const asset = assetStore.get(modelData.assetPath);
+        for (let i = 0; i<this.models.length; i++) {
+            const modelData = this.models[i];
+            const asset = await assetStore.load(modelData.assetPath);
             if (!(asset instanceof GLTFAsset)) {
                 throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
             }
@@ -126,7 +140,7 @@ class GameObject {
                 setObject3DProps(object3D, objectProps);
                 this.threeJSGroup.add(object3D);
             });
-        });
+        }
 
         this.lights.forEach(lightData => {
             let light = null;
@@ -152,10 +166,13 @@ class GameObject {
 
             this.threeJSGroup.add(light);
         });
-        
-        this.gameObjects.forEach(childGameObject => {
-            childGameObject.load()
-        });
+
+        for(let i = 0; i<this.gameObjects.length; i++) {
+            const childGameObject = this.gameObjects[i];
+            await childGameObject.load()
+        }
+
+        this.loaded = true;
     }
 
     hasTag(tag) {

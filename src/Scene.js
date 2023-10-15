@@ -33,11 +33,12 @@ class Scene {
         return initialAssets
     }
 
-    onLoaded(game) {
+    async load(game) {
         this.game = game;
-        this.gameObjects.forEach(gameObject => {
-            gameObject.load();
-        });
+        for(let i = 0; i<this.gameObjects.length; i++) {
+            const gameObject = this.gameObjects[i];
+            await gameObject.load()
+        }
     }
 
     addGameObject(gameObject) {

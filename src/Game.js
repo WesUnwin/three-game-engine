@@ -9,33 +9,33 @@ class Game {
         this.renderer = new Renderer(this, this.options.rendererOptions);
     }
 
-    async loadScene(scene) {
-        console.debug(`Game: loading scene: ${scene.name}`);
-        if (!this.assetStore || !this.options.assetOptions?.retainAssetsBetweenScenes) {
+    async getAssetStore() {
+        if (!this.assetStore) {
             console.debug('Game: creating a new, empty AssetStore...');
             this.assetStore = new AssetStore(this.options.assetOptions);
             await this.assetStore.init();
         }
+        return this.assetStore;
+    }
 
-        console.debug(`Game: loading initial assets for scene: ${scene.name}`);
-        const initialAssetList = scene.getInitialAssetList();
-        for (let i = 0; i<initialAssetList.length; i++) {
-            await this.assetStore.load(initialAssetList[i])
+    async loadScene(scene) {
+        console.debug(`Game: loading scene: ${scene.name}`);
+        const assetStore = await this.getAssetStore();
+
+        if (!this.options.assetOptions?.retainAssetsBetweenScene) {
+            console.debug(`Game: clearing all assets as options.assetOptions.retainAssetsBetweenScene was not set`);
+            assetStore.unloadAll();
         }
 
         this.scene = scene;
-        this.scene.onLoaded(this);
+        await this.scene.load(this);
 
         console.debug(`Game: successfully loaded scene: ${scene.name}`);
     }
 
     async loadAsset(assetPath) {
-        if (!this.assetStore) {
-            console.debug('Game: loadAsset(): AssetStore has not yet been created, creating a new empty AssetStore now...');
-            this.assetStore = new AssetStore(this.options.assetOptions);
-        }
-
-        await this.assetStore.load(assetPath);
+        const assetStore = await this.getAssetStore();
+        await assetStore.load(assetPath);
     }
 
     play() {

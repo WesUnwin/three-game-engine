@@ -55,23 +55,22 @@ class AssetStore {
   }
 
   /**
-   * Fetches the asset file located at the given relative URL, and adds
-   * to the internal list of loaded assets.
+   * Fetches the specified asset (if not already fetched)
    **/
   async load(path) {
     if (!this.initialized) {
       throw new Error('must call assetStore.init() before using load()')
     }
 
-    const AssetSubclass = AssetStore._getAssetSubclass(path);
-    const asset = new AssetSubclass(this.baseURL, path);
-    await asset.load().then(() => {
-      console.log(`AssetStore: successfully loaded: ${path}`);
+    if (!this.loadedAssets[path]) {
+      const AssetSubclass = AssetStore._getAssetSubclass(path);
+      const asset = new AssetSubclass(this.baseURL, path);
+      await asset.load();
       this.loadedAssets[path] = asset;
-    }, error => {
-      console.error(`AssetStore: error loading: ${path}: ${error}`);
-      throw error;
-    })
+      console.log(`AssetStore: successfully loaded asset: ${path}`);
+    }
+
+    return this.loadedAssets[path];
   }
 
   unload(path) {
@@ -84,15 +83,9 @@ class AssetStore {
     }
   }
 
-  /**
-   * Returns the Asset instance for the asset with the given path
-   */
-  get(path) {
-    const asset = this.loadedAssets[path];
-    if (!asset) {
-      throw new Error(`Asset not loaded: ${path}`);
-    }
-    return asset;
+  unloadAll() {
+    console.log(`AssetStore: unloading all assets, clearing this store.`);
+    this.loadedAssets = {};
   }
 }
 
