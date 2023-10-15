@@ -27,7 +27,7 @@ class GameObject {
         this.gameObjects = [];
 
         if (options.model) {
-            if (!typeof options.model.assetPath == 'string') {
+            if (!typeof options.model.assetPath === 'string') {
                 throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
             }
             if (!options.model.assetPath.endsWith('.glb')) {
@@ -35,6 +35,24 @@ class GameObject {
             }
             this.modelAssetPath = options.model.assetPath;
         }
+
+        const lights = options.lights || [];
+        lights.forEach(lightData => {
+            let light = null;
+            const lightTypes = {
+                PointLight: THREE.PointLight
+            }
+            const LightClass = lightTypes[lightData.type];
+            if (LightClass) {
+                light = new LightClass();
+            } else {
+                throw new Error(`GameObject unknown light type: ${lightData.type}`);
+            }
+            this.threeJSGroup.add(light);
+            if (lightData.position) {
+                light.position.set(lightData.position.x || 0, lightData.position.y || 0, lightData.position.z || 0);
+            }
+        });
     }
 
     getInitialAssetList() {
@@ -84,6 +102,7 @@ class GameObject {
                 console.warn(`GameObject ${this.name} was unable to create its model as the required asset (${this.modelAssetPath}) was not found (or loaded) in the AssetStore`)
             }
         }
+        
         this.gameObjects.forEach(childGameObject => {
             childGameObject.load()
         });
