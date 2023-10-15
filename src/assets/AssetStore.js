@@ -1,4 +1,7 @@
-import Asset from './Asset';
+import GLTFAsset from './GLTFAsset'
+import TextureAsset from './TextureAsset'
+import SoundAsset from './SoundAsset'
+import JSONAsset from './JSONAsset'
 
 class AssetStore {
   constructor(options = {}) {
@@ -31,6 +34,26 @@ class AssetStore {
     }
   }
 
+  static _getAssetSubclass(path) {
+    const assetTypes = [
+        { subclass: GLTFAsset, fileExtensions: ['.gltf', '.glb'] },
+        { subclass: TextureAsset, fileExtensions: ['.png', '.jpg', '.bmp'] },
+        { subclass: SoundAsset, fileExtensions: ['.wav', '.mp3', 'ogg'] },
+        { subclass: JSONAsset, fileExtensions: ['.json'] }
+    ];
+
+    if (path.includes('cube_textures')) {
+        return 
+    } else {
+        const assetType = assetTypes.find(type => type.fileExtensions.some(ext => path.endsWith(ext)));
+        if (assetType) {
+            return assetType.subclass;
+        } else {
+            throw new Error(`Unable to identify which Asset Subclass to use for this asset: ${path}`);
+        }
+    }
+  }
+
   /**
    * Fetches the asset file located at the given relative URL, and adds
    * to the internal list of loaded assets.
@@ -40,7 +63,7 @@ class AssetStore {
       throw new Error('must call assetStore.init() before using load()')
     }
 
-    const AssetSubclass = Asset.getAssetSubclass(path);
+    const AssetSubclass = AssetStore._getAssetSubclass(path);
     const asset = new AssetSubclass(this.baseURL, path);
     await asset.load().then(() => {
       console.log(`AssetStore: successfully loaded: ${path}`);
