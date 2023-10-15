@@ -7,7 +7,7 @@ class TextureAsset extends Asset {
             const loader = new THREE.TextureLoader();
             const fullURL = this.getFullURL();
             loader.load(fullURL,
-                function(data) {
+                data => {
                     this.data = data;
                     resolve();
                 },

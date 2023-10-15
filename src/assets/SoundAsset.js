@@ -8,7 +8,7 @@ class SoundAsset extends Asset {
             const loader = new THREE.AudioLoader();
             const fullURL = this.getFullURL();
             loader.load(fullURL,
-                function(data) {
+                data => {
                     // data is an AudioBuffer instance
                     this.data = data;
                     resolve();

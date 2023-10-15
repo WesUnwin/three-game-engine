@@ -7,8 +7,8 @@ class JSONAsset extends Asset {
             const fileLoader = new THREE.FileLoader();
             const fullURL = this.getFullURL();
             fileLoader.load(fullURL,
-                function(text) {
-                    this.json = JSON.parse(text);
+                text => {
+                    this.data = JSON.parse(text);
                     resolve();
                 },
                 () => {

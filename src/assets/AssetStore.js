@@ -30,7 +30,7 @@ class AssetStore {
         return `file://${dirName}/../../../assets`;
       }
     } else {
-      return `http://localhost:8080`;
+      return `http://localhost:8080/assets`;
     }
   }
 

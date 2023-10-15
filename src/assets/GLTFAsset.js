@@ -8,7 +8,7 @@ class GLTFAsset extends Asset {
             const loader = new GLTFLoader();
             const fullURL = this.getFullURL();
             loader.load(fullURL,
-                function(data) {
+                data => {
                     /**
                      * For a glb/gltf file, this is the gltf object that came from the GLTFLoader.
                      * An object of the form:
