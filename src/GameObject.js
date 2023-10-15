@@ -81,6 +81,9 @@ class GameObject {
             }
             const scene = clone(asset.data.scene);
             scene.children.forEach(object3D => {
+                if (modelData.name) {
+                    object3D.name = modelData.name;
+                }
                 this.threeJSGroup.add(object3D);
             });
         });
