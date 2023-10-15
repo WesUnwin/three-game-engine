@@ -91,8 +91,13 @@ class GameObject {
         this.lights.forEach(lightData => {
             let light = null;
             const lightTypes = {
-                PointLight: THREE.PointLight
-            }
+                AmbientLight: THREE.AmbientLight,
+                DirectionalLight: THREE.DirectionalLight,
+                HemisphereLight: THREE.HemisphereLight,
+                PointLight: THREE.PointLight,
+                RectAreaLight: THREE.RectAreaLight,
+                SpotLight: THREE.SpotLight
+            };
             const LightClass = lightTypes[lightData.type];
             if (LightClass) {
                 light = new LightClass();
@@ -107,8 +112,48 @@ class GameObject {
                     case 'type':
                         // Used above to identify which ThreeJS Light Class to use
                         break;
+                    case 'color':
+                    case 'intensity':
+                        // These can be applied to any type of light
+                        light[prop] = value; 
+                        break;
                     case 'position':
                         light.position.set(value.x || 0, value.y || 0, value.z || 0);
+                        break;
+                    case 'shadow':
+                    case 'target':
+                        if (lightData.type !== 'DirectionalLight') {
+                            throw new Error(`GameObject: light property ${prop} is only applicable to DirectionalLight, tried to apply to light of type: ${lightData.type}`);
+                        }
+                        light[prop] = value;
+                        break;
+                    case 'skyColor':
+                    case 'groundColor':
+                        if (lightData.type !== 'HemisphereLight') {
+                            throw new Error(`GameObject: light property ${prop} is only applicable to HemisphereLight, tried to apply to light of type: ${lightData.type}`);
+                        }
+                        light[prop] = value;
+                        break;
+                    case 'distance':
+                    case 'decay':
+                        if (!['PointLight', 'SpotLight'].includes(lightData.type)) {
+                            throw new Error(`GameObject: light property ${prop} is only applicable to PointLight and SpotLight, tried to apply to light of type: ${lightData.type}`);
+                        }
+                        light[prop] = value;
+                        break;
+                    case 'width':
+                    case 'height':
+                        if (lightData.type !== 'RectAreaLight') {
+                            throw new Error(`GameObject: light property ${prop} is only applicable to RectAreaLight, tried to apply to light of type: ${lightData.type}`);
+                        }
+                        light[prop] = value;
+                        break;
+                    case 'angle':
+                    case 'penumbra':
+                        if (lightData.type !== 'SpotLight') {
+                            throw new Error(`GameObject: light property ${prop} is only applicable to SpotLight, tried to apply to light of type: ${lightData.type}`);
+                        }
+                        light[prop] = value;
                         break;
                     default:
                         throw new Error(`GameObject: error configuring ThreeJS light, unknown property for light: ${prop}`);
