@@ -5,6 +5,7 @@ class Scene {
     constructor(sceneData = {}) {
         this.name = sceneData.name || 'unnamed-scene';
         this.threeJSScene = new THREE.Scene();
+        this.threeJSScene.name = this.name;
         this.threeJSScene.background = sceneData.background || new THREE.Color('lightblue');
 
         this.gameObjects = [];

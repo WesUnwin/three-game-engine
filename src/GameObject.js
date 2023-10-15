@@ -93,6 +93,7 @@ class GameObject {
             const LightClass = lightTypes[lightData.type];
             if (LightClass) {
                 light = new LightClass();
+                light.name = lightData.type.toLowerCase();
             } else {
                 throw new Error(`GameObject: error creating ThreeJS light: unknown light type: ${lightData.type}`);
             }
