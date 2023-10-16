@@ -1,9 +1,38 @@
 
-class Object3D {
-    add() {
+class Vector3 {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    remove() {
+    set(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
+class Object3D {
+    constructor() {
+        this.childObjects = [];
+        this.position = new Vector3(0,0,0);
+    }
+
+    add(object3D) {
+        this.childObjects.push(object3D);
+    }
+
+    remove(object3D) {
+        this.childObjects = this.childObjects.filter(obj => obj !== object3D);
+    }
+
+    clear() {
+        this.childObjects = [];
+    }
+
+    children() {
+        return this.childObjects;
     }
 }
 
@@ -14,10 +43,63 @@ class Scene extends Object3D {
 }
 
 class Color {
+    constructor(value) {
+        this.value = value;
+    }
+}
+
+class Light extends Object3D {
+
+}
+
+class AmbientLight extends Light {
+
+}
+
+class WebGL1Renderer {
+    constructor() {
+        this.domElement = null;
+        this.xr = {
+            enabled: false,
+            setSession: () => {}
+        }
+        this.shadowMap = {
+            enabled: false,
+            type: 0
+        }
+    }
+
+    setPixelRatio() {
+
+    }
+
+    setSize() {
+
+    }
+
+    render() {
+
+    }
+}
+
+class PerspectiveCamera extends Object3D {
+    updateProjectionMatrix() {
+
+    }
+}
+
+class AudioListener extends Object3D {
+
 }
 
 module.exports = {
     Group,
     Scene,
-    Color
+    Color,
+    Light,
+    AmbientLight,
+    WebGL1Renderer,
+    PerspectiveCamera,
+    Vector3,
+    AudioListener
 }

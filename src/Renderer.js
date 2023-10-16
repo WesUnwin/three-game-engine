@@ -5,12 +5,12 @@ import VRMode from './VR/VRMode';
 import Logger from './Logger'
 
 class Renderer {
-    constructor(game, options) {
+    constructor(game, options = {}) {
         this.game = game;
         this.options = options;
 
-        this.width = this.options.width;
-        this.height = this.options.height;
+        this.width = this.options.width || 0;
+        this.height = this.options.height || 0;
 
         this.threeJSRenderer = new THREE.WebGL1Renderer({ antialias: true });
         this.threeJSRenderer.gammaOutput = true;

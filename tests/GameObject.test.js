@@ -1,6 +1,8 @@
 const GameObject = require('../src/GameObject').default;
+const Game = require('../src/Game').default;
 const Scene = require('../src/Scene').default;
 const Group = require('three').Group;
+const THREE = require('three');
 
 describe('construction', () => {
     it('inits .threeJSGroup to a THREE.Group (by default)', () => {
@@ -9,6 +11,43 @@ describe('construction', () => {
         expect(gameObject.threeJSGroup instanceof Group).toBe(true)
     })
 })
+
+describe('getScene', () => {
+    it('returns the scene that parents the game object', () => {
+        const scene = new Scene();
+        const parentObject = new GameObject(scene);
+        const childObject = new GameObject(parentObject);
+        expect(childObject.getScene()).toBe(scene);
+    });
+});
+
+describe('load', () => {
+    describe('lights', () => {
+        describe('Light Types', () => {
+            let gameObject;
+
+            beforeEach(async () => {
+                const game = new Game();
+                const scene = new Scene();
+                gameObject = new GameObject(scene, {
+                    lights: [
+                        { type: 'AmbientLight', color: 'red', intensity: 0.5 }
+                    ]
+                });
+                await game.loadScene(scene);
+            });
+
+            it('creates an AmbientLight', () => {
+                const light = gameObject.threeJSGroup.children().find(c => c instanceof THREE.AmbientLight);
+                expect(light).not.toBe(null);
+                console.log(gameObject.threeJSGroup.children());
+                expect(light.color instanceof THREE.Color).toBe(true);
+                expect(light.color.value).toBe('red');
+                expect(light.intensity).toBe(0.5);
+            });
+        });
+    });
+});
 
 describe('hasTag', () => {
     describe('GameObject has the specified Tag', () => {
