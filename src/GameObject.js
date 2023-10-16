@@ -33,32 +33,6 @@ class GameObject {
         this.loaded = false;
     }
 
-    getInitialAssetList() {
-        const assetPaths = [];
-
-        this.models.forEach(modelData => {
-            const { assetPath } = modelData;
-            if (!(typeof assetPath === 'string')) {
-                throw new Error('GameObject has a model, but no model.assetPath assigned, this is required to load the model data');
-            }
-            if (!assetPath.endsWith('.glb')) {
-                throw new Error('GameObject model.assetPath must end with .glb');
-            }
-            assetPaths.push(assetPath);
-        });
-
-        return assetPaths;
-    }
-
-    getInitialAssetListRecursively() {
-        let initialAssets = this.getInitialAssetList();
-        this.gameObjects.forEach(gameObject => {
-            const objAssets = gameObject.getInitialAssetListRecursively();
-            initialAssets = initialAssets.concat(objAssets);
-        });
-        return initialAssets;
-    }
-
     getScene() {
         let currentParent = this.parent;
         // go up the hierachy untill you hit something that is not a GameObject

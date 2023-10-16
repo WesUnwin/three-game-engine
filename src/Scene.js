@@ -24,15 +24,6 @@ class Scene {
         });
     }
 
-    getInitialAssetList() {
-        let initialAssets = [];
-        this.gameObjects.forEach(gameObject => {
-            const objAssets = gameObject.getInitialAssetListRecursively();
-            initialAssets = initialAssets.concat(objAssets);
-        });
-        return initialAssets
-    }
-
     async load(game) {
         this.game = game;
         for(let i = 0; i<this.gameObjects.length; i++) {
