@@ -25,7 +25,7 @@ class Logger {
         const lastNdx = obj.gameObjects.length - 1;
         obj.gameObjects.forEach((child, ndx) => {
             const isLast = ndx === lastNdx;
-            Logger._dumpObjectRecursive(child, lines, isLast, newPrefix, options);
+            Logger.printHierarchyRecursive(child, lines, isLast, newPrefix, options);
         });
         return lines;
     }
@@ -49,7 +49,7 @@ class Logger {
         const lastNdx = obj.children.length - 1;
         obj.children.forEach((child, ndx) => {
             const isLast = ndx === lastNdx;
-            Logger._dumpObjectRecursive(child, lines, isLast, newPrefix, options);
+            Logger._printThreeJSGraphRecursive(child, lines, isLast, newPrefix, options);
         });
         return lines;
     }
