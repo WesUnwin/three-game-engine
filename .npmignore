@@ -3,3 +3,4 @@ src/
 docs/
 examples/
 __mocks__/
+tests/
