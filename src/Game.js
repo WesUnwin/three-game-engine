@@ -9,18 +9,26 @@ class Game {
         this.renderer = new Renderer(this, this.options.rendererOptions);
     }
 
-    async getAssetStore() {
+    getAssetStore() {
         if (!this.assetStore) {
             console.debug('Game: creating a new, empty AssetStore...');
             this.assetStore = new AssetStore(this.options.assetOptions);
-            await this.assetStore.init();
         }
         return this.assetStore;
     }
 
     async loadScene(scene) {
         console.debug(`Game: loading scene: ${scene.name}`);
-        const assetStore = await this.getAssetStore();
+
+        if (this.scene) {
+            console.debug(`Game: unloading scene: ${scene.name}`);
+            this.scene.beforeUnloaded();
+            this.scene.forEachGameObject(gameObject => {
+                gameObject.beforeUnloaded();
+            });
+        }
+
+        const assetStore = this.getAssetStore();
 
         if (!this.options.assetOptions?.retainAssetsBetweenScene) {
             console.debug(`Game: clearing all assets as options.assetOptions.retainAssetsBetweenScene was not set`);
@@ -31,11 +39,18 @@ class Game {
         await this.scene.load(this);
 
         console.debug(`Game: successfully loaded scene: ${scene.name}`);
+
+        // Invoke afterLoaded() callback on scene and all its children,
+        // AFTER the scene and all its game objects are loaded.
+        this.scene.afterLoaded();
+        this.scene.forEachGameObject(gameObject => {
+            gameObject.afterLoaded();
+        });
     }
 
     async loadAsset(assetPath) {
-        const assetStore = await this.getAssetStore();
-        await assetStore.load(assetPath);
+        const assetStore = this.getAssetStore();
+        return await assetStore.load(assetPath);
     }
 
     play() {

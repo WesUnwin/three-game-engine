@@ -57,7 +57,6 @@ class GameObject {
         if (!scene?.game) {
             throw new Error('GameObject: load(): the scene containing this GameObject must be loaded into a game object first');
         }
-        const assetStore = await scene.game.getAssetStore();
 
         this.threeJSGroup.clear() // Remove any existing child objects.
 
@@ -112,12 +111,12 @@ class GameObject {
 
         for (let i = 0; i<this.models.length; i++) {
             const modelData = this.models[i];
-            const asset = await assetStore.load(modelData.assetPath);
+            const asset = await scene.game.loadAsset(modelData.assetPath);
             if (!(asset instanceof GLTFAsset)) {
                 throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
             }
-            const scene = clone(asset.data.scene);
-            scene.children.forEach(object3D => {
+            const clonedModel = clone(asset.data.scene);
+            clonedModel.children.forEach(object3D => {
                 const objectProps = { ...modelData };
                 delete objectProps.assetPath;
                 setObject3DProps(object3D, objectProps);
@@ -183,6 +182,13 @@ class GameObject {
         return this.gameObjects;
     }
 
+    forEachGameObject(fn) {
+        fn(this);
+        this.gameObjects.forEach(child => {
+            child.forEachGameObject(fn);
+        });
+    }
+
     find(fn) {
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
@@ -223,6 +229,24 @@ class GameObject {
             this.parent.removeGameObject(this);
             this.parent = null;
         }
+    }
+
+    // Called after the scene and all its GameObjects have
+    // been succesfully loaded.
+    afterLoaded() {
+        // Optional: override and handle this event
+    }
+
+    // Called on the scene and all its GameObjecte immediately
+    // before threeJS renders everything.
+    beforeRender(args) {
+        // Optional: override and handle this event
+    }
+
+    // Called on the scene and all its GameObjects just before
+    // a new scene is loaded. Use this to do teardown operations.
+    beforeUnloaded(args) {
+        // Optional: override and handle this event   
     }
 }
 

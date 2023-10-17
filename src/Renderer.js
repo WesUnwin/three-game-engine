@@ -25,9 +25,21 @@ class Renderer {
         this.threeJSRenderer.setPixelRatio(this.options.pixelRatio);
         this.threeJSRenderer.setSize(this.width, this.height);
 
-        this.threeJSCamera = new THREE.PerspectiveCamera(50, this.width / this.height, 0.01, 1000);
-        this.threeJSCamera.position.set(0, 1.5, 5);
-        this.threeJSCamera.aspect = this.width / this.height;
+        const defaultCameraOptions = {
+            fov: 50, // field of view
+            aspect: this.width / this.height,
+            near: 0.01,
+            far: 1000,
+            position: {
+                x: 0,
+                y: 1.5,
+                z: 5
+            }
+        };
+        const cameraOptions = Object.assign(defaultCameraOptions, options.cameraOptions || {});
+
+        this.threeJSCamera = new THREE.PerspectiveCamera(cameraOptions.fov, cameraOptions.aspect, cameraOptions.near, cameraOptions.far);
+        this.threeJSCamera.position.set(cameraOptions.position.x, cameraOptions.position.y, cameraOptions.position.z);
         this.threeJSCamera.updateProjectionMatrix();
 
         this.threeJSCameraAudioListener = new THREE.AudioListener();
@@ -80,13 +92,49 @@ class Renderer {
         }
     }
 
+    addCameraToGameObject(gameObject) {
+        if (!(gameObject instanceof GameObject)) {
+            throw new Error('addCameraToGameObject: you can only pass a GameObject instance to this function');
+        }
+        this.addCameraToObject3D(gameObject.threeJSGroup);
+    }
+
+    addCameraToObject3D(object3D) {
+        if (!(object3D instanceof THREE.Object3D)) {
+            throw new Error('addCameraToObject3D: you can only pass a Object3D instance to this function');
+        }
+        object3D.add(this.threeJSCamera);
+    }
+
+    setCameraPosition(x, y, z) {
+        this.threeJSCamera.position.set(x, y, z);
+    }
+
+    setCameraRotation(x, y, z, order = undefined) {
+        this.threeJSCamera.rotation.set(x, y, z, order);
+    }
+
+    getCamera() {
+        return this.camera;
+    }
+
+    setCamera(camera, attachAudioListener = true) {
+        if (!(camera instanceof THREE.Camera)) {
+            throw new Error('setCamera: you must pass an instance of THREE.Camera to this function');
+        }
+        this.threeJSCamera = camera;
+        if (attachAudioListener) {
+            this.threeJSCamera.add(this.threeJSCameraAudioListener);
+        }
+    }
+
     play() {
         // Must use setAnimationLoop() (and not window.requestAnimationFrame()) for VR projects
         this.threeJSRenderer.setAnimationLoop(this._render.bind(this));
     }
 
     pause() {
-        this.threeJSRenderer.setAnimationLoop(null);
+        this.threeJSRenderer.setAnimationLoop(null); // passing null stops any ongoing animation, as the docs say
     }
 
     // time is a slowly increasing number of millisec since the beggining.
@@ -98,19 +146,37 @@ class Renderer {
 
         ThreeMeshUI.update();
 
-        if (this.game.scene) {
-            const threeJSScene = this.game.scene.threeJSScene;
-            threeJSScene.dispatchEvent({ type: 'update', deltaTimeInSec: deltaTimeInSec, camera: this.threeJSCamera });
-            this.threeJSRenderer.render(threeJSScene, this.threeJSCamera);
+        const scene = this.game.scene;
+        if (scene) {
+            this._beforeRender({
+                deltaTimeInSec 
+            });
+
+            this.threeJSRenderer.render(scene.threeJSScene, this.threeJSCamera);
         }
     }
+
+    _beforeRender(args) {
+        this.game.scene.beforeRender(args);
+        this.game.scene.forEachGameObject(gameObject => {
+            gameObject.beforeRender(args);
+        });
+    }
     
-    printScene(options = { positions: true }) {
+    printScene() {
+        if (this.game.scene) {
+            Logger.printHierarchy(this.game.scene);
+        } else {
+            console.warn('printScene(): no active scene to print');
+        }
+    }
+
+    printThreeJSScene(options = { positions: true }) {
         if (this.game.scene) {
             const threeJSScene = this.game.scene.threeJSScene;
-            Logger.dumpObject(threeJSScene, options);
+            Logger.printThreeJSGraph(threeJSScene, options);
         } else {
-            console.warn('printScene(): No scene currently loaded, nothing to print');
+            console.warn('printThreeJSScene(): No scene currently loaded, nothing to print');
         }
     }
 }

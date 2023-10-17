@@ -7,31 +7,7 @@ class AssetStore {
   constructor(options = {}) {
     this.options = options;
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
-    this.initialized = false;
-  }
-
-  async init() {
-    this.baseURL = await this.getBaseURL()
-    this.initialized = true;
-  }
-
-  async getBaseURL() {
-    if (this.options.baseURL) {
-      return this.options.baseURL
-    }
-  
-    if (window.electron) {
-      const isPackaged = await window.electron.isAppPackaged();
-      if (isPackaged) {
-        const resourcesPath = window.electron.getResourcesPath();
-        return `file://${resourcesPath}/assets`;
-      } else {
-        const dirName = window.electron.getDirName();
-        return `file://${dirName}/../../../assets`;
-      }
-    } else {
-      return `http://localhost:8080/assets`;
-    }
+    this.baseURL = options.baseURL || 'http://localhost:8080/assets';
   }
 
   static _getAssetSubclass(path) {
@@ -58,10 +34,6 @@ class AssetStore {
    * Fetches the specified asset (if not already fetched)
    **/
   async load(path) {
-    if (!this.initialized) {
-      throw new Error('must call assetStore.init() before using load()')
-    }
-
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
       const asset = new AssetSubclass(this.baseURL, path);
