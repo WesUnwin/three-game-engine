@@ -7,6 +7,9 @@ const runDemo = async () => {
         width: window.innerWidth,
         height: window.innerHeight,
         pixelRatio: window.devicePixelRatio
+      },
+      assetOptions: {
+        baseURL: 'http://localhost:8080/assets'
       }
     })
 

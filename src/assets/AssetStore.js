@@ -7,7 +7,7 @@ class AssetStore {
   constructor(options = {}) {
     this.options = options;
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
-    this.baseURL = options.baseURL || 'http://localhost:8080/assets';
+    this.baseURL = options.baseURL; // Will be needed (in most cases) if loading assets
   }
 
   static _getAssetSubclass(path) {
@@ -36,6 +36,9 @@ class AssetStore {
   async load(path) {
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
+      if (!this.baseURL) {
+        throw new Error('AssetStore: load: assetOptions.baseURL must be set before loading any asset');
+      }
       const asset = new AssetSubclass(this.baseURL, path);
       await asset.load();
       this.loadedAssets[path] = asset;
