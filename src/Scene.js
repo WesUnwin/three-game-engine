@@ -98,17 +98,17 @@ class Scene {
         return this.findAll(g => g.hasTag(tag));
     }
 
-    afterLoaded(args) {
+    afterLoaded() {
         // Optional: override and handle this event
     }
 
-    beforeRender(args) {
+    beforeRender() {
         // Optional: override and handle this event
     }
 
     // Called on the scene and all its GameObjects just before
     // a new scene is loaded. Use this to do teardown operations.
-    beforeUnloaded(args) {
+    beforeUnloaded() {
         // Optional: override and handle this event   
     }
 }

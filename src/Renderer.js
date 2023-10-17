@@ -3,6 +3,7 @@ import ThreeMeshUI from 'three-mesh-ui'
 
 import VRMode from './VR/VRMode';
 import Logger from './Logger'
+import GameObject from './GameObject';
 
 class Renderer {
     constructor(game, options = {}) {

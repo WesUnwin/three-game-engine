@@ -1,3 +1,6 @@
+import Scene from './Scene';
+import GameObject from './GameObject';
+
 class Logger {
     static printHierarchy(gameObjectOrScene, options = {}) {
         console.log(Logger.printHierarchyRecursive(gameObjectOrScene, [], true, '', options).join('\n'));
@@ -7,8 +10,6 @@ class Logger {
         const obj = gameObjectOrScene;
 
         const localPrefix = isLast ? '└─' : '├─';
-
-        const formatNumber = num => parseFloat(num.toFixed(1));
 
         let type = 'unknown';
         if (obj instanceof Scene) {

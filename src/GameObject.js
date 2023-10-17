@@ -239,13 +239,13 @@ class GameObject {
 
     // Called on the scene and all its GameObjecte immediately
     // before threeJS renders everything.
-    beforeRender(args) {
+    beforeRender() {
         // Optional: override and handle this event
     }
 
     // Called on the scene and all its GameObjects just before
     // a new scene is loaded. Use this to do teardown operations.
-    beforeUnloaded(args) {
+    beforeUnloaded() {
         // Optional: override and handle this event   
     }
 }
