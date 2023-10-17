@@ -4,3 +4,8 @@ docs/
 examples/
 __mocks__/
 tests/
+.babelrc
+.eslintrc.js
+jest.config.js
+jestGlobalSetup.js
+babel.config.js
