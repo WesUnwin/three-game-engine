@@ -19,7 +19,7 @@ class Scene {
         (sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
     }
 
-    _createGameObject(parent, gameObjectData) {
+    _createGameObject(parent: Scene | GameObject, gameObjectData) {
         const options = { ...gameObjectData };
         delete options.children;
         const GameObjectClass = gameObjectData.klass || GameObject;

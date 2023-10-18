@@ -14,7 +14,7 @@ class Game {
         this.renderer = new Renderer(this, this.options.rendererOptions);
     }
 
-    getAssetStore() {
+    getAssetStore(): AssetStore {
         if (!this.assetStore) {
             console.debug('Game: creating a new, empty AssetStore...');
             this.assetStore = new AssetStore(this.options.assetOptions);
@@ -53,7 +53,7 @@ class Game {
         });
     }
 
-    async loadAsset(assetPath) {
+    async loadAsset(assetPath: string) {
         const assetStore = this.getAssetStore();
         return await assetStore.load(assetPath);
     }

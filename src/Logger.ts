@@ -2,11 +2,11 @@ import Scene from './Scene';
 import GameObject from './GameObject';
 
 class Logger {
-    static printHierarchy(gameObjectOrScene, options = {}) {
+    static printHierarchy(gameObjectOrScene: GameObject | Scene, options = {}) {
         console.log(Logger.printHierarchyRecursive(gameObjectOrScene, [], true, '', options).join('\n'));
     }
 
-    static printHierarchyRecursive(gameObjectOrScene, lines = [], isLast = true, prefix = '', options) {
+    static printHierarchyRecursive(gameObjectOrScene: GameObject | Scene, lines = [], isLast = true, prefix = '', options) {
         const obj = gameObjectOrScene;
 
         const localPrefix = isLast ? '└─' : '├─';

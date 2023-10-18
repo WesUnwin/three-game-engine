@@ -83,11 +83,11 @@ class Renderer {
         this.threeJSRenderer.xr.enabled = true;
     }
 
-    getCanvas() {
+    getCanvas(): HTMLElement {
         return this.threeJSRenderer.domElement;
     }
     
-    setSize(width, height) {
+    setSize(width: number, height: number) {
         this.options.width = width;
         this.options.height = height;
 
@@ -102,33 +102,33 @@ class Renderer {
         }
     }
 
-    addCameraToGameObject(gameObject) {
+    addCameraToGameObject(gameObject: GameObject) {
         if (!(gameObject instanceof GameObject)) {
             throw new Error('addCameraToGameObject: you can only pass a GameObject instance to this function');
         }
         this.addCameraToObject3D(gameObject.threeJSGroup);
     }
 
-    addCameraToObject3D(object3D) {
+    addCameraToObject3D(object3D: THREE.Object3D) {
         if (!(object3D instanceof THREE.Object3D)) {
             throw new Error('addCameraToObject3D: you can only pass a Object3D instance to this function');
         }
         object3D.add(this.threeJSCamera);
     }
 
-    setCameraPosition(x, y, z) {
+    setCameraPosition(x: number, y: number, z: number) {
         this.threeJSCamera.position.set(x, y, z);
     }
 
-    setCameraRotation(x, y, z, order = undefined) {
+    setCameraRotation(x: number, y: number, z: number, order: number | undefined = undefined) {
         this.threeJSCamera.rotation.set(x, y, z, order);
     }
 
-    getCamera() {
+    getCamera(): THREE.Camera {
         return this.threeJSCamera;
     }
 
-    setCamera(camera, attachAudioListener = true) {
+    setCamera(camera: THREE.Camera, attachAudioListener: boolean = true) {
         if (!(camera instanceof THREE.Camera)) {
             throw new Error('setCamera: you must pass an instance of THREE.Camera to this function');
         }
@@ -148,7 +148,7 @@ class Renderer {
     }
 
     // time is a slowly increasing number of millisec since the beggining.
-    _render(time) {
+    _render(time: number) {
         const deltaTimeMS = this.previousRenderTime ? time - this.previousRenderTime : time;
         this.previousRenderTime = time;
 

@@ -2,6 +2,7 @@ import GLTFAsset from './GLTFAsset'
 import TextureAsset from './TextureAsset'
 import SoundAsset from './SoundAsset'
 import JSONAsset from './JSONAsset'
+import Asset from './Asset';
 
 class AssetStore {
   options: AssetOptions;
@@ -14,7 +15,7 @@ class AssetStore {
     this.baseURL = options.baseURL; // Will be needed (in most cases) if loading assets
   }
 
-  static _getAssetSubclass(path) {
+  static _getAssetSubclass(path: string) {
     const assetTypes = [
         { subclass: GLTFAsset, fileExtensions: ['.gltf', '.glb'] },
         { subclass: TextureAsset, fileExtensions: ['.png', '.jpg', '.bmp'] },
@@ -37,7 +38,7 @@ class AssetStore {
   /**
    * Fetches the specified asset (if not already fetched)
    **/
-  async load(path: string) {
+  async load(path: string): Promise<Asset> {
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
       if (!this.baseURL) {

@@ -9,11 +9,11 @@ class Settings {
   static _settings = null;
   static _promiseChain = Promise.resolve(); // allow at most 1 save() or load() operation at a time.
 
-  static on(event, listener) {
+  static on(event: string, listener) {
     Settings._emitter.on(event, listener);
   }
 
-  static off(event, listener) {
+  static off(event: string, listener) {
     Settings._emitter.off(event, listener);
   }
 
@@ -61,11 +61,11 @@ class Settings {
     });
   }
 
-  static get(key) {
+  static get(key: string) {
     return Settings._settings[key];
   }
 
-  static set(key, value) {
+  static set(key: string, value: any) {
     console.log(`Settings: setting ${key} to ${value}`);
     Settings._settings[key] = value;
     Settings._save();
@@ -115,7 +115,7 @@ class Settings {
     Settings._emitter.emit('SAVED');
   };
 
-  static _onSaveError = error => {
+  static _onSaveError = (error: Error) => {
     console.warn(`Settings: error saving settings: ${error}`);
     Settings._emitter.emit('SAVE_ERROR');
   };

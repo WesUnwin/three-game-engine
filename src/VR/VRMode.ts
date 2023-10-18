@@ -24,19 +24,19 @@ class VRMode extends EventEmitter {
     }
   }
 
-  isWebXRSupported() {
+  isWebXRSupported(): boolean {
     return this.webXRSupported;
   }
 
-  isImmersiveVRSupported() {
+  isImmersiveVRSupported(): boolean {
     return this.immersiveVRSupported;
   }
 
-  hasCheckedImmersiveVRSupport() {
+  hasCheckedImmersiveVRSupport(): boolean {
     return this.immersiveVRChecked;
   }
 
-  _setImmersiveVRSupported(value) {
+  _setImmersiveVRSupported(value: boolean) {
     if (this.immersiveVRSupported !== value || !this.immersiveVRChecked) {
       this.immersiveVRSupported = value;
       this.immersiveVRChecked = true;
@@ -50,12 +50,12 @@ class VRMode extends EventEmitter {
       return;
     }
 
-    const onCheckComplete = supported => {
+    const onCheckComplete = (supported: boolean) => {
       console.log('VRMode: immersive-vr supported: ', supported);
       this._setImmersiveVRSupported(supported);
     };
 
-    const onCheckFailed = error => {
+    const onCheckFailed = (error: Error) => {
       console.error('VRMode: isSessionSupported check failed! error: ', error);
       throw error;
     };

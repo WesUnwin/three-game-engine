@@ -165,11 +165,11 @@ class GameObject {
         this.loaded = true;
     }
 
-    hasTag(tag) {
+    hasTag(tag: string) {
         return this.tags.some(t => t === tag);
     }
 
-    addGameObject(gameObject) {
+    addGameObject(gameObject: GameObject) {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
@@ -177,7 +177,7 @@ class GameObject {
         }
     }
 
-    removeGameObject(gameObject) {
+    removeGameObject(gameObject: GameObject) {
         if (this.gameObjects.some(g => g === gameObject)) {
             // gameObject is indeed a child of this GameObject
             this.gameObjects = this.gameObjects.filter(g => g !== gameObject);
@@ -190,14 +190,14 @@ class GameObject {
         return this.gameObjects;
     }
 
-    forEachGameObject(fn) {
+    forEachGameObject(fn: (gameObject: GameObject) => {}) {
         fn(this);
         this.gameObjects.forEach(child => {
             child.forEachGameObject(fn);
         });
     }
 
-    find(fn) {
+    find(fn: (gameObject: GameObject) => {}): GameObject | null {
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
             if (fn(obj)) {
@@ -211,7 +211,7 @@ class GameObject {
         return null
     }
 
-    findAll(fn) {
+    findAll(fn: (gameObject: GameObject) => {}): GameObject[] {
         let results = []
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
@@ -224,11 +224,11 @@ class GameObject {
         return results
     }
 
-    findByName(name) {
+    findByName(name: string): GameObject | null {
         return this.find(g => g.name === name);
     }
 
-    findAllByTag(tag) {
+    findAllByTag(tag: string): GameObject[] {
         return this.findAll(g => g.hasTag(tag));
     }
 
