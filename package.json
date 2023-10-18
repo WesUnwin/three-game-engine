@@ -12,7 +12,7 @@
     "lint:fix": "eslint src/** --fix",
     "build": "tsc --project tsconfig.json",
     "test": "jest",
-    "prepublish": "npm run lint:fix && npm run test && npm run build",
+    "prepublish": "npm run test && npm run build",
     "examples": "npm run build && node ./examples/examplesServer.js"
   },
   "repository": {
