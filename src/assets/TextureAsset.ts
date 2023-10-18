@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import Asset from "./Asset";
 
-class JSONAsset extends Asset {
-    async load() {
+class TextureAsset extends Asset {
+    async load() : Promise<void> {
         return new Promise((resolve, reject) => {
-            const fileLoader = new THREE.FileLoader();
+            const loader = new THREE.TextureLoader();
             const fullURL = this.getFullURL();
-            fileLoader.load(fullURL,
-                text => {
-                    this.data = JSON.parse(text);
+            loader.load(fullURL,
+                data => {
+                    this.data = data;
                     resolve();
                 },
                 () => {
@@ -22,4 +22,4 @@ class JSONAsset extends Asset {
     }
 }
 
-export default JSONAsset;
+export default TextureAsset;

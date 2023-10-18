@@ -1,8 +1,15 @@
 import * as THREE from 'three';
+
+import Game from './Game';
 import GameObject from './GameObject';
 
 class Scene {
-    constructor(sceneData = {}) {
+    name: string;
+    threeJSScene: THREE.Scene;
+    gameObjects: GameObject[];
+    game: Game | null;
+
+    constructor(sceneData: SceneData = {}) {
         this.name = sceneData.name || 'unnamed-scene';
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.name = this.name;
@@ -102,7 +109,7 @@ class Scene {
         // Optional: override and handle this event
     }
 
-    beforeRender() {
+    beforeRender({ deltaTimeInSec }) {
         // Optional: override and handle this event
     }
 

@@ -1,4 +1,8 @@
 class Asset {
+    baseURL: string;
+    path: string;
+    data: any;
+
     constructor(baseURL, path) {
         this.baseURL = baseURL;
         this.path = path;
@@ -9,7 +13,7 @@ class Asset {
         return `${this.baseURL}/${this.path}`;
     }
 
-    async load() {
+    async load() : Promise<void> {
         // Override this in sub-class, with logic specific to the type of asset
         // this may involve using a loader specificto the type of asset, and
         // setting this.data to something

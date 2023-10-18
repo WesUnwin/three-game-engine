@@ -4,7 +4,16 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import GLTFAsset from './assets/GLTFAsset';
 
 class GameObject {
-    constructor(parent, options = {}) {
+    name: string;
+    tags: string[];
+    threeJSGroup: THREE.Group;
+    parent: Scene | GameObject;
+    gameObjects: GameObject[];
+    models: ModelData[];
+    lights: LightData[];
+    loaded: boolean;
+
+    constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
@@ -28,7 +37,6 @@ class GameObject {
 
         this.models = options.models || [];
         this.lights = options.lights || [];
-        this.cameras = options.cameras || [];
 
         this.loaded = false;
     }
@@ -239,7 +247,7 @@ class GameObject {
 
     // Called on the scene and all its GameObjecte immediately
     // before threeJS renders everything.
-    beforeRender() {
+    beforeRender({ deltaTimeInSec }) {
         // Optional: override and handle this event
     }
 

@@ -1,5 +1,5 @@
 class Util {
-    static debounce(func, wait, immediate) {
+    static debounce(func: any, wait: number = 0, immediate: boolean = false) {
         let timeout;
 
         return function executedFunction() {

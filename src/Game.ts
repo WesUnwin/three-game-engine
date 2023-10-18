@@ -1,10 +1,15 @@
 import Renderer from './Renderer';
+import Scene from './Scene';
 import AssetStore from './assets/AssetStore';
 
 class Game {
-    constructor(options = {}) {
+    options: GameOptions;
+    renderer: Renderer;
+    scene: Scene | null;
+    assetStore: AssetStore | null;
+
+    constructor(options: GameOptions = {}) {
         this.options = options;
-        this.renderer = null;
         this.scene = null;
         this.renderer = new Renderer(this, this.options.rendererOptions);
     }
@@ -17,7 +22,7 @@ class Game {
         return this.assetStore;
     }
 
-    async loadScene(scene) {
+    async loadScene(scene: Scene) {
         console.debug(`Game: loading scene: ${scene.name}`);
 
         if (this.scene) {

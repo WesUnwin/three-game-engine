@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Asset from "./Asset";
 
 class CubeTextureAsset extends Asset {
-    async load() {
+    async load() : Promise<void> {
         return new Promise((resolve, reject) => {
             const loader = new THREE.CubeTextureLoader();
             const fullURL = this.getFullURL();

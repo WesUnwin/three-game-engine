@@ -3,7 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import Asset from "./Asset";
 
 class GLTFAsset extends Asset {
-    async load() {
+
+    async load() : Promise<void> {
         return new Promise((resolve, reject) => {
             const loader = new GLTFLoader();
             const fullURL = this.getFullURL();

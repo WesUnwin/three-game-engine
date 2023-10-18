@@ -1,17 +1,26 @@
 import * as THREE from 'three';
 import ThreeMeshUI from 'three-mesh-ui'
 
+import Game from './Game';
 import VRMode from './VR/VRMode';
 import Logger from './Logger'
 import GameObject from './GameObject';
 
 class Renderer {
-    constructor(game, options = {}) {
+    game: Game;
+    options: RendererOptions;
+    threeJSRenderer: THREE.WebGL1Renderer;
+    threeJSCamera: THREE.Camera;
+    threeJSCameraAudioListener: THREE.AudioListener;
+    vrMode: VRMode;
+    previousRenderTime: number | undefined;
+
+    constructor(game: Game, options: RendererOptions = {}) {
         this.game = game;
         this.options = options;
 
-        this.width = this.options.width || 0;
-        this.height = this.options.height || 0;
+        this.options.width = this.options.width || 0;
+        this.options.height = this.options.height || 0;
 
         this.threeJSRenderer = new THREE.WebGL1Renderer({ antialias: true });
         this.threeJSRenderer.gammaOutput = true;
@@ -24,11 +33,11 @@ class Renderer {
         this.threeJSRenderer.physicallyCorrectLights = false;
 
         this.threeJSRenderer.setPixelRatio(this.options.pixelRatio);
-        this.threeJSRenderer.setSize(this.width, this.height);
+        this.threeJSRenderer.setSize(this.options.width, this.options.height);
 
         const defaultCameraOptions = {
             fov: 50, // field of view
-            aspect: this.width / this.height,
+            aspect: this.options.width / this.options.height,
             near: 0.01,
             far: 1000,
             position: {
@@ -79,12 +88,12 @@ class Renderer {
     }
     
     setSize(width, height) {
-        this.width = width;
-        this.height = height;
+        this.options.width = width;
+        this.options.height = height;
 
-        this.threeJSRenderer.setSize(this.width, this.height);
+        this.threeJSRenderer.setSize(this.options.width, this.options.height);
 
-        this.threeJSCamera.aspect = this.width / this.height;
+        this.threeJSCamera.aspect = this.options.width / this.options.height;
         this.threeJSCamera.updateProjectionMatrix();
 
         if (this.game.scene) {
@@ -116,7 +125,7 @@ class Renderer {
     }
 
     getCamera() {
-        return this.camera;
+        return this.threeJSCamera;
     }
 
     setCamera(camera, attachAudioListener = true) {

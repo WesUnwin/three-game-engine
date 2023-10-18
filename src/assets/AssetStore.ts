@@ -4,7 +4,11 @@ import SoundAsset from './SoundAsset'
 import JSONAsset from './JSONAsset'
 
 class AssetStore {
-  constructor(options = {}) {
+  options: AssetOptions;
+  loadedAssets: any;
+  baseURL: string;
+
+  constructor(options: AssetOptions = {}) {
     this.options = options;
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
     this.baseURL = options.baseURL; // Will be needed (in most cases) if loading assets
@@ -33,7 +37,7 @@ class AssetStore {
   /**
    * Fetches the specified asset (if not already fetched)
    **/
-  async load(path) {
+  async load(path: string) {
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
       if (!this.baseURL) {
@@ -48,7 +52,7 @@ class AssetStore {
     return this.loadedAssets[path];
   }
 
-  unload(path) {
+  unload(path: string) {
     const asset = this.loadedAssets[path];
     if (asset) {
       this.loadedAssets[path] = null;

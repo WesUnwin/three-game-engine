@@ -1,7 +1,16 @@
-import EventEmitter from "events";
+const { EventEmitter }  = require('events');
 
 // TODO possibly use promise chaining to serialize calls to isSessionSupported + requestSession
 class VRMode extends EventEmitter {
+  _session: any;
+  webXRSupported: boolean;
+  immersiveVRSupported: boolean;
+  immersiveVRChecked: boolean;
+
+  // // TODO why do I have to declare these, they are inherited from EventEmitter
+  // emit: (eventName: string) => {};
+  // on: (eventName: string) => void;
+
   constructor() {
     super();
     this._session = null;
@@ -9,7 +18,8 @@ class VRMode extends EventEmitter {
     this.immersiveVRSupported = false;
     this.immersiveVRChecked = false;
     if (this.webXRSupported) {
-      window.navigator.xr.addEventListener('devicechange', this._onDeviceChange);
+      // @ts-ignore
+      window.navigator.xr.addEventListener('devicechange', this._onDeviceChange); 
       this._checkForImmersizeVRSupport();
     }
   }
@@ -51,6 +61,7 @@ class VRMode extends EventEmitter {
     };
 
     console.log('VRMode: checking navigator.xr.isSessionSupported("immersive-vr")...');
+    // @ts-ignore
     window.navigator.xr.isSessionSupported('immersive-vr').then(onCheckComplete, onCheckFailed);
   }
 
@@ -81,6 +92,7 @@ class VRMode extends EventEmitter {
     };
 
     console.log('VRMode: requesting immersive-vr session...');
+    // @ts-ignore
     window.navigator.xr.requestSession('immersive-vr', sessionInit).then(this._onSessionStarted, onRequestSessionFailed);
   }
 
