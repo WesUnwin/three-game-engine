@@ -13,10 +13,28 @@ class Vector3 {
     }
 }
 
+class Euler {
+    constructor(x, y, z, order = 'XYZ') {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.order = order;
+    }
+
+    set(x, y, z, order) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.order = order;
+    }
+}
+
 class Object3D {
     constructor() {
         this.childObjects = [];
         this.position = new Vector3(0,0,0);
+        this.scale = new Vector3(0,0,0);
+        this.rotation = new Euler(0,0,0);
     }
 
     add(object3D) {
