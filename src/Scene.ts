@@ -39,11 +39,19 @@ class Scene {
         }
     }
 
+    isActive(): boolean {
+        return Boolean(this.game);
+    }
+
     addGameObject(gameObject) {
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
             this.threeJSScene.add(gameObject.threeJSGroup);
+
+            if (this.isActive()) {
+                gameObject.load(); // asynchronous
+            }
         }
     }
 

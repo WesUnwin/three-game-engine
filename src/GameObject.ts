@@ -21,24 +21,18 @@ class GameObject {
         this.name = options.name || '';
         this.tags = options.tags || [];
 
-        this.threeJSGroup = new THREE.Group();
-        this.threeJSGroup.name = `gameObject-${this.name}`;
-
-        parent.addGameObject(this);
-        this.parent = parent;
-
-        // Make this GameObject's threeJSGroup a child of the parent's threeJSGroup/threeJSScene
-        if (this.parent instanceof Scene) {
-            this.parent.threeJSScene.add(this.threeJSGroup)
-        } else {
-            this.parent.threeJSGroup.add(this.threeJSGroup);
-        }
         this.gameObjects = [];
 
         this.models = options.models || [];
         this.lights = options.lights || [];
 
         this.loaded = false;
+
+        this.threeJSGroup = new THREE.Group();
+        this.threeJSGroup.name = `gameObject-${this.name}`;
+
+        parent.addGameObject(this);
+        this.parent = parent;
     }
 
     getScene() {
@@ -58,6 +52,11 @@ class GameObject {
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
     async load() {
+        if (this.isLoaded()) {
+            console.warn('GameObject: load(): already loaded, exiting');
+            return
+        }
+
         const scene = this.getScene();
         if (!scene) {
             throw new Error('GameObject: load() this GameObject must be attached to a scene (directly or through its ancestor GameObjects) to be loaded');
@@ -165,6 +164,10 @@ class GameObject {
         this.loaded = true;
     }
 
+    isLoaded(): boolean {
+        return this.loaded;
+    }
+
     hasTag(tag: string) {
         return this.tags.some(t => t === tag);
     }
@@ -174,6 +177,11 @@ class GameObject {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
             this.threeJSGroup.add(gameObject.threeJSGroup);
+
+            const scene = this.getScene();
+            if (scene?.isActive()) {
+                gameObject.load(); // asynchronous
+            }
         }
     }
 

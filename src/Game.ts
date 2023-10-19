@@ -31,6 +31,8 @@ class Game {
             this.scene.forEachGameObject(gameObject => {
                 gameObject.beforeUnloaded();
             });
+            this.scene.game = null; // Signals that the scene is no longer active
+            this.scene = null;
         }
 
         const assetStore = this.getAssetStore();
