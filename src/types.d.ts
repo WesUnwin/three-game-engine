@@ -31,14 +31,32 @@ interface GameObjectOptions {
     tags?: string[];
     models?: ModelData[];
     lights?: LightData[];
+    position?: Vector3Data;
+    scale?: Vector3Data;
+    rotation?: EulerValues;
 }
 
 interface ModelData {
     assetPath: string;
+    position?: Vector3Data;
+}
+
+interface EulerValues {
+    x?: number;
+    y?: number;
+    z?: number;
+    order?: string;
+}
+
+interface Vector3Data {
+    x?: number;
+    y?: number;
+    z?: number;
 }
 
 interface LightData {
-    type: string;
+    type?: string;
+    position?: Vector3Data;
 }
 
 interface SceneData {

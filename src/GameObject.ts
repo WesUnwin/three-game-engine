@@ -31,6 +31,22 @@ class GameObject {
         this.threeJSGroup = new THREE.Group();
         this.threeJSGroup.name = `gameObject-${this.name}`;
 
+        const x = options.position?.x || 0;
+        const y = options.position?.y || 0;
+        const z = options.position?.z || 0;
+        this.setPosition(x, y, z);
+
+        const scaleX = options.scale?.x || 1;
+        const scaleY = options.scale?.y || 1;
+        const scaleZ = options.scale?.z || 1;
+        this.setScale(scaleX, scaleY, scaleZ);
+
+        const rotX = options.rotation?.x || 0;
+        const rotY = options.rotation?.y || 0;
+        const rotZ = options.rotation?.z || 0;
+        const rotOrder = options.rotation?.order || 'XYZ';
+        this.setRotation(rotX, rotY, rotZ, rotOrder);
+
         parent.addGameObject(this);
         this.parent = parent;
     }
@@ -264,6 +280,83 @@ class GameObject {
     beforeUnloaded() {
         // Optional: override and handle this event   
     }
+
+    setPosition(x: number, y: number, z: number) {
+        this.threeJSGroup.position.set(x, y, z);
+    }
+
+    rotateOnAxis(axis: THREE.Vector3, angle: number) {
+        this.threeJSGroup.rotateOnAxis(axis, angle);
+    }
+
+    rotateOnWorldAxis(axis: THREE.Vector3, angle: number) {
+        this.threeJSGroup.rotateOnWorldAxis(axis, angle);
+    }
+
+    rotateX(degrees: number) {
+        this.threeJSGroup.rotateX(degrees);
+    }
+
+    rotateY(degrees: number) {
+        this.threeJSGroup.rotateY(degrees);
+    }
+
+    rotateZ(degrees: number) {
+        this.threeJSGroup.rotateZ(degrees);
+    }
+
+    setRotationFromAxisAngle(axis: THREE.Vector3, angle: number) {
+        this.threeJSGroup.setRotationFromAxisAngle(axis, angle);
+    }
+
+    setRotationFromEuler(euler: THREE.Euler) {
+        this.threeJSGroup.setRotationFromEuler(euler);
+    }
+
+    setRotationFromMatrix(m: THREE.Matrix4) {
+        this.threeJSGroup.setRotationFromMatrix(m);
+    }
+
+    setRotationFromQuaternion(q: THREE.Quaternion) {
+        this.threeJSGroup.setRotationFromQuaternion(q);
+    }
+
+    setRotation(x: number, y: number, z: number, order: string = undefined) {
+        this.threeJSGroup.rotation.set(x, y, z, order);
+    }
+
+    setScale(x: number, y: number, z: number) {
+        this.threeJSGroup.scale.set(x, y, z);
+    }
+
+    translateOnAxis(axis: THREE.Vector3, distance: number) {
+        this.threeJSGroup.translateOnAxis(axis, distance);
+    }
+
+    translateX(distance: number) {
+        this.threeJSGroup.translateX(distance);
+    }
+
+    translateY(distance: number) {
+        this.threeJSGroup.translateY(distance);
+    }
+
+    translateZ(distance: number) {
+        this.threeJSGroup.translateZ(distance);
+    }
+
+    traverse(callback: (obj: THREE.Object3D) => {}) {
+        this.threeJSGroup.traverse(callback);
+    }
+
+    traverseVisible(callback: (obj: THREE.Object3D) => {}) {
+        this.threeJSGroup.traverseVisible(callback);
+    }
+
+    traverseAncestors(callback: (obj: THREE.Object3D) => {}) {
+        this.threeJSGroup.traverseAncestors(callback);
+    }
+
 }
 
 export default GameObject
