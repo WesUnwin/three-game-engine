@@ -8,15 +8,23 @@ class Scene {
     threeJSScene: THREE.Scene;
     gameObjects: GameObject[];
     game: Game | null;
+    sceneData: SceneData;
 
     constructor(sceneData: SceneData = {}) {
         this.name = sceneData.name || 'unnamed-scene';
+        this.sceneData = sceneData;
+        this.reset();
+    }
+
+    // Resets the state of the scene to what it was when it was constructed,
+    // this will wipe out all GameObjects and re-create them based on the initial SceneData.
+    reset() {
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.name = this.name;
-        this.threeJSScene.background = sceneData.background || new THREE.Color('lightblue');
+        this.threeJSScene.background = this.sceneData.background || new THREE.Color('lightblue');
 
         this.gameObjects = [];
-        (sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
+        (this.sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
     }
 
     _createGameObject(parent: Scene | GameObject, gameObjectData) {
