@@ -1,7 +1,10 @@
 import * as THREE from 'three';
+import RAPIER from '@dimforge/rapier3d-compat';
 
 import Game from './Game';
 import GameObject from './GameObject';
+import * as PhysicsHelpers from './physics/PhysicsHelpers';
+import { SceneData } from './types';
 
 class Scene {
     name: string;
@@ -9,6 +12,8 @@ class Scene {
     gameObjects: GameObject[];
     game: Game | null;
     sceneData: SceneData;
+    initialGravity: { x: number, y: number, z: number };
+    rapierWorld: RAPIER.World;
 
     constructor(sceneData: SceneData = {}) {
         this.name = sceneData.name || 'unnamed-scene';
@@ -22,6 +27,12 @@ class Scene {
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.name = this.name;
         this.threeJSScene.background = this.sceneData.background || new THREE.Color('lightblue');
+
+        this.initialGravity = {
+            x: this.sceneData.gravity?.x || 0,
+            y: this.sceneData.gravity?.y || -9.8,
+            z: this.sceneData.gravity?.z || 0,
+        };
 
         this.gameObjects = [];
         (this.sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
@@ -41,10 +52,22 @@ class Scene {
 
     async load(game) {
         this.game = game;
+
+        await PhysicsHelpers.initRAPIER();
+
+        this.rapierWorld = PhysicsHelpers.createRapierWorld(this.initialGravity);
+
         for(let i = 0; i<this.gameObjects.length; i++) {
             const gameObject = this.gameObjects[i];
             await gameObject.load()
         }
+    }
+
+    advancePhysics() {
+        this.rapierWorld.step();
+        this.forEachGameObject(gameObject => {
+            gameObject.afterPhysicsUpdate();
+        });
     }
 
     isActive(): boolean {

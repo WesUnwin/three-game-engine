@@ -1,3 +1,4 @@
+import RAPIER from "@dimforge/rapier3d-compat";
 
 
 
@@ -34,11 +35,38 @@ interface GameObjectOptions {
     position?: Vector3Data;
     scale?: Vector3Data;
     rotation?: EulerValues;
+    rigidBody?: RigidBodyData;
 }
 
 interface ModelData {
     assetPath: string;
     position?: Vector3Data;
+}
+
+interface RigidBodyData {
+    type: 'dynamic' | 'fixed';
+    colliders: ColliderData[];
+}
+
+interface ColliderData {
+    type: 'cuboid' | 'ball' | 'capsule' | 'trimesh' | 'heightfield';
+
+    // For a cuboid
+    hx: number; // half length along x-axis
+    hy: number; // half length along y-axis
+    hz: number; // half length along z-axis
+
+    halfHeight: number; // for a capsule
+    radius: number; // for a ball or capsule
+
+    vertices: Float32Array; // for a trimesh
+    indices: Uint32Array; // for a trimesh
+
+    // For a heightfield
+    nrows: number;
+    ncols: number;
+    heights: Float32Array;
+    scale: RAPIER.Vector;
 }
 
 interface EulerValues {
@@ -63,4 +91,5 @@ interface SceneData {
     name?: string;
     background?: null;
     gameObjects?: GameObjectOptions[];
+    gravity?: Vector3Data;
 }

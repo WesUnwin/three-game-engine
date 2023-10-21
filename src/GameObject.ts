@@ -1,7 +1,11 @@
 import * as THREE from 'three';
+import RAPIER from '@dimforge/rapier3d-compat';
+
 import Scene from './Scene';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import GLTFAsset from './assets/GLTFAsset';
+import * as PhysicsHelpers from './physics/PhysicsHelpers';
+import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
 
 class GameObject {
     name: string;
@@ -12,6 +16,8 @@ class GameObject {
     models: ModelData[];
     lights: LightData[];
     loaded: boolean;
+    rigidBodyData: RigidBodyData | null;
+    rapierRigidBody: RAPIER.RigidBody | null;
 
     constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
@@ -46,6 +52,8 @@ class GameObject {
         const rotZ = options.rotation?.z || 0;
         const rotOrder = options.rotation?.order || 'XYZ';
         this.setRotation(rotX, rotY, rotZ, rotOrder);
+
+        this.rigidBodyData = options.rigidBody || null;
 
         parent.addGameObject(this);
         this.parent = parent;
@@ -172,6 +180,10 @@ class GameObject {
             this.threeJSGroup.add(light);
         });
 
+        if (this.rigidBodyData) {
+            PhysicsHelpers.setupGameObjectPhysics(this);
+        }
+
         for(let i = 0; i<this.gameObjects.length; i++) {
             const childGameObject = this.gameObjects[i];
             await childGameObject.load()
@@ -261,6 +273,14 @@ class GameObject {
             this.parent.removeGameObject(this);
             this.parent = null;
         }
+    }
+
+    afterPhysicsUpdate() {
+        if (this.rapierRigidBody) {
+            this.threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
+            this.threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
+        }
+        // Optional: override and handle this event
     }
 
     // Called after the scene and all its GameObjects have
