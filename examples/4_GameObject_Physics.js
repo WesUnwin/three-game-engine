@@ -1,7 +1,5 @@
-import * as THREE from 'three';
 import GameObject from "../dist/GameObject";
 import { Game, Scene } from "../dist/index";
-import RAPIER from '@dimforge/rapier3d-compat';
 
 const runDemo = async () => {
     const game = new Game({
@@ -32,7 +30,7 @@ const runDemo = async () => {
 
         afterLoaded() {
           // Once a force is added it will remain affecting the rigid body untill removed
-          this.rapierRigidBody.addForce(new RAPIER.Vector3(0,0,-2), true);
+          this.rapierRigidBody.addForce({ x: 0, y: 0, z: -1 }, true);
         }
 
         beforeRender() {
