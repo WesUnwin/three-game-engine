@@ -148,6 +148,10 @@ class Renderer {
         this.threeJSCamera.rotation.set(x, y, z, order);
     }
 
+    makeCameraLookAt(x: number, y: number, z: number) {
+        this.threeJSCamera.lookAt(x,y,z);
+    }
+
     getCamera(): THREE.Camera {
         return this.threeJSCamera;
     }
