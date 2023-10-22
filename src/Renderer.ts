@@ -140,18 +140,6 @@ class Renderer {
         object3D.add(this.threeJSCamera);
     }
 
-    setCameraPosition(x: number, y: number, z: number) {
-        this.threeJSCamera.position.set(x, y, z);
-    }
-
-    setCameraRotation(x: number, y: number, z: number, order: number | undefined = undefined) {
-        this.threeJSCamera.rotation.set(x, y, z, order);
-    }
-
-    makeCameraLookAt(x: number, y: number, z: number) {
-        this.threeJSCamera.lookAt(x,y,z);
-    }
-
     getCamera(): THREE.Camera {
         return this.threeJSCamera;
     }
@@ -218,6 +206,18 @@ class Renderer {
         } else {
             console.warn('printThreeJSScene(): No scene currently loaded, nothing to print');
         }
+    }
+
+    setCameraPosition(...args) {
+        this.threeJSCamera.position.set(...args);
+    }
+
+    setCameraRotation(...args) {
+        this.threeJSCamera.rotation.set(...args);
+    }
+
+    makeCameraLookAt(...args) {
+        this.threeJSCamera.lookAt(...args);
     }
 }
 
