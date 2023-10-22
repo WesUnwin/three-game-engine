@@ -49,7 +49,23 @@ interface RigidBodyData {
 }
 
 interface ColliderData {
-    type: 'cuboid' | 'ball' | 'capsule' | 'trimesh' | 'heightfield';
+    type: 
+        'ball' | 
+        'capsule' | 
+        'cone' | 
+        'convexHull' |
+        'convexMesh' |
+        'cuboid' | 
+        'cylinder' |
+        'polyline' |
+        'roundCone' |
+        'roundConvexHull' |
+        'roundConvexMesh' |
+        'roundCuboid' |
+        'roundCylinder' |
+        'roundTriangle' |
+        'trimesh' | 
+        'heightfield';
 
     // For a cuboid
     hx: number; // half length along x-axis
@@ -59,14 +75,23 @@ interface ColliderData {
     halfHeight: number; // for a capsule
     radius: number; // for a ball or capsule
 
+    borderRadius: number; // for a roundCone
+
     vertices: Float32Array; // for a trimesh
     indices: Uint32Array; // for a trimesh
+
+    points: Float32Array;
 
     // For a heightfield
     nrows: number;
     ncols: number;
     heights: Float32Array;
     scale: RAPIER.Vector;
+
+    // For a roundTriangle
+    a: RAPIER.Vector;
+    b: RAPIER.Vector;
+    c: RAPIER.Vector;
 }
 
 interface EulerValues {

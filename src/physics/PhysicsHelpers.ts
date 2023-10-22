@@ -73,8 +73,19 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
 export const createColliderDesc = (colliderData: ColliderData): RAPIER.ColliderDesc => {
     const propsByColliderType = {
         ball: ['radius'],
-        cuboid: ['hx', 'hy', 'hz'],
         capsule: ['halfHeight', 'radius'],
+        cone: ['halfHeight', 'radius'],
+        convexHull: ['points'],
+        convexMesh: ['vertices', 'indices'],
+        cuboid: ['hx', 'hy', 'hz'],
+        cylinder: ['halfHeight', 'radius'],
+        polyline: ['vertices', 'indices'],
+        roundCone: ['halfHeight', 'radius', 'borderRadius'],
+        roundConvexHull: ['points', 'borderRadius'],
+        roundConvexMesh: ['vertices', 'indices', 'borderRadius'],
+        roundCuboid: ['hx', 'hy', 'hz', 'borderRadius'],
+        roundCylinder: ['halfHeight', 'radius', 'borderRadius'],
+        roundTriangle: ['a', 'b', 'c', 'borderRadius'],
         trimesh: ['vertices', 'indices'],
         heightfield: ['nrows', 'ncols', 'heights', 'scale']
     };
@@ -93,10 +104,32 @@ export const createColliderDesc = (colliderData: ColliderData): RAPIER.ColliderD
     switch(colliderData.type) {
         case 'ball':
             return RAPIER.ColliderDesc.ball(colliderData.radius);
-        case 'cuboid':
-            return RAPIER.ColliderDesc.cuboid(colliderData.hx, colliderData.hy, colliderData.hz);
         case 'capsule':
             return RAPIER.ColliderDesc.capsule(colliderData.halfHeight, colliderData.radius);
+        case 'cone':
+            return RAPIER.ColliderDesc.cone(colliderData.halfHeight, colliderData.radius);
+        case 'convexHull':
+            return RAPIER.ColliderDesc.convexHull(colliderData.points);
+        case 'convexMesh':
+            return RAPIER.ColliderDesc.convexMesh(colliderData.vertices, colliderData.indices);
+        case 'cuboid':
+            return RAPIER.ColliderDesc.cuboid(colliderData.hx, colliderData.hy, colliderData.hz);
+        case 'cylinder':
+            return RAPIER.ColliderDesc.cylinder(colliderData.halfHeight, colliderData.radius);
+        case 'polyline':
+            return RAPIER.ColliderDesc.polyline(colliderData.vertices, colliderData.indices);
+        case 'roundCone':
+            return RAPIER.ColliderDesc.roundCone(colliderData.halfHeight, colliderData.radius, colliderData.borderRadius);
+        case 'roundConvexHull':
+            return RAPIER.ColliderDesc.roundConvexHull(colliderData.points, colliderData.borderRadius);
+        case 'roundConvexMesh':
+            return RAPIER.ColliderDesc.roundConvexMesh(colliderData.vertices, colliderData.indices, colliderData.borderRadius);
+        case 'roundCuboid':
+            return RAPIER.ColliderDesc.roundCuboid(colliderData.hx, colliderData.hy, colliderData.hz, colliderData.borderRadius);
+        case 'roundCylinder':
+            return RAPIER.ColliderDesc.roundCylinder(colliderData.halfHeight, colliderData.radius, colliderData.borderRadius);
+        case 'roundTriangle':
+            return RAPIER.ColliderDesc.roundTriangle(colliderData.a, colliderData.b, colliderData.c, colliderData.borderRadius);
         case 'trimesh':
             return RAPIER.ColliderDesc.trimesh(colliderData.vertices, colliderData.indices);
         case 'heightfield':
