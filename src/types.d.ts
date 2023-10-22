@@ -13,6 +13,7 @@ interface RendererOptions {
     enableVR?: boolean;
     pixelRatio?: number;
     cameraOptions?: CameraOptions;
+    setupFullScreenCanvas?: boolean;
 }
 
 interface CameraOptions {

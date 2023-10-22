@@ -20,9 +20,6 @@ class Renderer {
         this.game = game;
         this.options = options;
 
-        this.options.width = this.options.width || 0;
-        this.options.height = this.options.height || 0;
-
         this.threeJSRenderer = new THREE.WebGL1Renderer({ antialias: true });
         this.threeJSRenderer.gammaOutput = true;
         this.threeJSRenderer.outputEncoding = THREE.sRGBEncoding;
@@ -33,7 +30,10 @@ class Renderer {
         this.threeJSRenderer.toneMappingExposure = 1;
         this.threeJSRenderer.physicallyCorrectLights = false;
 
-        this.threeJSRenderer.setPixelRatio(this.options.pixelRatio);
+        this.options.width = this.options.width || window?.innerWidth;
+        this.options.height = this.options.height || window?.innerHeight;
+
+        this.threeJSRenderer.setPixelRatio(this.options.pixelRatio || window?.devicePixelRatio || 1);
         this.threeJSRenderer.setSize(this.options.width, this.options.height);
 
         const defaultCameraOptions = {
@@ -56,9 +56,32 @@ class Renderer {
         this.threeJSCameraAudioListener = new THREE.AudioListener();
         this.threeJSCamera.add(this.threeJSCameraAudioListener);
 
+        if (this.options.setupFullScreenCanvas) {
+            this.setupFullScreenCanvas();
+        }
+
         if (this.options.enableVR) {
             this._initVR();
         }
+    }
+
+    setupFullScreenCanvas() {
+        const canvas = this.getCanvas();
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+
+        document.body.innerHTML = '';
+        document.body.appendChild(canvas);
+        document.body.style.margin = '0px';
+      
+        // on resizing the viewport, update the dimensions of the canvas to fill the viewport
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          this.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        this.setSize(window.innerWidth, window.innerHeight);
     }
 
     _initVR() {
@@ -84,7 +107,7 @@ class Renderer {
         this.threeJSRenderer.xr.enabled = true;
     }
 
-    getCanvas(): HTMLElement {
+    getCanvas(): HTMLCanvasElement {
         return this.threeJSRenderer.domElement;
     }
     
