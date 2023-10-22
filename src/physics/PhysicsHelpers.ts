@@ -34,22 +34,13 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
 
     // Physics:  Create RigidBody and its Colliders for this GameObject
     if (rigidBodyData) {
-        let rigidBodyDesc: RAPIER.RigidBodyDesc = null;
-        switch (rigidBodyData.type) {
-            case 'fixed':
-                rigidBodyDesc = RAPIER.RigidBodyDesc.fixed();
-                break;
-            case 'dynamic':
-                rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic();
-                break;
-            default:
-                throw new Error(`GameObject: load(): invalid rigidBody.type: ${rigidBodyData.type}`);
-        }
-
         const scene = gameObject.getScene();
         if (!scene) {
             throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
         }
+
+        const rigidBodyDesc: RAPIER.RigidBodyDesc = createRigidBodyDesc(gameObject.rigidBodyData);
+
         gameObject.rapierRigidBody = scene.rapierWorld.createRigidBody(rigidBodyDesc);
 
         // Position the RigidBody within the Physics World, at the (world) position
@@ -69,6 +60,21 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
         });
     }
 }
+
+export const createRigidBodyDesc = (rigidBodyData: RigidBodyData): RAPIER.RigidBodyDesc => {
+    switch (rigidBodyData.type) {
+        case 'fixed':
+            return RAPIER.RigidBodyDesc.fixed();
+        case 'dynamic':
+            return RAPIER.RigidBodyDesc.dynamic();
+        case 'kinematicPositionBased':
+            return RAPIER.RigidBodyDesc.kinematicPositionBased();
+        case 'kinematicVelocityBased':
+            return RAPIER.RigidBodyDesc.kinematicVelocityBased();
+        default:
+            throw new Error(`GameObject: load(): invalid rigidBody.type: ${rigidBodyData.type}`);
+    }
+};
 
 export const createColliderDesc = (colliderData: ColliderData): RAPIER.ColliderDesc => {
     const propsByColliderType = {
