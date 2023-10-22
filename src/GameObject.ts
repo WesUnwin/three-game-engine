@@ -378,6 +378,61 @@ class GameObject {
         this.threeJSGroup.traverseAncestors(callback);
     }
 
+    resetForces(wakeUp: boolean) {
+        this.rapierRigidBody.resetForces(wakeUp);
+    }
+
+    resetTorques(wakeUp: boolean) {
+        this.rapierRigidBody.resetTorques(wakeUp);
+    }
+
+    addForce(vector: RAPIER.Vector, wakeUp: boolean) {
+        this.rapierRigidBody.addForce(vector, wakeUp);
+    }
+
+    addForceAtPoint(force: RAPIER.Vector, point: RAPIER.Vector, wakeUp: boolean) {
+        this.rapierRigidBody.addForceAtPoint(force, point, wakeUp);
+    }
+
+    addTorque(vector: RAPIER.Vector, wakeUp: boolean) {
+        this.rapierRigidBody.addTorque(vector, wakeUp);
+    }
+
+    applyImpulse(impulse: RAPIER.Vector, wakeUp: boolean) {
+        this.rapierRigidBody.applyImpulse(impulse, wakeUp);
+    }
+
+    applyImpulseAtPoint(impulse: RAPIER.Vector, point: RAPIER.Vector, wakeUp: boolean) {
+        this.rapierRigidBody.applyImpulseAtPoint(impulse, point, wakeUp);
+    }
+
+    lockTranslations(locked: boolean, wakeUp: boolean) {
+        this.rapierRigidBody.lockTranslations(locked, wakeUp);
+    }
+
+    lockRotations(locked: boolean, wakeUp: boolean) {
+        this.rapierRigidBody.lockRotations(locked, wakeUp);
+    }
+
+    setEnabledRotations(enableX: boolean, enableY: boolean, enableZ: boolean, wakeUp: boolean) {
+        this.rapierRigidBody.setEnabledRotations(enableX, enableY, enableZ, wakeUp);
+    }
+
+    setLinearDamping(factor: number) {
+        this.rapierRigidBody.setLinearDamping(factor);
+    }
+
+    setAngularDamping(factor: number) {
+        this.rapierRigidBody.setAngularDamping(factor);
+    }
+
+    setDominanceGroup(group: number) {
+        this.rapierRigidBody.setDominanceGroup(group);
+    }
+
+    enableCcd(enabled: boolean) {
+        this.rapierRigidBody.enableCcd(enabled);
+    }
 }
 
 export default GameObject
