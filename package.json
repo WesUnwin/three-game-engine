@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/WesUnwin/three-game-engine#readme",
   "dependencies": {
+    "@dimforge/rapier3d-compat": "^0.11.2",
     "events": "^3.3.0",
     "three": "^0.136.0",
     "three-mesh-ui": "^5.3.1"

@@ -5,6 +5,7 @@ import Game from './Game';
 import VRMode from './VR/VRMode';
 import Logger from './Logger'
 import GameObject from './GameObject';
+import { RendererOptions } from './types';
 
 class Renderer {
     game: Game;
@@ -158,6 +159,8 @@ class Renderer {
 
         const scene = this.game.scene;
         if (scene) {
+            scene.advancePhysics();
+
             this._beforeRender({
                 deltaTimeInSec 
             });

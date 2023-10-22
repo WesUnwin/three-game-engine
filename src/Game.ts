@@ -1,6 +1,7 @@
 import Renderer from './Renderer';
 import Scene from './Scene';
 import AssetStore from './assets/AssetStore';
+import { GameOptions } from './types';
 
 class Game {
     options: GameOptions;

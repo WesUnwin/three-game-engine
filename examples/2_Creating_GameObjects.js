@@ -57,7 +57,7 @@ const runDemo = async () => {
     new GameObject(ground, { // Will be added as a child GameObject of the ground GameObject
       name: 'pine_tree_1',
       models: [
-        { assetPath: 'models/pine_tree.glb', position: { x: -2, z: -2 }, scale: { x: 0.5, y: 0.5, z: 0.5 } }
+        { assetPath: 'models/pine_tree.glb', position: { x: -2, z: -2, y: 0.5 }, scale: { x: 0.5, y: 0.5, z: 0.5 } }
       ]
     });
 

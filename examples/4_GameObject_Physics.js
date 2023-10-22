@@ -12,7 +12,7 @@ const runDemo = async () => {
       assetOptions: {
         baseURL: 'http://localhost:8080/assets' // All asssetPaths below are relative to this
       }
-    })
+    });
 
     window.game = game;
   
@@ -31,22 +31,25 @@ const runDemo = async () => {
     });
 
     // Scripts can be associated by GameObjects by creating your own GameObject sub-class
-    class UFOGameObject extends GameObject {
+    class BarrelGameObject extends GameObject {
         constructor(parent, options) {
             super(parent, {
                 models: [
-                    { assetPath: 'models/UFO.glb', scale: { x: 0.25, y: 0.25, z: 0.25 } }
+                    { assetPath: 'models/barrel.glb' }
                 ],
+                rigidBody: {
+                    type: 'dynamic',
+                    colliders: [
+                        //{ type: 'ball', radius: 0.5 }
+                        { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
+                    ]
+                },
                 ...options // merge with any passed in GameObjectOptions
             })
         }
 
-        beforeRender({ deltaTimeInSec }) {
-            // Here you can make changes to the GameObject in any way each frame
-            // deltaTimeInSec represents the time that passed since the last frame,
-            // and can be used to move things at a consistent speed in real time regardless of the
-            // frame rate.
-            this.rotateY(deltaTimeInSec * 2); // Equivalent of this.threeJSGroup.rotateY(deltaTimeInSec * 2)
+        beforeRender() {
+            console.log('Rigid body position: ', this.rapierRigidBody.translation());
         }
     }
 
@@ -58,13 +61,42 @@ const runDemo = async () => {
             { assetPath: 'models/test_area.glb' }
           ],
           lights: [
-            { type: 'PointLight', position: { x: 0, y: 5, z: 0 } }
-          ]
+            { type: 'AmbientLight', intensity: 0.5 }
+          ],
+          rigidBody: {
+            type: 'fixed',
+            colliders: [
+                { type: 'cuboid', hx: 5, hy: 0.5, hz: 5 }
+            ]
+          }
         },
         {
-          name: 'ufo',
-          klass: UFOGameObject,
-          position: { z: -2, y: 2.5 }
+          name: 'barrel',
+          models: [
+            { assetPath: 'models/barrel.glb' }
+          ],
+          rigidBody: {
+            type: 'dynamic',
+            colliders: [
+              { type: 'cylinder', halfHeight: 0.5, radius: 0.5 }
+            ]
+          },
+          position: { x: -1, y: 3, z: 0 },
+          rotation: { x: 0, y: 0, z: 20 }
+        },
+        {
+          name: 'bale',
+          models: [
+            { assetPath: 'models/bale_of_hay.glb' }
+          ],
+          rigidBody: {
+            type: 'dynamic',
+            colliders: [
+              { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
+            ]
+          },
+          position: { x: 1, y: 4, z: 0 },
+          rotation: { x: 31, y: 90, z: 11 }
         }
       ]
     });

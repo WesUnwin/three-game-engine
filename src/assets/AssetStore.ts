@@ -3,6 +3,7 @@ import TextureAsset from './TextureAsset'
 import SoundAsset from './SoundAsset'
 import JSONAsset from './JSONAsset'
 import Asset from './Asset';
+import { AssetOptions } from '../types';
 
 class AssetStore {
   options: AssetOptions;
