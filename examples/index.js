@@ -1,11 +1,13 @@
 import runDemo1 from "./1_HelloWorld";
 import runDemo2 from "./2_Creating_GameObjects";
 import runDemo3 from "./3_Moving_GameObjects";
+import runDemo4 from "./4_GameObject_Physics";
 
 const demos = [
     { name: '1. Hello World!', run: runDemo1 },
     { name: '2. Creating Game Objects', run: runDemo2 },
-    { name: '3. Moving Game Objects', run: runDemo3 }
+    { name: '3. Moving Game Objects', run: runDemo3 },
+    { name: '4. GameObject Physics', run: runDemo4 }
 ];
 
 const desc = document.createElement('p');
