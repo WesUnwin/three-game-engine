@@ -45,6 +45,7 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
 
         // Position the RigidBody within the Physics World, at the (world) position
         // it should be based on the world position of the threeJS group representing the GameObject
+        // TODO: get world position of threeJSGroup not local
         const x = gameObject.threeJSGroup.position.x;
         const y = gameObject.threeJSGroup.position.y;
         const z = gameObject.threeJSGroup.position.z;

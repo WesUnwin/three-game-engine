@@ -277,6 +277,7 @@ class GameObject {
 
     afterPhysicsUpdate() {
         if (this.rapierRigidBody) {
+            // TODO: set world position of threeJSGroup, not local
             this.threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
             this.threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
         }
