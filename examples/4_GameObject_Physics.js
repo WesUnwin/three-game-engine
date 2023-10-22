@@ -1,5 +1,7 @@
+import * as THREE from 'three';
 import GameObject from "../dist/GameObject";
 import { Game, Scene } from "../dist/index";
+import RAPIER from '@dimforge/rapier3d-compat';
 
 const runDemo = async () => {
     const game = new Game({
@@ -15,22 +17,27 @@ const runDemo = async () => {
     class BarrelGameObject extends GameObject {
         constructor(parent, options) {
             super(parent, {
-                models: [
-                    { assetPath: 'models/barrel.glb' }
-                ],
-                rigidBody: {
-                    type: 'dynamic',
-                    colliders: [
-                        //{ type: 'ball', radius: 0.5 }
-                        { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
-                    ]
-                },
+              models: [
+                { assetPath: 'models/barrel.glb' }
+              ],
+              rigidBody: {
+                type: 'dynamic',
+                colliders: [
+                  { type: 'cylinder', halfHeight: 0.5, radius: 0.5 }
+                ]
+              },
                 ...options // merge with any passed in GameObjectOptions
             })
         }
 
+        afterLoaded() {
+          // Once a force is added it will remain affecting the rigid body untill removed
+          this.rapierRigidBody.addForce(new RAPIER.Vector3(0,0,-2), true);
+        }
+
         beforeRender() {
             console.log('Rigid body position: ', this.rapierRigidBody.translation());
+            
         }
     }
 
@@ -53,17 +60,9 @@ const runDemo = async () => {
         },
         {
           name: 'barrel',
-          models: [
-            { assetPath: 'models/barrel.glb' }
-          ],
-          rigidBody: {
-            type: 'dynamic',
-            colliders: [
-              { type: 'cylinder', halfHeight: 0.5, radius: 0.5 }
-            ]
-          },
-          position: { x: -1, y: 3, z: 0 },
-          rotation: { x: 0, y: 0, z: 20 }
+          klass: BarrelGameObject,
+          position: { x: 0.1, y: 3, z: 4 },
+          rotation: { x: 0, y: -0.1, z: 20 }
         },
         {
           name: 'bale',
@@ -76,11 +75,14 @@ const runDemo = async () => {
               { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
             ]
           },
-          position: { x: 1, y: 4, z: 0 },
+          position: { x: 1, y: 6, z: 0 },
           rotation: { x: 31, y: 90, z: 11 }
         }
       ]
     });
+
+    game.renderer.setCameraPosition(-4, 5, 10);
+    game.renderer.makeCameraLookAt(0,0,0);
 
     await game.loadScene(scene);
 
