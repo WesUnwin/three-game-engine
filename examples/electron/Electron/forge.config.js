@@ -62,11 +62,6 @@ const packagerConfig = {
   }
 };
 
-if (process.platform === 'win32') {
-  console.log('\n==> forge.config.js: using custom electron build that allows for OpenXR usage');
-  packagerConfig.electronZipDir = './Electron/custom_electron_builds';
-}
-
 const config = {
   packagerConfig: packagerConfig,
   makers: [
