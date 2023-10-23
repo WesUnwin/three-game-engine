@@ -1,6 +1,6 @@
 {
   "name": "three-game-engine",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Simple light-weight game engine using three.js, three-mesh-ui and rapier",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
