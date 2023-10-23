@@ -30,10 +30,13 @@ class Renderer {
         this.threeJSRenderer.toneMappingExposure = 1;
         this.threeJSRenderer.physicallyCorrectLights = false;
 
-        this.options.width = this.options.width || window?.innerWidth;
-        this.options.height = this.options.height || window?.innerHeight;
+        if (typeof window !== 'undefined') {
+            this.options.width = this.options.width || window?.innerWidth;
+            this.options.height = this.options.height || window?.innerHeight;
+            this.options.pixelRatio = this.options.pixelRatio || window?.devicePixelRatio
+        }
 
-        this.threeJSRenderer.setPixelRatio(this.options.pixelRatio || window?.devicePixelRatio || 1);
+        this.threeJSRenderer.setPixelRatio(this.options.pixelRatio || 1);
         this.threeJSRenderer.setSize(this.options.width, this.options.height);
 
         const defaultCameraOptions = {
@@ -66,6 +69,10 @@ class Renderer {
     }
 
     setupFullScreenCanvas() {
+        if (typeof window === 'undefined') {
+            throw new Error('setupFullScreenCanvas() can only be called in a browser-like context, where the top level variable window is defined')
+        }
+
         const canvas = this.getCanvas();
         canvas.style.width = `${window.innerWidth}px`;
         canvas.style.height = `${window.innerHeight}px`;
