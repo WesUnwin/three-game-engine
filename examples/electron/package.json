@@ -1,0 +1,40 @@
+{
+  "name": "three-game-engine-example-electron-app",
+  "version": "1.0.0",
+  "description": "Example Electron App Using three-game-engine",
+  "main": ".webpack/main",
+  "scripts": {
+    "electron-start": "electron-forge start",
+    "electron-package": "electron-forge package",
+    "electron-make": "electron-forge make"
+  },
+  "keywords": [],
+  "author": "Wes Unwin",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.63",
+    "@vercel/webpack-asset-relocator-loader": "1.7.0",
+    "css-loader": "^6.0.0",
+    "electron": "17.0.0",
+    "html-webpack-plugin": "^5.3.1",
+    "node-loader": "^2.0.0",
+    "style-loader": "^3.0.0",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.6",
+    "electron-squirrel-startup": "^1.0.0",
+    "three-game-engine": "^0.3.0"
+  },
+  "config": {
+    "forge": "./Electron/forge.config.js"
+  }
+}
