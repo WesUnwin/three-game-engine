@@ -157,6 +157,39 @@ class Scene {
     beforeUnloaded() {
         // Optional: override and handle this event   
     }
+
+    showPhysics() {
+        let physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
+        if (!physicsRenderingLines) {
+            let material = new THREE.LineBasicMaterial({
+                color: 0xffffff,
+                vertexColors: true
+            });
+
+            let geometry =  new THREE.BufferGeometry();
+
+            physicsRenderingLines = new THREE.LineSegments(geometry, material);
+            physicsRenderingLines.name = 'PhysicsRenderingLines';
+
+            this.threeJSScene.add(physicsRenderingLines);
+        }
+    }
+
+    hidePhysics() {
+        const physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
+        if (physicsRenderingLines) {
+            this.threeJSScene.remove(physicsRenderingLines);
+        }
+    }
+
+    updatePhysicsGraphics() {
+        const physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
+        if (physicsRenderingLines) {
+            const buffers = this.rapierWorld.debugRender();
+            physicsRenderingLines.geometry.setAttribute('position', new THREE.BufferAttribute(buffers.vertices, 3));
+            physicsRenderingLines.geometry.setAttribute('color', new THREE.BufferAttribute(buffers.colors, 4));
+        }
+    }
 }
 
 export default Scene

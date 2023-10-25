@@ -183,6 +183,8 @@ class Renderer {
         if (scene) {
             scene.advancePhysics();
 
+            scene.updatePhysicsGraphics();
+
             this._beforeRender({
                 deltaTimeInSec 
             });
