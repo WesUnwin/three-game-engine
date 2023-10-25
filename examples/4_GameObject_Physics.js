@@ -34,8 +34,6 @@ const runDemo = async () => {
         }
 
         beforeRender() {
-            console.log('Rigid body position: ', this.rapierRigidBody.translation());
-            
         }
     }
 
@@ -85,6 +83,8 @@ const runDemo = async () => {
     await game.loadScene(scene);
 
     game.play();
+
+    window.game = game;
 }
 
 export default runDemo
