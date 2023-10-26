@@ -9,6 +9,11 @@ This library simply ties together several well known, capable javascript librari
 
 ![Screenshot](docs/three-game-engine.png)
 
+This game engine allows you to manage a Scene of GameObjects.
+Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
+
+![Screenshot](docs/three-game-engine-architecture.png)
+
 ## The vision
  - to make it easy to tie together 3 great javascript libraries: ThreeJS, Rapier3D, and three-mesh-ui to create a versatile, easy to use 3D game engine.
  - to allow javascript lovers to easily jump into game development, using tools and libraries familiar to them.
