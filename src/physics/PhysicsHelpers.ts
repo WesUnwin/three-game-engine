@@ -55,6 +55,16 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
         const worldRotation = gameObject.threeJSGroup.quaternion.clone();
         gameObject.rapierRigidBody.setRotation(worldRotation as RAPIER.Quaternion, true);
 
+        if (rigidBodyData.enabledTranslations) {
+            const enabledTrans = rigidBodyData.enabledTranslations;
+            gameObject.rapierRigidBody.setEnabledTranslations(enabledTrans.x, enabledTrans.y, enabledTrans.z, true);
+        }
+
+        if (rigidBodyData.enabledRotations) {
+            const enabledRots = rigidBodyData.enabledRotations;
+            gameObject.rapierRigidBody.setEnabledRotations(enabledRots.x, enabledRots.y, enabledRots.z, true);
+        }
+
         (rigidBodyData.colliders || []).forEach(colliderData => {
             const colliderDesc = createColliderDesc(colliderData);
             scene.rapierWorld.createCollider(colliderDesc, gameObject.rapierRigidBody);

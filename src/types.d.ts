@@ -46,6 +46,16 @@ interface ModelData {
 
 interface RigidBodyData {
     type: 'dynamic' | 'fixed' | 'kinematicPositionBased' | 'kinematicVelocityBased';
+    enabledTranslations?: {
+        x: boolean,
+        y: boolean,
+        z: boolean,  
+    },
+    enabledRotations?: {
+        x: boolean,
+        y: boolean,
+        z: boolean,
+    },
     colliders: ColliderData[];
 }
 
