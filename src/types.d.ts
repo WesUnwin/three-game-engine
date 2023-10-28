@@ -78,6 +78,10 @@ interface ColliderData {
         'trimesh' | 
         'heightfield';
 
+    density?: number; // default 1.0
+    friction?: number; // default 0.5
+    sensor?: boolean; // if true this is a sensor collider (for detecting things that enter its 3D volume) not a solid collider.
+
     // For a cuboid
     hx: number; // half length along x-axis
     hy: number; // half length along y-axis

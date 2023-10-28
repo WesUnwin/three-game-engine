@@ -67,7 +67,19 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
 
         (rigidBodyData.colliders || []).forEach(colliderData => {
             const colliderDesc = createColliderDesc(colliderData);
-            scene.rapierWorld.createCollider(colliderDesc, gameObject.rapierRigidBody);
+            const collider = scene.rapierWorld.createCollider(colliderDesc, gameObject.rapierRigidBody);
+
+            if (typeof colliderData.density !== 'undefined') {
+                collider.setDensity(colliderData.density);
+            }
+
+            if (typeof colliderData.friction !== 'undefined') {
+                collider.setFriction(colliderData.friction);
+            }
+
+            if (typeof colliderData.sensor !== 'undefined') {
+                collider.setSensor(colliderData.sensor);
+            }
         });
     }
 }
