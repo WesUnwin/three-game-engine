@@ -11,7 +11,7 @@ const defaultControllerOptions = {
     }
 }
 
-class CharacterController extends GameObject {
+class DynamicCharacterController extends GameObject {
     controllerOptions: {
         capsule: {
             halfHeight: number,
@@ -67,11 +67,9 @@ class CharacterController extends GameObject {
             const desiredMovementVector = new THREE.Vector3(desiredMovement.x, desiredMovement.y, desiredMovement.z);
             desiredMovementVector.normalize();
 
-            // Make it so "forward" is in the same direction as where the camera faces.
-            const threeJSCamera = this.getScene()?.game?.renderer?.getCamera();
-            if (threeJSCamera) {
-                desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), threeJSCamera.rotation.y);
-            }
+            // Make it so "forward" is in the same direction as where the character faces
+            const playerRotation = this.threeJSGroup.rotation;
+            desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), playerRotation.y);
 
             desiredMovementVector.multiplyScalar(movementSpeed);
 
@@ -107,4 +105,4 @@ class CharacterController extends GameObject {
     }
 }
 
-export default CharacterController
+export default DynamicCharacterController
