@@ -2,6 +2,7 @@ import _Game from './Game'
 import _Scene from './Scene'
 import _GameObject from './GameObject'
 import _DynamicCharacterController from "./util/DynamicCharacterController";
+import _KinematicCharacterController from "./util/KinematicCharacterController";
 
 import * as _THREE from 'three';
 import _RAPIER from '@dimforge/rapier3d-compat';
@@ -14,6 +15,7 @@ export const Game = _Game
 export const Scene = _Scene
 export const GameObject = _GameObject
 export const DynamicCharacterController = _DynamicCharacterController;
+export const KinematicCharacterController = _KinematicCharacterController;
 
 // Underlying libraries:
 export const THREE = _THREE;
