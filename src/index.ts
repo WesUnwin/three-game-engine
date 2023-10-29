@@ -1,6 +1,7 @@
 import _Game from './Game'
 import _Scene from './Scene'
 import _GameObject from './GameObject'
+import _CharacterController from "./util/CharacterController";
 
 import * as _THREE from 'three';
 import _RAPIER from '@dimforge/rapier3d-compat';
@@ -12,6 +13,7 @@ import _ThreeMeshUI from 'three-mesh-ui'
 export const Game = _Game
 export const Scene = _Scene
 export const GameObject = _GameObject
+export const CharacterController = _CharacterController;
 
 // Underlying libraries:
 export const THREE = _THREE;

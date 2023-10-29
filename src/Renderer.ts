@@ -186,7 +186,8 @@ class Renderer {
             scene.updatePhysicsGraphics();
 
             this._beforeRender({
-                deltaTimeInSec 
+                deltaTimeInSec,
+                time
             });
 
             this.threeJSRenderer.render(scene.threeJSScene, this.threeJSCamera);

@@ -72,6 +72,11 @@ class GameObject {
         }
     }
 
+    getRapierWorld() {
+        const scene = this.getScene();
+        return scene?.rapierWorld;
+    }
+
     // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
