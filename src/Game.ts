@@ -1,6 +1,7 @@
 import Renderer from './Renderer';
 import Scene from './Scene';
 import AssetStore from './assets/AssetStore';
+import InputManager from './input/InputManager';
 import { GameOptions } from './types';
 
 class Game {
@@ -8,11 +9,13 @@ class Game {
     renderer: Renderer;
     scene: Scene | null;
     assetStore: AssetStore | null;
+    inputManager: InputManager;
 
     constructor(options: GameOptions = {}) {
         this.options = options;
         this.scene = null;
         this.renderer = new Renderer(this, this.options.rendererOptions);
+        this.inputManager = new InputManager();
     }
 
     getAssetStore(): AssetStore {
