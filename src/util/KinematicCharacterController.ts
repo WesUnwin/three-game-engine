@@ -55,7 +55,6 @@ class KinematicCharacterController extends CharacterController {
             }
         });
         if (camera) {
-            console.log('set c')
             camera.rotation.set(pitchAngle, 0, 0);
         }
 
