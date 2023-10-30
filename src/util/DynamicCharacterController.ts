@@ -42,7 +42,7 @@ class DynamicCharacterController extends CharacterController {
         const desiredMovementVector = this.getDesiredTranslation(deltaTimeInSec);
 
         // Make it so "forward" is in the same direction as where the character faces
-        desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
+        desiredMovementVector.applyQuaternion(desiredRotation);
         
         desiredMovementVector.multiplyScalar(400);
         this.rapierRigidBody.applyImpulse(desiredMovementVector, true);
