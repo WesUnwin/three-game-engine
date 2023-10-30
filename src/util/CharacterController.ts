@@ -5,9 +5,9 @@ import GameObject from "../GameObject"
 import { CharacterControllerOptions } from '../types';
 
 const defaultControllerOptions: CharacterControllerOptions = {
-    walkingSpeed: 1.5,
-    runningSpeed: 3,
-    jumpCooldown: 1500
+    walkingSpeed: 2,
+    runningSpeed: 4,
+    jumpCooldown: 1000
 }
 
 class CharacterController extends GameObject {
@@ -71,6 +71,29 @@ class CharacterController extends GameObject {
 
     beforeRender({ deltaTimeInSec, time }) {
 
+    }
+
+    rayCastToGround(): RAPIER.RayColliderToi {
+        const rapierWorld = this.getRapierWorld();
+        const currentPosition = this.rapierRigidBody.translation();
+
+        const capsuleHalfHeight = 0.45 + 0.4 //this.controllerOptions.capsule.halfHeight - this.controllerOptions.capsule.radius
+
+        // Point just below the capsulate collider
+        const rayOrigin = { 
+            x: currentPosition.x,
+            y: currentPosition.y - capsuleHalfHeight - 0.01,
+            z: currentPosition.z
+        };
+
+        const rayDirection = { x: 0, y: -1, z: 0 }; // downwards
+        const ray = new RAPIER.Ray(rayOrigin, rayDirection);
+        return rapierWorld.castRay(ray, 1, true);
+    }
+
+    isOnGround(threshold: number = 0.2): boolean {
+        const groundHit = this.rayCastToGround();
+        return groundHit ? groundHit.toi < threshold : false;
     }
 }
 

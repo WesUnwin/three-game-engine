@@ -14,6 +14,7 @@ const defaultCapsuleOptions = {
  */
 class KinematicCharacterController extends CharacterController {
     rapierCharacterController: RAPIER.KinematicCharacterController;
+    verticalVelocity: number;
 
     constructor(parent, options, controllerOptions) {
         super(parent, {
@@ -25,12 +26,14 @@ class KinematicCharacterController extends CharacterController {
                 enabledRotations: { x: false, y: true, z: false }
             },
             ...options // merge with any passed in GameObjectOptions
-        }, controllerOptions)
+        }, controllerOptions);
+        this.verticalVelocity = 0;
     }
 
     afterLoaded(): void {
         const rapierWorld = this.getRapierWorld();
-        this.rapierCharacterController = rapierWorld.createCharacterController(0.2);
+        const offset = 0.05;
+        this.rapierCharacterController = rapierWorld.createCharacterController(offset);
     }
 
     beforeRender({ deltaTimeInSec, time }) {
@@ -41,15 +44,40 @@ class KinematicCharacterController extends CharacterController {
         const pitchAngle = this.getDesiredPitch();
         const desiredRotation = new THREE.Quaternion();
         desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
-        this.rapierRigidBody.setRotation(desiredRotation, true);
+
+        const yawQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yawAngle, 0));
+        this.rapierRigidBody.setRotation(yawQuaternion, true);
+
+        let camera = null;
+        this.threeJSGroup.traverse(obj => {
+            if (obj instanceof THREE.Camera) {
+                camera = obj;
+            }
+        });
+        if (camera) {
+            console.log('set c')
+            camera.rotation.set(pitchAngle, 0, 0);
+        }
 
         const desiredMovementVector = this.getDesiredTranslation(deltaTimeInSec);
 
         // Make it so "forward" is in the same direction as where the character faces
-        desiredMovementVector.applyQuaternion(desiredRotation);
+        desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
 
-        // Emulate gravity
-        desiredMovementVector.y -= 1;
+        // Emulate gravity (accelerates verticalVelocity downwards to a max terminal velocity)
+        const isOnGround = this.isOnGround();
+        if (isOnGround && this.verticalVelocity < 0) {
+            this.verticalVelocity = -0.5; // keeps collider pressed against ground
+        } else {
+            this.verticalVelocity -= (9.8 * deltaTimeInSec);
+            if (this.verticalVelocity < -10) {
+                this.verticalVelocity = -10; // terminal velocity
+            }
+        }
+
+        desiredMovementVector.y += (this.verticalVelocity * deltaTimeInSec);
+
+        //console.log(`isOnGround: ${isOnGround} vert velocity: ${this.verticalVelocity}, y: ${this.rapierRigidBody.translation().y}`);
 
         const collider = this.rapierRigidBody.collider(0);
         this.rapierCharacterController.computeColliderMovement(collider, desiredMovementVector);
@@ -64,31 +92,16 @@ class KinematicCharacterController extends CharacterController {
         });
 
         // Jump mechanics
-        // if (keyboard.isKeyDown(' ')) {
-        //     const timeSinceLastJump = time - this.lastJumpTime;
-        //     if (timeSinceLastJump > this.controllerOptions.jumpCooldown) {
-        //         const rapierWorld = this.getRapierWorld();
-        //         const currentPosition = this.rapierRigidBody.translation();
-
-        //         // Point just below the capsulate collider
-        //         const rayOrigin = { 
-        //             x: currentPosition.x,
-        //             y: currentPosition.y - this.controllerOptions.capsule.halfHeight - this.controllerOptions.capsule.radius - 0.05,
-        //             z: currentPosition.z
-        //         };
-
-        //         const rayDirection = { x: 0, y: -0.1, z: 0 }; // downwards
-        //         const ray = new RAPIER.Ray(rayOrigin, rayDirection);
-        //         const groundHit = rapierWorld.castRay(ray, 0.01, true);
-
-        //         const isFalling = this.rapierRigidBody.linvel().y < -0.1;
-        //         if (groundHit && !isFalling) {
-        //             // There is ground below the character, so the player can indeed initate a jump
-        //             this.rapierRigidBody.applyImpulse(new THREE.Vector3(0, this.jumpImpulse, 0), true);
-        //             this.lastJumpTime = time;
-        //         }
-        //     }
-        // }
+        if (keyboard.isKeyDown(' ')) {
+            const timeSinceLastJump = time - this.lastJumpTime;
+            if (timeSinceLastJump > this.controllerOptions.jumpCooldown) {
+                if (isOnGround) {
+                    // There is ground below the character, so the player can indeed initate a jump
+                    this.verticalVelocity = 5;
+                    this.lastJumpTime = time;
+                }
+            }
+        }
     }
 }
 
