@@ -3,23 +3,24 @@ import RAPIER from '@dimforge/rapier3d-compat';
 
 import CharacterController from './CharacterController';
 
-const defaultControllerOptions = {
-    capsule: {
-        halfHeight: 0.45,
-        radius: 0.4,
-        density: 500
-    }
-}
+const defaultCapsuleOptions = {
+    halfHeight: 0.45,
+    radius: 0.4,
+    density: 500
+};
 
+/**
+ * Based off Rapier's CharacterController, but with more functionality.
+ */
 class KinematicCharacterController extends CharacterController {
     rapierCharacterController: RAPIER.KinematicCharacterController;
 
-    constructor(parent, options, controllerOptions = defaultControllerOptions) {
+    constructor(parent, options, controllerOptions) {
         super(parent, {
             rigidBody: {
                 type: 'kinematicPositionBased',
                 colliders: [
-                    { type: 'capsule', ...Object.assign({}, defaultControllerOptions.capsule, controllerOptions.capsule) }
+                    { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
                 ],
                 enabledRotations: { x: false, y: true, z: false }
             },
@@ -63,31 +64,31 @@ class KinematicCharacterController extends CharacterController {
         });
 
         // Jump mechanics
-        if (keyboard.isKeyDown(' ')) {
-            const timeSinceLastJump = time - this.lastJumpTime;
-            if (timeSinceLastJump > this.jumpCooldown) {
-                const rapierWorld = this.getRapierWorld();
-                const currentPosition = this.rapierRigidBody.translation();
+        // if (keyboard.isKeyDown(' ')) {
+        //     const timeSinceLastJump = time - this.lastJumpTime;
+        //     if (timeSinceLastJump > this.controllerOptions.jumpCooldown) {
+        //         const rapierWorld = this.getRapierWorld();
+        //         const currentPosition = this.rapierRigidBody.translation();
 
-                // Point just below the capsulate collider
-                const rayOrigin = { 
-                    x: currentPosition.x,
-                    y: currentPosition.y - this.controllerOptions.capsule.halfHeight - this.controllerOptions.capsule.radius - 0.05,
-                    z: currentPosition.z
-                };
+        //         // Point just below the capsulate collider
+        //         const rayOrigin = { 
+        //             x: currentPosition.x,
+        //             y: currentPosition.y - this.controllerOptions.capsule.halfHeight - this.controllerOptions.capsule.radius - 0.05,
+        //             z: currentPosition.z
+        //         };
 
-                const rayDirection = { x: 0, y: -0.1, z: 0 }; // downwards
-                const ray = new RAPIER.Ray(rayOrigin, rayDirection);
-                const groundHit = rapierWorld.castRay(ray, 0.01, true);
+        //         const rayDirection = { x: 0, y: -0.1, z: 0 }; // downwards
+        //         const ray = new RAPIER.Ray(rayOrigin, rayDirection);
+        //         const groundHit = rapierWorld.castRay(ray, 0.01, true);
 
-                const isFalling = this.rapierRigidBody.linvel().y < -0.1;
-                if (groundHit && !isFalling) {
-                    // There is ground below the character, so the player can indeed initate a jump
-                    this.rapierRigidBody.applyImpulse(new THREE.Vector3(0, this.jumpImpulse, 0), true);
-                    this.lastJumpTime = time;
-                }
-            }
-        }
+        //         const isFalling = this.rapierRigidBody.linvel().y < -0.1;
+        //         if (groundHit && !isFalling) {
+        //             // There is ground below the character, so the player can indeed initate a jump
+        //             this.rapierRigidBody.applyImpulse(new THREE.Vector3(0, this.jumpImpulse, 0), true);
+        //             this.lastJumpTime = time;
+        //         }
+        //     }
+        // }
     }
 }
 

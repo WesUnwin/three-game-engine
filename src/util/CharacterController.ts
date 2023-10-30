@@ -2,25 +2,17 @@ import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 
 import GameObject from "../GameObject"
+import { CharacterControllerOptions } from '../types';
 
-const defaultControllerOptions = {
-    capsule: {
-        halfHeight: 0.45,
-        radius: 0.4,
-        density: 500
-    }
+const defaultControllerOptions: CharacterControllerOptions = {
+    walkingSpeed: 1.5,
+    runningSpeed: 3,
+    jumpCooldown: 1500
 }
 
 class CharacterController extends GameObject {
-    controllerOptions: {
-        capsule: {
-            halfHeight: number,
-            radius: number
-        }
-    };
+    controllerOptions: CharacterControllerOptions;
     lastJumpTime: number = 0;
-    jumpCooldown: number = 1500; // in millisec
-    jumpImpulse: number = 1300;
 
     constructor(parent, options, controllerOptions = defaultControllerOptions) {
         super(parent, {
@@ -48,7 +40,8 @@ class CharacterController extends GameObject {
     getDesiredTranslation(deltaTimeInSec: number): THREE.Vector3 {
         const keyboard = this.getScene().game.inputManager.keyboard;
 
-        const movementSpeed = 1.5; // meters per sec
+        // meters per sec
+        const movementSpeed = keyboard.isShiftDown() ? this.controllerOptions.runningSpeed : this.controllerOptions.walkingSpeed;
 
         const movementAmount = movementSpeed * deltaTimeInSec;
 

@@ -3,39 +3,26 @@ import RAPIER from '@dimforge/rapier3d-compat';
 
 import CharacterController from './CharacterController';
 
-const defaultControllerOptions = {
-    capsule: {
-        halfHeight: 0.45,
-        radius: 0.4,
-        density: 500
-    }
-}
+const defaultCapsuleOptions = {
+    halfHeight: 0.45,
+    radius: 0.4,
+    density: 500
+};
 
 class DynamicCharacterController extends CharacterController {
-    controllerOptions: {
-        capsule: {
-            halfHeight: number,
-            radius: number
-        }
-    };
-    lastJumpTime: number = 0;
-    jumpCooldown: number = 1500; // in millisec
     jumpImpulse: number = 1300;
 
-    constructor(parent, options, controllerOptions = defaultControllerOptions) {
+    constructor(parent, options, controllerOptions) {
         super(parent, {
             rigidBody: {
                 type: 'dynamic',
                 colliders: [
-                    { type: 'capsule', ...Object.assign({}, defaultControllerOptions.capsule, controllerOptions.capsule) }
+                    { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
                 ],
                 enabledRotations: { x: false, y: true, z: false }
             },
             ...options // merge with any passed in GameObjectOptions
-        })
-        this.controllerOptions = Object.assign({}, defaultControllerOptions, controllerOptions);
-
-        this.lastJumpTime = 0;
+        }, controllerOptions)
     }
 
     afterLoaded(): void {
@@ -63,7 +50,7 @@ class DynamicCharacterController extends CharacterController {
         // Jump mechanics
         if (keyboard.isKeyDown(' ')) {
             const timeSinceLastJump = time - this.lastJumpTime;
-            if (timeSinceLastJump > this.jumpCooldown) {
+            if (timeSinceLastJump > this.controllerOptions.jumpCooldown) {
                 const rapierWorld = this.getRapierWorld();
                 const currentPosition = this.rapierRigidBody.translation();
 

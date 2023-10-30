@@ -133,3 +133,11 @@ interface SceneData {
     gameObjects?: GameObjectOptions[];
     gravity?: Vector3Data;
 }
+
+interface CharacterControllerOptions {
+    walkingSpeed?: number;
+    runningSpeed?: number;
+    jumpCooldown?: number;
+
+    capsule?: ColliderData
+}
