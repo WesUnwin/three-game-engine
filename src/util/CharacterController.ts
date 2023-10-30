@@ -45,10 +45,12 @@ class CharacterController extends GameObject {
         return mouse.getPointerY() / -250.0; 
     }
 
-    getDesiredTranslation(): THREE.Vector3 {
+    getDesiredTranslation(deltaTimeInSec: number): THREE.Vector3 {
         const keyboard = this.getScene().game.inputManager.keyboard;
 
-        const movementSpeed = 0.1;
+        const movementSpeed = 1.5; // meters per sec
+
+        const movementAmount = movementSpeed * deltaTimeInSec;
 
         const [w, s, a, d] = ['w', 's', 'a', 'd'].map(key => keyboard.isKeyDown(key));
 
@@ -69,7 +71,7 @@ class CharacterController extends GameObject {
         const desiredMovementVector = new THREE.Vector3(desiredMovement.x, desiredMovement.y, desiredMovement.z);
 
         desiredMovementVector.normalize();
-        desiredMovementVector.multiplyScalar(movementSpeed);
+        desiredMovementVector.multiplyScalar(movementAmount);
 
         return desiredMovementVector;
     }

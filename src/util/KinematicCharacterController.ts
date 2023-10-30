@@ -17,7 +17,7 @@ class KinematicCharacterController extends CharacterController {
     constructor(parent, options, controllerOptions = defaultControllerOptions) {
         super(parent, {
             rigidBody: {
-                type: 'dynamic',
+                type: 'kinematicPositionBased',
                 colliders: [
                     { type: 'capsule', ...Object.assign({}, defaultControllerOptions.capsule, controllerOptions.capsule) }
                 ],
@@ -42,22 +42,25 @@ class KinematicCharacterController extends CharacterController {
         desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
         this.rapierRigidBody.setRotation(desiredRotation, true);
 
-        const desiredMovementVector = this.getDesiredTranslation();
+        const desiredMovementVector = this.getDesiredTranslation(deltaTimeInSec);
 
         // Make it so "forward" is in the same direction as where the character faces
         desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
-        
+
+        // Emulate gravity
+        desiredMovementVector.y -= 1;
+
         const collider = this.rapierRigidBody.collider(0);
         this.rapierCharacterController.computeColliderMovement(collider, desiredMovementVector);
 
         const correctedMovement = this.rapierCharacterController.computedMovement();
 
         const translation = this.rapierRigidBody.translation();
-        this.rapierRigidBody.setTranslation({
+        this.rapierRigidBody.setNextKinematicTranslation({
             x: translation.x + correctedMovement.x,
             y: translation.y + correctedMovement.y,
             z: translation.z + correctedMovement.z
-        }, true);
+        });
 
         // Jump mechanics
         if (keyboard.isKeyDown(' ')) {

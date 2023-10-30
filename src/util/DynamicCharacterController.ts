@@ -52,7 +52,7 @@ class DynamicCharacterController extends CharacterController {
         desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
         this.rapierRigidBody.setRotation(desiredRotation, true);
 
-        const desiredMovementVector = this.getDesiredTranslation();
+        const desiredMovementVector = this.getDesiredTranslation(deltaTimeInSec);
 
         // Make it so "forward" is in the same direction as where the character faces
         desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
