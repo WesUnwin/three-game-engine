@@ -64,7 +64,7 @@ const runDemo = async () => {
     game.renderer.setCameraPosition(-4, 5, 10);
     game.renderer.makeCameraLookAt(0,0,0);
 
-    scene.showPhysics();
+    //scene.showPhysics();
 
     await game.loadScene(scene);
 

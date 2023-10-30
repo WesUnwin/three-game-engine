@@ -66,7 +66,7 @@ class KinematicCharacterController extends CharacterController {
         // Emulate gravity (accelerates verticalVelocity downwards to a max terminal velocity)
         const isOnGround = this.isOnGround();
         if (isOnGround && this.verticalVelocity < 0) {
-            this.verticalVelocity = -0.5; // keeps collider pressed against ground
+            this.verticalVelocity = -1; // keeps collider pressed against ground
         } else {
             this.verticalVelocity -= (9.8 * deltaTimeInSec);
             if (this.verticalVelocity < -10) {

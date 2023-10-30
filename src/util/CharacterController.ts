@@ -91,7 +91,7 @@ class CharacterController extends GameObject {
         return rapierWorld.castRay(ray, 1, true);
     }
 
-    isOnGround(threshold: number = 0.2): boolean {
+    isOnGround(threshold: number = 0.1): boolean {
         const groundHit = this.rayCastToGround();
         return groundHit ? groundHit.toi < threshold : false;
     }
