@@ -1,5 +1,5 @@
 import RAPIER from "@dimforge/rapier3d-compat";
-import { Game, Scene, KinematicCharacterController, THREE, DynamicCharacterController } from "../dist/index";
+import { Game, Scene, KinematicCharacterController, THREE } from "../dist/index";
 
 const runDemo = async () => {
     const game = new Game({
@@ -11,7 +11,7 @@ const runDemo = async () => {
       }
     })
 
-    class ExampleCharacter extends DynamicCharacterController {
+    class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
             super(parent, {
                 models: [
