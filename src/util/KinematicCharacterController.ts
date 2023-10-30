@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 
-import GameObject from "../GameObject"
+import CharacterController from './CharacterController';
 
 const defaultControllerOptions = {
     capsule: {
@@ -11,16 +11,7 @@ const defaultControllerOptions = {
     }
 }
 
-class KinematicCharacterController extends GameObject {
-    controllerOptions: {
-        capsule: {
-            halfHeight: number,
-            radius: number
-        }
-    };
-    lastJumpTime: number = 0;
-    jumpCooldown: number = 1500; // in millisec
-    jumpImpulse: number = 1300;
+class KinematicCharacterController extends CharacterController {
     rapierCharacterController: RAPIER.KinematicCharacterController;
 
     constructor(parent, options, controllerOptions = defaultControllerOptions) {
@@ -33,10 +24,7 @@ class KinematicCharacterController extends GameObject {
                 enabledRotations: { x: false, y: true, z: false }
             },
             ...options // merge with any passed in GameObjectOptions
-        })
-        this.controllerOptions = Object.assign({}, defaultControllerOptions, controllerOptions);
-
-        this.lastJumpTime = 0;
+        }, controllerOptions)
     }
 
     afterLoaded(): void {
@@ -45,48 +33,31 @@ class KinematicCharacterController extends GameObject {
     }
 
     beforeRender({ deltaTimeInSec, time }) {
-        const keyboard = this.getScene().game.inputManager.keyboard;
+        const inputManager = this.getScene().game.inputManager;
+        const keyboard = inputManager.keyboard;
 
-        const movementSpeed = 0.1;
+        const yawAngle = this.getDesiredYaw();
+        const pitchAngle = this.getDesiredPitch();
+        const desiredRotation = new THREE.Quaternion();
+        desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
+        this.rapierRigidBody.setRotation(desiredRotation, true);
 
-        const [w, s, a, d] = ['w', 's', 'a', 'd'].map(key => keyboard.isKeyDown(key));
+        const desiredMovementVector = this.getDesiredTranslation();
 
-        const desiredMovement = { x: 0, y: 0, z: 0 };
-        if (w) {
-            desiredMovement.z -= 1;
-        }
-        if (s) {
-            desiredMovement.z += 1;
-        }
-        if (a) {
-            desiredMovement.x -= 1;
-        }
-        if (d) {
-            desiredMovement.x += 1;
-        }
+        // Make it so "forward" is in the same direction as where the character faces
+        desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
+        
+        const collider = this.rapierRigidBody.collider(0);
+        this.rapierCharacterController.computeColliderMovement(collider, desiredMovementVector);
 
-        if (desiredMovement.x != 0 || desiredMovement.y != 0 || desiredMovement.z != 0) {
-            const desiredMovementVector = new THREE.Vector3(desiredMovement.x, desiredMovement.y, desiredMovement.z);
-            desiredMovementVector.normalize();
+        const correctedMovement = this.rapierCharacterController.computedMovement();
 
-            // Make it so "forward" is in the same direction as where the character faces
-            const playerRotation = this.threeJSGroup.rotation;
-            desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), playerRotation.y);
-
-            desiredMovementVector.multiplyScalar(movementSpeed);
-
-            const collider = this.rapierRigidBody.collider(0);
-            this.rapierCharacterController.computeColliderMovement(collider, desiredMovementVector);
-
-            const correctedMovement = this.rapierCharacterController.computedMovement();
-
-            const translation = this.rapierRigidBody.translation();
-            this.rapierRigidBody.setTranslation({
-                x: translation.x + correctedMovement.x,
-                y: translation.y + correctedMovement.y,
-                z: translation.z + correctedMovement.z
-            }, true);
-        }
+        const translation = this.rapierRigidBody.translation();
+        this.rapierRigidBody.setTranslation({
+            x: translation.x + correctedMovement.x,
+            y: translation.y + correctedMovement.y,
+            z: translation.z + correctedMovement.z
+        }, true);
 
         // Jump mechanics
         if (keyboard.isKeyDown(' ')) {

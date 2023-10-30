@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 
-import GameObject from "../GameObject"
+import CharacterController from './CharacterController';
 
 const defaultControllerOptions = {
     capsule: {
@@ -11,7 +11,7 @@ const defaultControllerOptions = {
     }
 }
 
-class DynamicCharacterController extends GameObject {
+class DynamicCharacterController extends CharacterController {
     controllerOptions: {
         capsule: {
             halfHeight: number,
@@ -43,38 +43,22 @@ class DynamicCharacterController extends GameObject {
     }
 
     beforeRender({ deltaTimeInSec, time }) {
-        const keyboard = this.getScene().game.inputManager.keyboard;
+        const inputManager = this.getScene().game.inputManager;
+        const keyboard = inputManager.keyboard;
 
-        const movementSpeed = 40;
+        const yawAngle = this.getDesiredYaw();
+        const pitchAngle = this.getDesiredPitch();
+        const desiredRotation = new THREE.Quaternion();
+        desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
+        this.rapierRigidBody.setRotation(desiredRotation, true);
 
-        const [w, s, a, d] = ['w', 's', 'a', 'd'].map(key => keyboard.isKeyDown(key));
+        const desiredMovementVector = this.getDesiredTranslation();
 
-        const desiredMovement = { x: 0, y: 0, z: 0 };
-        if (w) {
-            desiredMovement.z -= 1;
-        }
-        if (s) {
-            desiredMovement.z += 1;
-        }
-        if (a) {
-            desiredMovement.x -= 1;
-        }
-        if (d) {
-            desiredMovement.x += 1;
-        }
-
-        if (desiredMovement.x != 0 || desiredMovement.y != 0 || desiredMovement.z != 0) {
-            const desiredMovementVector = new THREE.Vector3(desiredMovement.x, desiredMovement.y, desiredMovement.z);
-            desiredMovementVector.normalize();
-
-            // Make it so "forward" is in the same direction as where the character faces
-            const playerRotation = this.threeJSGroup.rotation;
-            desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), playerRotation.y);
-
-            desiredMovementVector.multiplyScalar(movementSpeed);
-
-            this.rapierRigidBody.applyImpulse(desiredMovementVector, true);
-        }
+        // Make it so "forward" is in the same direction as where the character faces
+        desiredMovementVector.applyAxisAngle(new THREE.Vector3(0,1,0), yawAngle);
+        
+        desiredMovementVector.multiplyScalar(400);
+        this.rapierRigidBody.applyImpulse(desiredMovementVector, true);
 
         // Jump mechanics
         if (keyboard.isKeyDown(' ')) {

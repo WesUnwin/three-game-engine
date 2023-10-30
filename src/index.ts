@@ -1,6 +1,7 @@
 import _Game from './Game'
 import _Scene from './Scene'
 import _GameObject from './GameObject'
+import _CharacterController from "./util/CharacterController";
 import _DynamicCharacterController from "./util/DynamicCharacterController";
 import _KinematicCharacterController from "./util/KinematicCharacterController";
 
@@ -14,6 +15,7 @@ import _ThreeMeshUI from 'three-mesh-ui'
 export const Game = _Game
 export const Scene = _Scene
 export const GameObject = _GameObject
+export const CharacterController = _CharacterController;
 export const DynamicCharacterController = _DynamicCharacterController;
 export const KinematicCharacterController = _KinematicCharacterController;
 
