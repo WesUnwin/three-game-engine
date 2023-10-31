@@ -37,6 +37,23 @@ const runDemo = async () => {
       }
     }
 
+    class Platform2_10_1 extends GameObject {
+      constructor(parent, options) {
+        super(parent, {
+            models: [
+                { assetPath: 'models/platform_2_10_1.glb' }
+            ],
+            rigidBody: {
+              type: 'fixed',
+              colliders: [
+                  { type: 'cuboid', hx: 5, hy: 0.5, hz: 1 }
+              ]
+            },
+            ...options
+        })
+      }
+    }
+
     class Platform2_2_05 extends GameObject {
       constructor(parent, options) {
         super(parent, {
@@ -209,6 +226,57 @@ const runDemo = async () => {
           klass: Platform2_2_2,
           position: { x: -15, y: 1.25, z: -10 } // left wall of 2x2x2s, forward left platform
         },
+        {
+          klass: Platform2_10_1,
+          position: { x: -15, y: -1.1, z: -0.1 }, // slope, 10 degree angle
+          rotation: { x: 0.174533, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -13, y: -1.95, z: -0.4 }, // slope, 20 degree angle
+          rotation: { x: 0.349066, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -11, y: -2.8, z: -0.9 }, // slope, 30 degree angle
+          rotation: { x: 0.523599, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -9, y: -3.6, z: -1.5 }, // slope, 40 degree angle
+          rotation: { x: 0.698132, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -7, y: -4, z: -2.2 }, // slope, 50 degree angle
+          rotation: { x: 0.872665, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -15, y: -2, z: 9.9 },
+          rotation: { x: 0, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -13, y: -3.5, z: 9 },
+          rotation: { x: 0, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -11, y: -5.25, z: 8.5 },
+          rotation: { x: 0, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -9, y: -6.9, z: 7.5 },
+          rotation: { x: 0, y: Math.PI / 2.0, z: 0 }
+        },
+        {
+          klass: Platform2_10_1,
+          position: { x: -7, y: -8, z: 6 },
+          rotation: { x: 0, y: Math.PI / 2.0, z: 0 }
+        },
+
 
         {
           klass: Platform10_10_1,
