@@ -1,5 +1,4 @@
-import RAPIER from "@dimforge/rapier3d-compat";
-import { Game, GameObject, Scene, KinematicCharacterController, THREE } from "../dist/index";
+import { Game, GameObject, Scene, KinematicCharacterController } from "../dist/index";
 
 const runDemo = async () => {
     const game = new Game({
@@ -13,10 +12,22 @@ const runDemo = async () => {
 
     class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
-            super(parent, {
+            super(parent,
+              { // GameObjectOptions
                 models: [],
                 ...options
-            })
+              }, 
+              { // CharacterControllerOptions
+              }, 
+              { // KinematicCharacterControllerOptions
+                autoStep: {
+                  maxHeight: 0.35, // automatically step onto platforms as long as their not taller than this value
+                  minWidth: 0.5, // in order to auto-step onto, at least this much clearance is needed on top of it
+                  includeDynamicBodies: false // if true this would step onto dynamic bodies (that are small enough)
+                },
+                applyImpulsesToDynamicBodies: true // allows you to push around things like the Barrel and Bale of Hay
+              }
+            )
         }
     }
 

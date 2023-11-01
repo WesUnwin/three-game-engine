@@ -9,14 +9,38 @@ const defaultCapsuleOptions = {
     density: 500
 };
 
+interface KinematicCharacterControllerOptions {
+    offset?: number;
+    autoStep?: {
+        maxHeight: number; // max height the character can automatically step up onto
+        minWidth: number; // min width of the the distance ontop of the step needed to be able to autostep on onto the step
+        includeDynamicBodies: boolean; // if true, you can autostep onto dynamic bodies
+    };
+    maxSlopeClimbAngle?: number; // can't climb slopes greater than this, in radians
+    minSlopeSlideAngle?: number; // slopes greater in this will cause the character to slide, in radians
+    snapToGroundDistance?: number;
+    applyImpulsesToDynamicBodies?: boolean;
+    computeColliderMovement?: {
+        filterFlag: RAPIER.QueryFilterFlags;
+        filterGroups: number;
+        filterPredicate: (collider: RAPIER.Collider) => boolean;
+    }
+}
+
+const defaultKinematicCharacterControllerOptions = {
+    offset: 0.05,
+    applyImpulsesToDynamicBodies: false
+};
+
 /**
  * Based off Rapier's CharacterController, but with more functionality.
  */
 class KinematicCharacterController extends CharacterController {
     rapierCharacterController: RAPIER.KinematicCharacterController;
     verticalVelocity: number;
+    kinematicChararacterControllerOptions: KinematicCharacterControllerOptions;
 
-    constructor(parent, options, controllerOptions) {
+    constructor(parent, options, controllerOptions, kinematicChararacterControllerOptions) {
         super(parent, {
             rigidBody: {
                 type: 'kinematicPositionBased',
@@ -27,13 +51,45 @@ class KinematicCharacterController extends CharacterController {
             },
             ...options // merge with any passed in GameObjectOptions
         }, controllerOptions);
+
+
+        this.kinematicChararacterControllerOptions = Object.assign(
+            {},
+            defaultKinematicCharacterControllerOptions,
+            kinematicChararacterControllerOptions
+        );
+
         this.verticalVelocity = 0;
     }
 
     afterLoaded(): void {
         const rapierWorld = this.getRapierWorld();
-        const offset = 0.05;
+
+        const offset = this.kinematicChararacterControllerOptions.offset;
         this.rapierCharacterController = rapierWorld.createCharacterController(offset);
+
+        if (typeof this.kinematicChararacterControllerOptions.maxSlopeClimbAngle != 'undefined') {
+            this.rapierCharacterController.setMaxSlopeClimbAngle(this.kinematicChararacterControllerOptions.maxSlopeClimbAngle);
+        }
+
+        if (typeof this.kinematicChararacterControllerOptions.minSlopeSlideAngle != 'undefined') {
+            this.rapierCharacterController.setMinSlopeSlideAngle(this.kinematicChararacterControllerOptions.minSlopeSlideAngle);
+        }
+
+        const { autoStep } = this.kinematicChararacterControllerOptions;
+        if (autoStep) {
+            this.rapierCharacterController.enableAutostep(autoStep.maxHeight, autoStep.minWidth, autoStep.includeDynamicBodies);
+        } else {
+            this.rapierCharacterController.disableAutostep();
+        }
+
+        if (this.kinematicChararacterControllerOptions.snapToGroundDistance) {
+            this.rapierCharacterController.enableSnapToGround(this.kinematicChararacterControllerOptions.snapToGroundDistance);
+        } else {
+            this.rapierCharacterController.disableSnapToGround();
+        }
+
+        this.rapierCharacterController.setApplyImpulsesToDynamicBodies(this.kinematicChararacterControllerOptions.applyImpulsesToDynamicBodies);
     }
 
     beforeRender({ deltaTimeInSec, time }) {
@@ -79,7 +135,14 @@ class KinematicCharacterController extends CharacterController {
         //console.log(`isOnGround: ${isOnGround} vert velocity: ${this.verticalVelocity}, y: ${this.rapierRigidBody.translation().y}`);
 
         const collider = this.rapierRigidBody.collider(0);
-        this.rapierCharacterController.computeColliderMovement(collider, desiredMovementVector);
+        const computeMovementOptionalArgs = this.kinematicChararacterControllerOptions.computeColliderMovement;
+        this.rapierCharacterController.computeColliderMovement(
+            collider,
+            desiredMovementVector,
+            computeMovementOptionalArgs?.filterFlag,
+            computeMovementOptionalArgs?.filterGroups,
+            computeMovementOptionalArgs?.filterPredicate
+        );
 
         const correctedMovement = this.rapierCharacterController.computedMovement();
 
