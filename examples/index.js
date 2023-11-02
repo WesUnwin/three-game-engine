@@ -2,7 +2,7 @@ import runDemo1 from "./1_HelloWorld";
 import runDemo2 from "./2_Creating_GameObjects";
 import runDemo3 from "./3_Moving_GameObjects";
 import runDemo4 from "./4_GameObject_Physics";
-import runDemo5 from "./5_CharacterController";
+import runDemo5 from "./5_First_Person_KinematicCharacterController";
 
 const demos = [
     { name: '1. Hello World!', run: runDemo1 },
