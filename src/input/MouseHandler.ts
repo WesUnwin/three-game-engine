@@ -1,5 +1,5 @@
 
-class Mouse {
+class MouseHandler {
     canvas: HTMLCanvasElement;
     pointerX: number;
     pointerY: number;
@@ -43,4 +43,4 @@ class Mouse {
     }
 }
 
-export default Mouse;
+export default MouseHandler;

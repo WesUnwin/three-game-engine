@@ -27,19 +27,19 @@ class CharacterController extends GameObject {
 
     getDesiredYaw(): number {
         const inputManager = this.getScene().game.inputManager;
-        const mouse = inputManager.mouse;
+        const mouse = inputManager.mouseHandler;
         return mouse.getPointerX() / -250.0; 
     }
 
     getDesiredPitch(): number {
         const inputManager = this.getScene().game.inputManager;
-        const mouse = inputManager.mouse;
+        const mouse = inputManager.mouseHandler;
         return mouse.getPointerY() / -250.0; 
     }
 
     getDesiredTranslation(deltaTimeInSec: number): THREE.Vector3 {
         const inputManager = this.getScene().game.inputManager;
-        const keyboard = inputManager.keyboard;
+        const keyboard = inputManager.keyboardHandler;
 
         // meters per sec
         const movementSpeed = keyboard.isShiftDown() ? this.controllerOptions.runningSpeed : this.controllerOptions.walkingSpeed;

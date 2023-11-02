@@ -1,4 +1,4 @@
-class Keyboard {
+class KeyboardHandler {
     pressedKeys = {};
     shiftIsDown: boolean = false;
 
@@ -25,4 +25,4 @@ class Keyboard {
     }
 }
 
-export default Keyboard;
+export default KeyboardHandler;

@@ -94,7 +94,7 @@ class KinematicCharacterController extends CharacterController {
 
     beforeRender({ deltaTimeInSec, time }) {
         const inputManager = this.getScene().game.inputManager;
-        const keyboard = inputManager.keyboard;
+        const keyboard = inputManager.keyboardHandler;
 
         const yawAngle = this.getDesiredYaw();
         const pitchAngle = this.getDesiredPitch();
