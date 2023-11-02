@@ -15,7 +15,7 @@ class Game {
         this.options = options;
         this.scene = null;
         this.renderer = new Renderer(this, this.options.rendererOptions);
-        this.inputManager = new InputManager(this.renderer.getCanvas());
+        this.inputManager = new InputManager(this.renderer.getCanvas(), this.options.inputOptions);
     }
 
     getAssetStore(): AssetStore {

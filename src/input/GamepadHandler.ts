@@ -33,6 +33,10 @@ class GamepadHandler {
         }
     }
 
+    anyGamepadConnected(): boolean {
+        return this.gamepads.some(gamepad => gamepad);
+    }
+
     _onGamePadConnected = event => {
         const { gamepad } = event;
         console.debug(`GamePad: gamepad connected at index: ${gamepad.index} id: ${gamepad.id} button count: ${gamepad.buttons.length} axes count: ${gamepad.axes.length}`);
@@ -52,6 +56,61 @@ class GamepadHandler {
             this.gamepads = navigator.getGamepads(); 
         }
     }
+
+    readVerticalAxis(): number {
+        const amounts = [];
+        for (const gamepad of this.gamepads) {
+            if (gamepad) {
+                const forwardButton = gamepad.buttons[12];
+                if (forwardButton) {
+                    amounts.push(forwardButton.value * -1.0);
+                }
+
+                const backwardButton = gamepad.buttons[13];
+                if (backwardButton) {
+                    amounts.push(backwardButton.value);
+                }
+                
+                const verticalAxes = [gamepad.axes[1]];
+                verticalAxes.forEach(axis => {
+                    if (typeof axis != 'undefined') {
+                        amounts.push(axis);
+                    }
+                });
+            }
+        }
+
+        // Sum all values producing a net axis movement, ignore close to neutral values
+        return amounts.filter(amt => Math.abs(amt) > 0.01).reduce((amt, sum) => amt + sum, 0.0);
+    }
+
+    readHorizontalAxis(): number {
+        const amounts = [];
+        for (const gamepad of this.gamepads) {
+            if (gamepad) {
+                const leftButton = gamepad.buttons[14];
+                if (leftButton) {
+                    amounts.push(leftButton.value * -1.0);
+                }
+
+                const rightButton = gamepad.buttons[15];
+                if (rightButton) {
+                    amounts.push(rightButton.value);
+                }
+                
+                const horizontalAxes = [gamepad.axes[0]];
+                horizontalAxes.forEach(axis => {
+                    if (typeof axis != 'undefined') {
+                        amounts.push(axis);
+                    }
+                });
+            }
+        }
+
+        // Sum all values producing a net axis movement, ignore close to neutral values
+        return amounts.filter(amt => Math.abs(amt) > 0.01).reduce((amt, sum) => amt + sum, 0.0);
+    }
+
 
     print() {
         console.log(`Gamepad count: ${this.gamepads.length}`);

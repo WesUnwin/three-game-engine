@@ -1,10 +1,9 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 
-
-
 interface GameOptions {
     rendererOptions?: RendererOptions;
     assetOptions?: AssetOptions;
+    inputOptions?: InputOptions
 }
 
 interface RendererOptions {
@@ -26,6 +25,10 @@ interface CameraOptions {
 interface AssetOptions {
     baseURL?: string;
     retainAssetsBetweenScene?: boolean;
+}
+
+interface InputOptions {
+    wsadMovement: boolean; // use WSAD keyboard keys to move around, just like arrow keys
 }
 
 interface GameObjectOptions {

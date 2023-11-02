@@ -181,6 +181,8 @@ class Renderer {
 
         const scene = this.game.scene;
         if (scene) {
+            this.game.inputManager.beforeRender();
+
             scene.advancePhysics();
 
             scene.updatePhysicsGraphics();
