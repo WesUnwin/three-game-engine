@@ -48,7 +48,7 @@ class GamepadHandler {
     readGamepads() {
         // gets the current state of gamepads PLUS the current state of their buttons and axes
         // this needs to be called each frame of the game in order for this.gamepads and their button/axes states to be up to date
-        if (this.isGamepadAPISupported()) {
+        if (this.apiSupported) {
             this.gamepads = navigator.getGamepads(); 
         }
     }
