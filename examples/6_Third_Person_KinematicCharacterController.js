@@ -34,16 +34,14 @@ const runDemo = async () => {
   
     const scene = new TestAreaScene();
 
+    await game.loadScene(scene);
+
     const character = new ExampleCharacter(scene, {
         name: 'player',
         position: { x: -3, y: 3, z: 3 }
     });
 
-
-
     scene.showPhysics();
-
-    await game.loadScene(scene);
 
     game.play();
 

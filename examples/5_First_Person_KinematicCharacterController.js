@@ -32,19 +32,19 @@ const runDemo = async () => {
         }
     }
   
+    game.renderer.setCameraPosition(-4, 5, 10);
+    game.renderer.makeCameraLookAt(0,0,0);
+
     const scene = new TestAreaScene();
+
+    await game.loadScene(scene);
+
+    scene.showPhysics();
 
     const character = new ExampleCharacter(scene, {
         name: 'player',
         position: { x: -3, y: 3, z: 3 }
     });
-
-    game.renderer.setCameraPosition(-4, 5, 10);
-    game.renderer.makeCameraLookAt(0,0,0);
-
-    scene.showPhysics();
-
-    await game.loadScene(scene);
 
     game.play();
 

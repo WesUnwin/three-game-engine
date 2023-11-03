@@ -4,54 +4,56 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { SceneData } from './types';
+import { GameObjectJSON, GameObjectOptions, SceneJSON } from './types';
 
 class Scene {
     name: string;
     threeJSScene: THREE.Scene;
     gameObjects: GameObject[];
     game: Game | null;
-    sceneData: SceneData;
+    sceneJSON: SceneJSON;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
+    gameObjectClasses: Object;
 
-    constructor(sceneData: SceneData = {}) {
-        this.name = sceneData.name || 'unnamed-scene';
-        this.sceneData = sceneData;
-        this.reset();
-    }
-
-    // Resets the state of the scene to what it was when it was constructed,
-    // this will wipe out all GameObjects and re-create them based on the initial SceneData.
-    reset() {
-        this.threeJSScene = new THREE.Scene();
-        this.threeJSScene.name = this.name;
-        this.threeJSScene.background = this.sceneData.background || new THREE.Color('lightblue');
-
-        this.initialGravity = {
-            x: this.sceneData.gravity?.x || 0,
-            y: this.sceneData.gravity?.y || -9.8,
-            z: this.sceneData.gravity?.z || 0,
-        };
-
+    constructor(sceneJSON: SceneJSON = {}) {
+        this.name = sceneJSON.name || 'unnamed-scene';
+        this.sceneJSON = sceneJSON;
         this.gameObjects = [];
-        (this.sceneData.gameObjects || []).forEach(g => this._createGameObject(this, g));
+        this.threeJSScene = null;
+        this.gameObjectClasses = {};
     }
 
-    _createGameObject(parent: Scene | GameObject, gameObjectData) {
-        const options = { ...gameObjectData };
-        delete options.children;
-        const GameObjectClass = gameObjectData.klass || GameObject;
-        const gameObject = new GameObjectClass(parent, options);
-        parent.addGameObject(gameObject);
-        this.threeJSScene.add(gameObject.threeJSGroup);
-        (gameObjectData.gameObjects || []).forEach(childData => {
-            this._createGameObject(gameObject, childData);
-        });
+    registerGameObjectTypes(types: Object) {
+        for (const type in types) {
+            this.gameObjectClasses[type] = types[type];
+        }
+    }
+
+    getGameObjectClass(type) {
+        const klass = this.gameObjectClasses[type];
+        if (klass) {
+            return klass;
+        } else {
+            return this.game.getGameObjectClass(type);
+        }
     }
 
     async load(game) {
         this.game = game;
+
+        this.threeJSScene = new THREE.Scene();
+        this.threeJSScene.name = this.name;
+        this.threeJSScene.background = this.sceneJSON.background || new THREE.Color('lightblue');
+
+        this.initialGravity = {
+            x: this.sceneJSON.gravity?.x || 0,
+            y: this.sceneJSON.gravity?.y || -9.8,
+            z: this.sceneJSON.gravity?.z || 0,
+        };
+
+        this.gameObjects = [];
+        (this.sceneJSON.gameObjects || []).forEach(g => this._createGameObject(this, g));
 
         await PhysicsHelpers.initRAPIER();
 
@@ -61,6 +63,29 @@ class Scene {
             const gameObject = this.gameObjects[i];
             await gameObject.load()
         }
+    }
+
+    _createGameObject(parent: Scene | GameObject, gameObjectJSON: GameObjectJSON) {
+        const options = { ...gameObjectJSON };
+        delete options.children;
+
+        const GameObjectClass = gameObjectJSON.type ? this.getGameObjectClass(gameObjectJSON.type) : GameObject;
+        if (!GameObjectClass) {
+            throw new Error(`Error: no GameObject sub-class registered for game object type: ${gameObjectJSON.type}`);
+        }
+
+        // @ts-ignore
+        const gameObject = new GameObjectClass(parent, options);
+
+        if (!(gameObject instanceof GameObject)) {
+            throw new Error(`Error: GameObject class must be a sub-class of GameObject. Invalid class registered for type ${gameObjectJSON.type}`);
+        }
+
+        parent.addGameObject(gameObject);
+        this.threeJSScene.add(gameObject.threeJSGroup);
+        (gameObjectJSON.children || []).forEach(childData => {
+            this._createGameObject(gameObject, childData);
+        });
     }
 
     advancePhysics() {
@@ -75,13 +100,16 @@ class Scene {
     }
 
     addGameObject(gameObject) {
+        if (!this.game) {
+            throw new Error('Scene: cannot add additional GameObjects until scene is loaded, initial game objects should be created by passing sceneJSON into the Scene constructor.');
+        }
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
             this.threeJSScene.add(gameObject.threeJSGroup);
 
             if (this.isActive()) {
-                gameObject.load(); // asynchronous
+                gameObject.load().then(() => gameObject.afterLoaded()); // asynchronous
             }
         }
     }
@@ -159,6 +187,10 @@ class Scene {
     }
 
     showPhysics() {
+        if (!this.game) {
+            throw new Error('showPhysics() must be called after the scene is loaded');
+        }
+
         let physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
         if (!physicsRenderingLines) {
             let material = new THREE.LineBasicMaterial({

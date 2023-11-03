@@ -44,10 +44,14 @@ const runDemo = async () => {
         },
         {
           name: 'ufo',
-          klass: UFOGameObject,
+          type: 'UFOGameObject',
           position: { z: -2, y: 2.5 }
         }
       ]
+    });
+
+    scene.registerGameObjectTypes({
+      UFOGameObject: UFOGameObject
     });
 
     await game.loadScene(scene);

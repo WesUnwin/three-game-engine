@@ -93,6 +93,10 @@ class KinematicCharacterController extends CharacterController {
     }
 
     beforeRender({ deltaTimeInSec, time }) {
+        if (!this.isLoaded()) {
+            return;
+        }
+
         const inputManager = this.getScene().game.inputManager;
         const keyboard = inputManager.keyboardHandler;
 

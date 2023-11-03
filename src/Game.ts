@@ -10,12 +10,25 @@ class Game {
     scene: Scene | null;
     assetStore: AssetStore | null;
     inputManager: InputManager;
+    gameObjectClasses: Object;
 
     constructor(options: GameOptions = {}) {
         this.options = options;
         this.scene = null;
         this.renderer = new Renderer(this, this.options.rendererOptions);
         this.inputManager = new InputManager(this.renderer.getCanvas(), this.options.inputOptions);
+        this.gameObjectClasses = {}; // key-values map game object types to GameObject sub-classes
+    }
+
+    registerGameObjectTypes(types: Object) {
+        for (const type in types) {
+            this.gameObjectClasses[type] = types[type];
+        }
+    }
+
+    getGameObjectClass(type) {
+        const klass = this.gameObjectClasses[type];
+        return klass || null;
     }
 
     getAssetStore(): AssetStore {

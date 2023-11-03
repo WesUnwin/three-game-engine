@@ -6,6 +6,18 @@ interface GameOptions {
     inputOptions?: InputOptions
 }
 
+interface SceneJSON {
+    name?: string;
+    background?: null;
+    gameObjects?: GameObjectJSON[];
+    gravity?: Vector3Data;
+}
+
+interface GameObjectJSON extends GameObjectOptions {
+    type?: string;
+    children?: GameObjectJSON[];
+}
+
 interface RendererOptions {
     width?: number;
     height?: number;
@@ -128,13 +140,6 @@ interface Vector3Data {
 interface LightData {
     type?: string;
     position?: Vector3Data;
-}
-
-interface SceneData {
-    name?: string;
-    background?: null;
-    gameObjects?: GameObjectOptions[];
-    gravity?: Vector3Data;
 }
 
 interface CharacterControllerOptions {

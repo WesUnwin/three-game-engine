@@ -56,7 +56,7 @@ const runDemo = async () => {
         },
         {
           name: 'barrel',
-          klass: BarrelGameObject,
+          type: 'BarrelGameObject',
           position: { x: 0.1, y: 3, z: 4 },
           rotation: { x: 0, y: -0.1, z: 20 }
         },
@@ -75,6 +75,10 @@ const runDemo = async () => {
           rotation: { x: 31, y: 90, z: 11 }
         }
       ]
+    });
+  
+    scene.registerGameObjectTypes({
+      BarrelGameObject: BarrelGameObject
     });
 
     game.renderer.setCameraPosition(-4, 5, 10);
