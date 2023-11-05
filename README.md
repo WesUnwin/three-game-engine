@@ -46,6 +46,13 @@ MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
     game.play();
 ```
 
+# Desktop and Mobile Apps
+In addition to using this library to build web apps that run in your browser, with third party tools like electron, cordova, etc. you can easily package and distribute your game as a desktop app or mobile app.
+
+This repo contains complete working examples of:
+- How to use electron & electron-forge to package your game as a desktop app, see [examples/electron](https://github.com/WesUnwin/three-game-engine/tree/main/examples/electron)
+- How to package your app as an android or iOS app using Apache Cordova, see [examples/cordova](https://github.com/WesUnwin/three-game-engine/tree/main/examples/cordova)
+
 # Library API
 
 Top level objects:
