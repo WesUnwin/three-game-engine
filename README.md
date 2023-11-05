@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/three-game-engine.svg)](https://badge.fury.io/js/three-game-engine)
 
 # three-game-engine
 Simple, lightweight game engine using:
