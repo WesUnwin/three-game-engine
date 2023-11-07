@@ -224,7 +224,8 @@ A Scene internally manages a Three.js Scene object.
 
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| new Scene(sceneData)                         | Creates a 3D scene from the given data.                                          |
+| new Scene()                                  | Creates a new empty Scene.                                                       |
+| new Scene(jsonAssetPath)                     | Creates a new scene, that will be populated with the layout of GameObjects in the specified json file. See Scene JSON. |
 | addGameObject(gameObject)                    | Adds the given GameObject to the scene.                                         |
 | removeGameObject(gameObject)                 | Removes the given GameObject from the scene.                                     |
 | getRootGameObjects()                         | Returns all top level game objects in the scene.                                 |
