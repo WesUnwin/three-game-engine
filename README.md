@@ -1,5 +1,7 @@
 [![npm version](https://badge.fury.io/js/three-game-engine.svg)](https://badge.fury.io/js/three-game-engine)
 
+MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
+
 # three-game-engine
 Simple, lightweight game engine using:
  - Three.js - a 3D WebGL-based Graphics Engine (https://github.com/mrdoob/three
@@ -10,40 +12,139 @@ This library simply ties together several well known, capable javascript librari
 
 ![Screenshot](docs/three-game-engine.png)
 
-This game engine allows you to manage a Scene of GameObjects.
-Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
-
-![Screenshot](docs/three-game-engine-architecture.png)
-
-## The vision
+## The Vision
  - to make it easy to tie together 3 great javascript libraries: ThreeJS, Rapier3D, and three-mesh-ui to create a versatile, easy to use 3D game engine.
  - to allow javascript lovers to easily jump into game development, using tools and libraries familiar to them.
  - to offer a 100% free engine that can be used by anyone to build personal or comercial apps/games.
  - maintain source code that is highly readable, and extendable
  - to offer VR support
 
-MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
+# Architecture
+This game engine allows you to manage a Scene of GameObjects.
+Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
 
-# Example
+![Screenshot](docs/three-game-engine-architecture.png)
+
+# Assets
+Your game will need to load and interact with various files such as gltfs, sounds, images, scene JSON files, game object type JSON files, etc.
+The game object manages an AssetStore (game.assetStore) which manages loading and caching files as they are needed.
+
+Your game will need to specify a base URL: (eg. https://localhost/assets or file://yourgamefiles/assets) to be used for all assets.
+All assets are specified by an asset path which is relative to this base URL: eg an asset path of models/player.glb thus would be loaded from https://localhost/assets/models/player.glb.
+
+# Scenes
+Scenes are represented by instances of the Scene class, or a sub-class of Scene.
+Scenes can (optionally) be initialized by JSON data that controls the positioning and layout of GameObjects representing scenary, items. characters, etc. in the scene.
+
+Creating a class that extends the Scene class will give you the ability to add scripting to control the behavior of the scene.
+
+Furthermore you can registerGameObjectClasses() to associate a javascript class with each type of GameObject, allowing you to control the behavior of types of GameObjects.
 
 ```
-    import { Game, Scene } from "three-game-engine";
+import { Scene } from 'three-game-engine';
+import testAreaJSON from './testArea.json';
 
-    const game = new Game({
-      rendererOptions: {
-        setupFullScreenCanvas: true
-      },
-      assetOptions: {
-        baseURL: 'http://localhost:8080/assets'
-      }
+import PlayerGameObject from '../game_objects/PlayerGameObject.js';
+
+class TestAreaScene extends Scene {
+  constructor() {
+    super(testAreaJSON); // will use the layout defined in this json to populate this scene with game objects when loaded
+  
+    // Designate the PlayerGameObject JS class (a sub-class of GameObject),
+    // to controls all game objects of type 'playerGameObject', defined in the above testAreaJSON
+    this.registerGameObjectClasses({
+      'playerGameObject': PlayerGameObject 
     })
+  }
 
-    const scene = new Scene();
+  afterLoaded() {
+    // called once when this scene is loaded by the game object
+  }
 
-    await game.loadScene(scene);
+  beforeRender() {
+    // called once before each time ThreeJS renders the scene
+  }
+}
+```
 
-    // Will render the empty scene, displaying its default blue background
-    game.play();
+# Scene JSON
+The best way to control the initial layout of a scene is by creating a .json file like this:
+
+```
+{
+  "gameObjectTypes": {
+    "player": "game_objects/player.json" // asset path relative to assetOptions.baseURL 
+  },
+
+  "gameObjects": [
+    // you can define individual, unique GameObjects like this:
+    { 
+      "name": "ground",
+      "models": [
+        { "assetPath": "models/ground.glb" }
+      ],
+      "lights": [
+        { "type": "AmbientLight", "intensity": 0.5 }
+      ],
+      "position": { "x": 5, "y": 0, "z": 0 }
+    },
+
+    // OR you can create a game object of a given "type", inheriting from the above game object type's .json file
+    { 
+      "type": "player",
+      "position": { "x": 5, "y": 0, "z": 0 }
+    }
+  ]
+}
+```
+
+# GameObject Type JSON
+You can define a type of GameObject by a .json file, to create re-usable, generalized GameObjects that all
+are based off a common set of properties (eg. all share the same models/physics properties etc.)
+
+```
+{
+  "models": [
+    { "assetPath": "models/player.glb" }
+  ],
+  "rigidBody": { // Optional
+      "type": "kinematicPositionBased",
+      "colliders": [
+          { "type": "capsule", "halfHeight": 0.5, "radius", 0.5 }
+      ],
+      "enabledRotations": { "x": false, "y": true, "z": false }
+  }
+}
+```
+
+# GameObject Classes
+A GameObject type can also be (optionally) associated with a GameObject sub-class.
+
+call game/scene.registerGameObjectClasses() to link your javascript GameObject class to a type of
+GameObject.
+
+Registering a GameObject class allows you to define/control the behavior of GameObjects of this type.
+
+```
+  class PlayerGameObject extends GameObject {
+      afterLoaded() {
+        // called once when this GameObject and its scene gets loaded
+      }
+
+      beforeRender() {
+        // called once each frame
+        // you can control the behavior and functionality of the game object here.
+      }
+  }
+```
+
+# Examples
+The examples/ folder In this repo contains several simple example apps that that demonstrate features of the engine.
+To run the examples in your browser, clone this repo then run:
+
+```
+  npm install
+  npm run examples
 ```
 
 # Desktop and Mobile Apps
@@ -53,7 +154,8 @@ This repo contains complete working examples of:
 - How to use electron & electron-forge to package your game as a desktop app, see [examples/electron](https://github.com/WesUnwin/three-game-engine/tree/main/examples/electron)
 - How to package your app as an android or iOS app using Apache Cordova, see [examples/cordova](https://github.com/WesUnwin/three-game-engine/tree/main/examples/cordova)
 
-# Library API
+
+# API Reference
 
 Top level objects:
 

@@ -9,6 +9,7 @@ interface GameOptions {
 interface SceneJSON {
     name?: string;
     background?: null;
+    gameObjectTypes: {};
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
 }

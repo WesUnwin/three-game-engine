@@ -4,27 +4,33 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { GameObjectJSON, GameObjectOptions, SceneJSON } from './types';
+import { GameObjectJSON, SceneJSON } from './types';
 
 class Scene {
     name: string;
     threeJSScene: THREE.Scene;
     gameObjects: GameObject[];
     game: Game | null;
+    jsonAssetPath: string; // (optional) assetPath to the a .json file containing scene json
     sceneJSON: SceneJSON;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
     gameObjectClasses: Object;
+    gameObjectTypes: Object;
 
-    constructor(sceneJSON: SceneJSON = {}) {
-        this.name = sceneJSON.name || 'unnamed-scene';
-        this.sceneJSON = sceneJSON;
+    constructor(jsonAssetPath?: string) {
+        this.jsonAssetPath = jsonAssetPath;
+
+        this.name = 'unnamed-scene';
+
         this.gameObjects = [];
         this.threeJSScene = null;
         this.gameObjectClasses = {};
+
+        this.gameObjectTypes = {};
     }
 
-    registerGameObjectTypes(types: Object) {
+    registerGameObjectClasses(types: Object) {
         for (const type in types) {
             this.gameObjectClasses[type] = types[type];
         }
@@ -42,22 +48,34 @@ class Scene {
     async load(game) {
         this.game = game;
 
+        if (this.jsonAssetPath) {
+            const jsonAsset = await this.game.loadAsset(this.jsonAssetPath);
+            this.sceneJSON = jsonAsset.data;
+
+            if (this.sceneJSON?.gameObjectTypes) {
+                for (const gameObjectType in this.sceneJSON.gameObjectTypes) {
+                    const assetPath = this.sceneJSON.gameObjectTypes[gameObjectType];
+                    const gameObjectTypeJSON = await this.game.loadAsset(assetPath);
+                    this.gameObjectTypes[gameObjectType] = gameObjectTypeJSON.data;
+                }
+            }
+        }
+
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.name = this.name;
-        this.threeJSScene.background = this.sceneJSON.background || new THREE.Color('lightblue');
-
-        this.initialGravity = {
-            x: this.sceneJSON.gravity?.x || 0,
-            y: this.sceneJSON.gravity?.y || -9.8,
-            z: this.sceneJSON.gravity?.z || 0,
-        };
-
-        this.gameObjects = [];
-        (this.sceneJSON.gameObjects || []).forEach(g => this._createGameObject(this, g));
+        this.threeJSScene.background = this.sceneJSON?.background || new THREE.Color('lightblue');
 
         await PhysicsHelpers.initRAPIER();
 
+        this.initialGravity = {
+            x: this.sceneJSON?.gravity?.x || 0,
+            y: this.sceneJSON?.gravity?.y || -9.8,
+            z: this.sceneJSON?.gravity?.z || 0,
+        };
         this.rapierWorld = PhysicsHelpers.createRapierWorld(this.initialGravity);
+
+        this.gameObjects = [];
+        (this.sceneJSON?.gameObjects || []).forEach(g => this._createGameObject(this, g));
 
         for(let i = 0; i<this.gameObjects.length; i++) {
             const gameObject = this.gameObjects[i];
@@ -69,13 +87,35 @@ class Scene {
         const options = { ...gameObjectJSON };
         delete options.children;
 
-        const GameObjectClass = gameObjectJSON.type ? this.getGameObjectClass(gameObjectJSON.type) : GameObject;
+        let gameObject = null;
+
+        let GameObjectClass = GameObject;
+        if (gameObjectJSON.type) {
+            const type = gameObjectJSON.type;
+
+            const gameObjectTypeJSON = this.gameObjectTypes[type];
+            if (!gameObjectTypeJSON) {
+                throw new Error(`Scene: error creating game object: unknown game object type: ${type}. You must define this type in the scene JSON .gameObjectTypes field`);
+            }
+
+            // Merge the base set of options defined in the the game object type json, with any options for this individual object
+            // from the scene JSON.
+            const allOptions = Object.assign({}, gameObjectTypeJSON, options);
+
+            const RegisteredGameObjectClass = this.gameObjectClasses[type];
+            if (RegisteredGameObjectClass) {
+                // @ts-ignore
+                gameObject = new RegisteredGameObjectClass(parent, allOptions);
+            } else {
+                gameObject = new GameObject(parent, allOptions);
+            }
+        } else {
+            gameObject = new GameObject(parent, options);
+        }
+
         if (!GameObjectClass) {
             throw new Error(`Error: no GameObject sub-class registered for game object type: ${gameObjectJSON.type}`);
         }
-
-        // @ts-ignore
-        const gameObject = new GameObjectClass(parent, options);
 
         if (!(gameObject instanceof GameObject)) {
             throw new Error(`Error: GameObject class must be a sub-class of GameObject. Invalid class registered for type ${gameObjectJSON.type}`);

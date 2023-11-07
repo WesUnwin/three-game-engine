@@ -20,7 +20,7 @@ class Game {
         this.gameObjectClasses = {}; // key-values map game object types to GameObject sub-classes
     }
 
-    registerGameObjectTypes(types: Object) {
+    registerGameObjectClasses(types: Object) {
         for (const type in types) {
             this.gameObjectClasses[type] = types[type];
         }

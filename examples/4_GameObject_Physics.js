@@ -37,54 +37,17 @@ const runDemo = async () => {
         }
     }
 
-    const scene = new Scene({
-      gameObjects: [
-        {
-          name: 'ground',
-          models: [
-            { assetPath: 'models/test_area.glb' }
-          ],
-          lights: [
-            { type: 'AmbientLight', intensity: 0.5 }
-          ],
-          rigidBody: {
-            type: 'fixed',
-            colliders: [
-                { type: 'cuboid', hx: 5, hy: 0.5, hz: 5 }
-            ]
-          }
-        },
-        {
-          name: 'barrel',
-          type: 'BarrelGameObject',
-          position: { x: 0.1, y: 3, z: 4 },
-          rotation: { x: 0, y: -0.1, z: 20 }
-        },
-        {
-          name: 'bale',
-          models: [
-            { assetPath: 'models/bale_of_hay.glb' }
-          ],
-          rigidBody: {
-            type: 'dynamic',
-            colliders: [
-              { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
-            ]
-          },
-          position: { x: 1, y: 6, z: 0 },
-          rotation: { x: 31, y: 90, z: 11 }
-        }
-      ]
-    });
-  
-    scene.registerGameObjectTypes({
-      BarrelGameObject: BarrelGameObject
-    });
+    const scene = new Scene("json/scenes/simpleTestScene.json");
 
     game.renderer.setCameraPosition(-4, 5, 10);
     game.renderer.makeCameraLookAt(0,0,0);
 
     await game.loadScene(scene);
+
+    new BarrelGameObject(scene, {
+      position: { x: 0, y: 3, z: 0 },
+      rotation: { x: 1.4, y: 2, z: 2 }
+    });
 
     game.play();
 

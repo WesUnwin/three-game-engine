@@ -31,30 +31,15 @@ const runDemo = async () => {
         }
     }
 
-    const scene = new Scene({
-      gameObjects: [
-        {
-          name: 'ground',
-          models: [
-            { assetPath: 'models/test_area.glb' }
-          ],
-          lights: [
-            { type: 'PointLight', position: { x: 0, y: 5, z: 0 } }
-          ]
-        },
-        {
-          name: 'ufo',
-          type: 'UFOGameObject',
-          position: { z: -2, y: 2.5 }
-        }
-      ]
-    });
-
-    scene.registerGameObjectTypes({
-      UFOGameObject: UFOGameObject
-    });
+    const scene = new Scene("json/scenes/simpleTestScene.json");
 
     await game.loadScene(scene);
+
+    new UFOGameObject(scene, {
+      name: 'ufo',
+      type: 'UFOGameObject',
+      position: { z: -2, y: 2.5 }
+    })
 
     game.play();
 }
