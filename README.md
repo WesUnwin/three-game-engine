@@ -6,7 +6,7 @@ MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
 Simple, lightweight game engine using:
  - Three.js - a 3D WebGL-based Graphics Engine (https://github.com/mrdoob/three
  - Rapier - a 3D Physics Engine (https://github.com/dimforge/rapier.js)
- - three-mesh-ui - Toolkit for building 3D user interfaces in Three.js
+ - three-mesh-ui - Lets you build 3D user interfaces in Three.js (https://github.com/felixmariotto/three-mesh-ui)
 
 This library simply ties together several well known, capable javascript libraries resulting in a powerful yet simple game engine.
 
