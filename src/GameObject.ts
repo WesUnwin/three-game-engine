@@ -5,7 +5,9 @@ import Scene from './Scene';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import GLTFAsset from './assets/GLTFAsset';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
+import * as UIHelpers from './ui/UIHelpers';
 import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
+import { UserInterfaceJSON } from './ui/UIHelpers';
 
 class GameObject {
     name: string;
@@ -18,6 +20,7 @@ class GameObject {
     loaded: boolean;
     rigidBodyData: RigidBodyData | null;
     rapierRigidBody: RAPIER.RigidBody | null;
+    userInterfacesData: UserInterfaceJSON[];
 
     constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
@@ -54,6 +57,8 @@ class GameObject {
         this.setRotation(rotX, rotY, rotZ, rotOrder);
 
         this.rigidBodyData = options.rigidBody || null;
+
+        this.userInterfacesData = options.userInterfaces || [];
 
         parent.addGameObject(this);
         this.parent = parent;
@@ -158,6 +163,10 @@ class GameObject {
                 setObject3DProps(object3D, objectProps);
                 this.threeJSGroup.add(object3D);
             });
+        }
+
+        for (let uiData of this.userInterfacesData) {
+            await UIHelpers.createUIComponent(uiData, this.threeJSGroup, scene.game.assetStore);
         }
 
         this.lights.forEach(lightData => {

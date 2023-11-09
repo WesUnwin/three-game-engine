@@ -1,4 +1,5 @@
 import RAPIER from "@dimforge/rapier3d-compat";
+import { UserInterfaceJSON } from "./ui/UIHelpers";
 
 interface GameOptions {
     rendererOptions?: RendererOptions;
@@ -53,6 +54,7 @@ interface GameObjectOptions {
     scale?: Vector3Data;
     rotation?: EulerValues;
     rigidBody?: RigidBodyData;
+    userInterfaces?: UserInterfaceJSON[];
 }
 
 interface ModelData {
