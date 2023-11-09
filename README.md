@@ -62,13 +62,13 @@ class TestAreaScene extends Scene {
   }
 
   beforeRender() {
-    // called once before each time ThreeJS renders the scene
+    // called once per frame, before ThreeJS is used to render the scene
   }
 }
 ```
 
 # Scene JSON
-The best way to control the initial layout of a scene is by creating a .json file like this:
+The best way to populate a scene with an initial set of game objects is by using a .json file like this:
 
 ```
 {
@@ -107,20 +107,34 @@ are based off a common set of properties (eg. all share the same models/physics 
   "models": [
     { "assetPath": "models/player.glb" }
   ],
+  "lights": [
+    { "type": "PointLight", "position": { "x": 0, "y": 5, "z": 0 } }
+  ],
   "rigidBody": { // Optional
       "type": "kinematicPositionBased",
       "colliders": [
           { "type": "capsule", "halfHeight": 0.5, "radius", 0.5 }
       ],
       "enabledRotations": { "x": false, "y": true, "z": false }
-  }
+  },
+  "userInterfaces": [ // Optional, GameObjects can create MeshUIComponents (via three-mesh-ui library) which will be added to the threeJSGroup
+    {
+      "type": "Block",
+      "children": [
+        {
+          "type": "Text",
+          "content": "Hello world!"
+        }
+      ]
+    }
+  ]
 }
 ```
 
 # GameObject Classes
 A GameObject type can also be (optionally) associated with a GameObject sub-class.
 
-call game/scene.registerGameObjectClasses() to link your javascript GameObject class to a type of
+Call game/scene.registerGameObjectClasses() to link your javascript GameObject class to a type of
 GameObject.
 
 Registering a GameObject class allows you to define/control the behavior of GameObjects of this type.
@@ -129,11 +143,15 @@ Registering a GameObject class allows you to define/control the behavior of Game
   class PlayerGameObject extends GameObject {
       afterLoaded() {
         // called once when this GameObject and its scene gets loaded
+        this.y = 0;
       }
 
-      beforeRender() {
-        // called once each frame
-        // you can control the behavior and functionality of the game object here.
+      beforeRender({ deltaTimeInSec }) {
+        // Called once per frame
+
+        this.setRotation(0, this.y, 0);
+
+        this.y += 1 * deltaTimeInSec;
       }
   }
 ```
