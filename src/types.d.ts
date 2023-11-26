@@ -27,6 +27,7 @@ interface RendererOptions {
     pixelRatio?: number;
     cameraOptions?: CameraOptions;
     setupFullScreenCanvas?: boolean;
+    canvas?: HTMLCanvasElement;
 }
 
 interface CameraOptions {

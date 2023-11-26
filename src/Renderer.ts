@@ -7,6 +7,11 @@ import Logger from './Logger'
 import GameObject from './GameObject';
 import { RendererOptions } from './types';
 
+interface ThreeJSWebGL1RendererConstructorOptions {
+    antialias?: boolean;
+    canvas?: HTMLCanvasElement;
+}
+
 class Renderer {
     game: Game;
     options: RendererOptions;
@@ -20,7 +25,20 @@ class Renderer {
         this.game = game;
         this.options = options;
 
-        this.threeJSRenderer = new THREE.WebGL1Renderer({ antialias: true });
+        const threeJSRendererOptions: ThreeJSWebGL1RendererConstructorOptions = {
+            antialias: true
+        };
+        if (options.canvas) {
+            threeJSRendererOptions.canvas = options.canvas;
+            if (!this.options.width) {
+                this.options.width = options.canvas.width;
+            }
+            if (!this.options.height) {
+                this.options.height = options.canvas.height;
+            }
+        }
+
+        this.threeJSRenderer = new THREE.WebGL1Renderer(threeJSRendererOptions);
         this.threeJSRenderer.gammaOutput = true;
         this.threeJSRenderer.outputEncoding = THREE.sRGBEncoding;
         this.threeJSRenderer.shadowMap.enabled = true;
