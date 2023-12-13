@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Sidebar from './src/Sidebar.jsx';
+import App from './src/App.jsx';
 import { Game, Scene } from '../dist/index.js';
 
 console.log('Scene editor running')
@@ -54,4 +54,4 @@ game.play();
 
 const container = document.getElementById('sidebar_container');
 const root = createRoot(container);
-root.render(<Sidebar />);
+root.render(<App />);
