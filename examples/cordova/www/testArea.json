@@ -1,0 +1,241 @@
+{
+  "gameObjectTypes": {
+    "ExampleCharacter": "game_objects/ExampleCharacter.json",
+    "Platform10_10_1": "game_objects/environment/Platform10_10_1.json",
+    "Platform2_2_2": "game_objects/environment/Platform2_2_2.json",
+    "Platform2_2_1": "game_objects/environment/Platform2_2_1.json",
+    "Platform2_2_05": "game_objects/environment/Platform2_2_05.json",
+    "Platform2_10_1": "game_objects/environment/Platform2_10_1.json"
+  },
+  "gameObjects": [
+    {
+      "type": "ExampleCharacter",
+      "name": "player",
+      "position": { "x": -3, "y": 3, "z": 3 }
+    },
+    {
+        "type": "Platform10_10_1",
+        "position": { "x": 0, "y": -0.25, "z": 0 },
+        "lights": [
+            { "type": "AmbientLight", "intensity": 0.5 }
+        ]
+    },
+    {
+      "type": "Platform10_10_1",
+      "position": { "x": 0, "y": -0.25, "z": -10 }
+    },
+
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -1, "y": 1.25, "z": -14 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": 1, "y": 1.25, "z": -14 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": 3, "y": 1.25, "z": -14 } 
+    },
+
+    {
+      "type": "Platform2_2_05",  
+      "position": { "x": -4, "y": 2.5, "z": -14 }
+    },
+
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -1, "y": 1, "z": -12 }
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -1, "y": 0.75, "z": -10 }
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -1, "y": 0.5, "z": -8 }
+    },
+    {
+      "type": "Platform2_2_1",
+      "position": { "x": -1, "y": 0.75, "z": -6 }
+    },
+    {
+      "type": "Platform2_2_1",
+      "position": { "x": -1, "y": 0.5, "z": -4 }
+    },
+    {
+      "type": "Platform2_2_05",
+      "position": { "x": -1, "y": 0.5, "z": -2 }
+    },
+    {
+      "type": "Platform2_2_05",
+      "position": { "x": -1, "y": 0.25, "z": 0 }
+    },
+
+
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": 1, "y": 0.75, "z": -12 }
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": 1, "y": 0.25, "z": -10 }
+    },
+    {
+      "type": "Platform2_2_1",  
+      "position": { "x": 1, "y": 0.25, "z": -8 }
+    },
+
+    {
+      "type": "Platform2_2_1", 
+      "position": { "x": 3, "y": 0.75, "z": -12 }
+    },
+
+
+    {
+      "type": "Platform10_10_1",
+      "position": { "x": -11, "y": -0.25, "z": -10 }
+    },
+
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -7, "y": 1.25, "z": -14 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -9, "y": 1.25, "z": -14 }
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -11, "y": 1.25, "z": -14 }
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -13, "y": 1.25, "z": -14 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -15, "y": 1.25, "z": -14 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -15, "y": 1.25, "z": -12 } 
+    },
+    {
+      "type": "Platform2_2_2",
+      "position": { "x": -15, "y": 1.25, "z": -10 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -15, "y": -1.1, "z": -0.1 }, 
+      "rotation": { "x": 0.174533, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -13, "y": -1.95, "z": -0.4 }, 
+      "rotation": { "x": 0.349066, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -11, "y": -2.8, "z": -0.9 }, 
+      "rotation": { "x": 0.523599, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -9, "y": -3.6, "z": -1.5 },
+      "rotation": { "x": 0.698132, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -7, "y": -4, "z": -2.2 }, 
+      "rotation": { "x": 0.872665, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -15, "y": -2, "z": 9.9 },
+      "rotation": { "x": 0, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -13, "y": -3.5, "z": 9 },
+      "rotation": { "x": 0, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -11, "y": -5.25, "z": 8.5 },
+      "rotation": { "x": 0, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -9, "y": -6.9, "z": 7.5 },
+      "rotation": { "x": 0, "y": 1.57, "z": 0 }
+    },
+    {
+      "type": "Platform2_10_1",
+      "position": { "x": -7, "y": -8, "z": 6 },
+      "rotation": { "x": 0, "y": 1.57, "z": 0 }
+    },
+
+
+    {
+      "type": "Platform10_10_1",
+      "position": { "x": 12, "y": -0.25, "z": -10 }
+    },
+    {
+      "name": "bale",
+      "models": [
+        { "assetPath": "models/bale_of_hay.glb" }
+      ],
+      "rigidBody": {
+        "type": "dynamic",
+        "colliders": [
+          { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
+        ]
+      },
+      "position": { "x": 7, "y": 6, "z": -8 },
+      "rotation": { "x": 31, "y": 90, "z": 11 }
+    },
+    {
+      "name": "bale2",
+      "models": [
+        { "assetPath": "models/bale_of_hay.glb" }
+      ],
+      "rigidBody": {
+        "type": "dynamic",
+        "colliders": [
+          { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
+        ]
+      },
+      "position": { "x": 12, "y": 6, "z": -8 },
+      "rotation": { "x": 5, "y": 90, "z": 11 }
+    },
+    {
+      "name": "barrel",
+      "models": [
+        { "assetPath": "models/barrel.glb" }
+      ],
+      "rigidBody": {
+        "type": "dynamic",
+        "colliders": [
+          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
+        ]
+      },
+      "position": { "x": 14, "y": 6, "z": -5 },
+      "rotation": { "x": 5, "y": 90, "z": 11 }
+    },
+    {
+      "name": "barrel2",
+      "models": [
+        { "assetPath": "models/barrel.glb" }
+      ],
+      "rigidBody": {
+        "type": "dynamic",
+        "colliders": [
+          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
+        ]
+      },
+      "position": { "x": 14, "y": 6, "z": -11 },
+      "rotation": { "x": 5, "y": 90, "z": 11 }
+    }
+  ]
+}

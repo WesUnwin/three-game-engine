@@ -1,15 +1,7 @@
-import { Game, KinematicCharacterController } from "../dist/index";
-import TestAreaScene from "./scenes/TestAreaScene";
+import { Game, KinematicCharacterController } from "../../dist/index";
 
 const runDemo = async () => {
-    const game = new Game({
-      rendererOptions: {
-        setupFullScreenCanvas: true
-      },
-      assetOptions: {
-        baseURL: 'http://localhost:8080/assets'
-      }
-    })
+    const game = new Game('http://localhost:8080/examples/first_person_character_controller');
 
     class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
@@ -30,27 +22,33 @@ const runDemo = async () => {
               }
             )
         }
+  
+        afterLoaded() {
+          super.afterLoaded();
+
+          const scene = this.getScene();
+          const game = scene.game;
+        
+          const player = scene.findByName('player');
+
+          game.renderer.setCameraPosition(-4, 5, 10);
+          game.renderer.makeCameraLookAt(0,0,0);
+        
+          const cam = game.renderer.getCamera();
+          player.threeJSGroup.add(cam);
+
+          cam.position.set(0, 0.4, 0);
+          cam.rotation.set(0, 0, 0);
+
+          scene.showPhysics();
+        }
     }
   
-    const scene = new TestAreaScene();
+    game.registerGameObjectClasses({ ExampleCharacter });
 
-    await game.loadScene(scene);
-
-    const character = new ExampleCharacter(scene, {
-        name: 'player',
-        position: { x: -3, y: 3, z: 3 }
-    });
-
-    scene.showPhysics();
+    await game.loadScene('TestAreaScene');
 
     game.play();
-
-    const player = scene.findByName('player');
-
-    const cam = game.renderer.getCamera();
-    cam.position.set(-11,5,11);
-
-    cam.lookAt(player.threeJSGroup.position)
 
     window.game = game;
 }

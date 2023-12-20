@@ -1,90 +1,57 @@
-import { Game, Scene, GameObject} from "three-game-engine";
-
-console.log('running three-game-engine example cordova app');
+import { Game, KinematicCharacterController } from "../../../dist/index"
 
 const runDemo = async () => {
-    const game = new Game({
-      rendererOptions: {
-        setupFullScreenCanvas: true
-      },
-      assetOptions: {
-        baseURL: 'https://localhost'  
-      }
-    })
+    // Here with this example cordova app, the base URL refers to everything in the cordova/www folder
+    const game = new Game('https://localhost');
 
-    // Scripts can be associated by GameObjects by creating your own GameObject sub-class
-    class BarrelGameObject extends GameObject {
+    class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
-            super(parent, {
-              models: [
-                { assetPath: 'models/barrel.glb' }
-              ],
-              rigidBody: {
-                type: 'dynamic',
-                colliders: [
-                  { type: 'cylinder', halfHeight: 0.5, radius: 0.5 }
-                ]
-              },
-                ...options // merge with any passed in GameObjectOptions
-            })
+            super(parent,
+              { // GameObjectOptions
+                models: [],
+                ...options
+              }, 
+              { // CharacterControllerOptions
+              }, 
+              { // KinematicCharacterControllerOptions
+                autoStep: {
+                  maxHeight: 0.35, // automatically step onto platforms as long as their not taller than this value
+                  minWidth: 0.5, // in order to auto-step onto, at least this much clearance is needed on top of it
+                  includeDynamicBodies: false // if true this would step onto dynamic bodies (that are small enough)
+                },
+                applyImpulsesToDynamicBodies: true // allows you to push around things like the Barrel and Bale of Hay
+              }
+            )
         }
-
+  
         afterLoaded() {
-          // Once a force is added it will remain affecting the rigid body untill removed
-          this.rapierRigidBody.addForce({ x: 0, y: 0, z: -1 }, true);
-        }
+          super.afterLoaded();
 
-        beforeRender() {
+          const scene = this.getScene();
+          const game = scene.game;
+        
+          const player = scene.findByName('player');
 
+          game.renderer.setCameraPosition(-4, 5, 10);
+          game.renderer.makeCameraLookAt(0,0,0);
+        
+          const cam = game.renderer.getCamera();
+          player.threeJSGroup.add(cam);
+
+          cam.position.set(0, 0.4, 0);
+          cam.rotation.set(0, 0, 0);
+
+          scene.showPhysics();
         }
     }
+  
+    game.registerGameObjectClasses({ ExampleCharacter });
 
-    const scene = new Scene({
-      gameObjects: [
-        {
-          name: 'ground',
-          models: [
-            { assetPath: 'models/test_area.glb' }
-          ],
-          lights: [
-            { type: 'AmbientLight', intensity: 0.5 }
-          ],
-          rigidBody: {
-            type: 'fixed',
-            colliders: [
-                { type: 'cuboid', hx: 5, hy: 0.5, hz: 5 }
-            ]
-          }
-        },
-        {
-          name: 'barrel',
-          klass: BarrelGameObject,
-          position: { x: 0.1, y: 3, z: 4 },
-          rotation: { x: 0, y: -0.1, z: 20 }
-        },
-        {
-          name: 'bale',
-          models: [
-            { assetPath: 'models/bale_of_hay.glb' }
-          ],
-          rigidBody: {
-            type: 'dynamic',
-            colliders: [
-              { type: 'cuboid', hx: 0.5, hy: 0.5, hz: 1 }
-            ]
-          },
-          position: { x: 1, y: 6, z: 0 },
-          rotation: { x: 31, y: 90, z: 11 }
-        }
-      ]
-    });
-
-    game.renderer.setCameraPosition(-4, 5, 10);
-    game.renderer.makeCameraLookAt(0,0,0);
-
-    await game.loadScene(scene);
+    await game.loadScene('TestAreaScene');
 
     game.play();
+
+    window.game = game;
 }
 
-runDemo()
+runDemo();

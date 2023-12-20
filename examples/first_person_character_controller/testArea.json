@@ -1,12 +1,18 @@
 {
   "gameObjectTypes": {
-    "Platform10_10_1": "json/game_objects/environment/Platform10_10_1.json",
-    "Platform2_2_2": "json/game_objects/environment/Platform2_2_2.json",
-    "Platform2_2_1": "json/game_objects/environment/Platform2_2_1.json",
-    "Platform2_2_05": "json/game_objects/environment/Platform2_2_05.json",
-    "Platform2_10_1": "json/game_objects/environment/Platform2_10_1.json"
+    "ExampleCharacter": "game_objects/ExampleCharacter.json",
+    "Platform10_10_1": "game_objects/environment/Platform10_10_1.json",
+    "Platform2_2_2": "game_objects/environment/Platform2_2_2.json",
+    "Platform2_2_1": "game_objects/environment/Platform2_2_1.json",
+    "Platform2_2_05": "game_objects/environment/Platform2_2_05.json",
+    "Platform2_10_1": "game_objects/environment/Platform2_10_1.json"
   },
   "gameObjects": [
+    {
+      "type": "ExampleCharacter",
+      "name": "player",
+      "position": { "x": -3, "y": 3, "z": 3 }
+    },
     {
         "type": "Platform10_10_1",
         "position": { "x": 0, "y": -0.25, "z": 0 },

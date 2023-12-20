@@ -1,103 +1,68 @@
-import { Game, Scene, GameObject } from "three-game-engine"
+import { Game, KinematicCharacterController } from "../../../dist/index"
 
-
-// Since we can't use a top-level await, wrap everything in runApp() and call immediately
-const runApp = async () => {
-    let asssetBaseURL = `http://localhost:8080`;
-
-    if (window.electron) {
-      const isPackaged = await window.electron.isAppPackaged();
-      if (isPackaged) {
+const runDemo = async () => {
+    // For an electron app, we can use a file:// URL to references file packaged up with the electron
+    // app that will be installed on the user's machine.
+    let baseURL = null;
+    const isPackaged = await window.electron.isAppPackaged();
+    if (isPackaged) {
         const resourcesPath = window.electron.getResourcesPath();
-        asssetBaseURL = `file://${resourcesPath}/assets`;
-      } else {
+        baseURL = `file://${resourcesPath}/assets`;
+    } else {
         const dirName = window.electron.getDirName();
-        asssetBaseURL = `file://${dirName}/../../../assets`;
-      }
+        baseURL = `file://${dirName}/../../../assets`;
     }
 
-    const game = new Game({
-        rendererOptions: {
-        },
-        assetOptions: {
-            baseURL: asssetBaseURL
-        }
-    })
+    const game = new Game(baseURL);
 
-    const canvas = game.renderer.getCanvas();
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
-
-    document.body.innerHTML = '';
-    document.body.appendChild(canvas);
-    document.body.style.margin = '0px';
-  
-    // on resizing the viewport, update the dimensions of the canvas to fill the viewport
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      game.renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    game.renderer.setSize(window.innerWidth, window.innerHeight);
-    
-    class BarrelGameObject extends GameObject {
+    class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
-            super(parent, {
-            models: [
-                { assetPath: 'models/barrel.glb' }
-            ],
-            rigidBody: {
-                type: 'dynamic',
-                colliders: [
-                { type: 'cylinder', halfHeight: 0.5, radius: 0.5 }
-                ]
-            },
-                ...options // merge with any passed in GameObjectOptions
-            })
+            super(parent,
+              { // GameObjectOptions
+                models: [],
+                ...options
+              }, 
+              { // CharacterControllerOptions
+              }, 
+              { // KinematicCharacterControllerOptions
+                autoStep: {
+                  maxHeight: 0.35, // automatically step onto platforms as long as their not taller than this value
+                  minWidth: 0.5, // in order to auto-step onto, at least this much clearance is needed on top of it
+                  includeDynamicBodies: false // if true this would step onto dynamic bodies (that are small enough)
+                },
+                applyImpulsesToDynamicBodies: true // allows you to push around things like the Barrel and Bale of Hay
+              }
+            )
         }
-    
+  
         afterLoaded() {
-            // Once a force is added it will remain affecting the rigid body untill removed
-            this.rapierRigidBody.addForce({ x: 0, y: 0, z: -1 }, true);
-        }
-    
-        beforeRender() {
+          super.afterLoaded();
+
+          const scene = this.getScene();
+          const game = scene.game;
+        
+          const player = scene.findByName('player');
+
+          game.renderer.setCameraPosition(-4, 5, 10);
+          game.renderer.makeCameraLookAt(0,0,0);
+        
+          const cam = game.renderer.getCamera();
+          player.threeJSGroup.add(cam);
+
+          cam.position.set(0, 0.4, 0);
+          cam.rotation.set(0, 0, 0);
+
+          scene.showPhysics();
         }
     }
-    
-    const scene = new Scene({
-        gameObjects: [
-            {
-                name: 'ground',
-                models: [
-                    { assetPath: 'models/test_area.glb' }
-                ],
-                lights: [
-                    { type: 'AmbientLight', intensity: 0.5 }
-                ],
-                rigidBody: {
-                    type: 'fixed',
-                    colliders: [
-                        { type: 'cuboid', hx: 5, hy: 0.5, hz: 5 }
-                    ]
-                }
-            },
-            {
-                name: 'barrel',
-                klass: BarrelGameObject,
-                position: { x: 0.1, y: 3, z: 4 },
-                rotation: { x: 0, y: -0.1, z: 20 }
-            }
-        ]
-    });
-    
-    game.renderer.setCameraPosition(-4, 5, 10);
-    game.renderer.threeJSCamera.lookAt(0,0,0);
-    
-    await game.loadScene(scene);
-    
+  
+    game.registerGameObjectClasses({ ExampleCharacter });
+
+    await game.loadScene('TestAreaScene');
+
     game.play();
+
+    window.game = game;
 }
 
-runApp();
+runDemo();

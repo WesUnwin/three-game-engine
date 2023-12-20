@@ -1,0 +1,11 @@
+{
+    "rendererOptions": {
+        "setupFullScreenCanvas": true
+    },
+    "gameObjectTypes": {
+        "ExampleCharacter": "game_objects/ExampleCharacter.json"
+    },
+    "scenes": {
+        "TestAreaScene": "testArea.json"
+    }
+}
