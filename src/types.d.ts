@@ -1,10 +1,11 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import { UserInterfaceJSON } from "./ui/UIHelpers";
 
-interface GameOptions {
+interface GameJSON {
     rendererOptions?: RendererOptions;
     assetOptions?: AssetOptions;
-    inputOptions?: InputOptions
+    inputOptions?: InputOptions;
+    scenes?: Object;
 }
 
 interface SceneJSON {

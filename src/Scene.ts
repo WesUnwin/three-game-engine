@@ -15,7 +15,6 @@ class Scene {
     sceneJSON: SceneJSON;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
-    gameObjectClasses: Object;
     gameObjectTypes: Object;
 
     constructor(jsonAssetPath?: string) {
@@ -25,24 +24,12 @@ class Scene {
 
         this.gameObjects = [];
         this.threeJSScene = null;
-        this.gameObjectClasses = {};
 
         this.gameObjectTypes = {};
     }
 
-    registerGameObjectClasses(types: Object) {
-        for (const type in types) {
-            this.gameObjectClasses[type] = types[type];
-        }
-    }
-
     getGameObjectClass(type) {
-        const klass = this.gameObjectClasses[type];
-        if (klass) {
-            return klass;
-        } else {
-            return this.game.getGameObjectClass(type);
-        }
+        return this.game.getGameObjectClass(type);
     }
 
     async load(game) {
@@ -102,7 +89,7 @@ class Scene {
             // from the scene JSON.
             const allOptions = Object.assign({}, gameObjectTypeJSON, options);
 
-            const RegisteredGameObjectClass = this.gameObjectClasses[type];
+            const RegisteredGameObjectClass = this.getGameObjectClass(type);
             if (RegisteredGameObjectClass) {
                 // @ts-ignore
                 gameObject = new RegisteredGameObjectClass(parent, allOptions);
@@ -111,10 +98,6 @@ class Scene {
             }
         } else {
             gameObject = new GameObject(parent, options);
-        }
-
-        if (!GameObjectClass) {
-            throw new Error(`Error: no GameObject sub-class registered for game object type: ${gameObjectJSON.type}`);
         }
 
         if (!(gameObject instanceof GameObject)) {

@@ -3,17 +3,14 @@ import TextureAsset from './TextureAsset'
 import SoundAsset from './SoundAsset'
 import JSONAsset from './JSONAsset'
 import Asset from './Asset';
-import { AssetOptions } from '../types';
 
 class AssetStore {
-  options: AssetOptions;
-  loadedAssets: any;
   baseURL: string;
+  loadedAssets: any;
 
-  constructor(options: AssetOptions = {}) {
-    this.options = options;
+  constructor(baseURL: string) {
+    this.baseURL = baseURL;
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
-    this.baseURL = options.baseURL; // Will be needed (in most cases) if loading assets
   }
 
   static _getAssetSubclass(path: string) {
