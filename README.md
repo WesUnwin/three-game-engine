@@ -95,7 +95,7 @@ Scenes are defined by a JSON file, that controls the layout of a hierarchy of ga
 ```
 {
   "gameObjects": [
-    // you can define individual, unique GameObjects like this:
+    // You can define individual, unique GameObjects like this:
     { 
       "name": "ground",
       "models": [
@@ -107,7 +107,9 @@ Scenes are defined by a JSON file, that controls the layout of a hierarchy of ga
       "position": { "x": 5, "y": 0, "z": 0 }
     },
 
-    // OR you can reference a type of game object (a prefab) of a given "type", inheriting from the above game object type's .json file
+    // OR you can create a game object of a given "type",
+    // which will inherit all the properties of the game object type's .json file
+    // declared for this type in your game.json file.
     { 
       "type": "player",
       "position": { "x": 5, "y": 0, "z": 0 }
@@ -124,12 +126,18 @@ This is similar to creating a pre-fab in engine's like Unity.
 
 ```
 {
+  // A GameObject can clone all the mesh data from a given .gltf or .glb file.
+  // These will be addded as children of the GameObjects .threeJSGroup.
   "models": [
     { "assetPath": "models/player.glb" }
   ],
+
+  // Similarly, game objects can parent ThreeJS lights of any type:
   "lights": [
     { "type": "PointLight", "position": { "x": 0, "y": 5, "z": 0 } }
   ],
+
+  // A gameobject can optionally have a Rapier RigidBody, and colliders attached to it.
   "rigidBody": {
       "type": "kinematicPositionBased",
       "colliders": [
@@ -137,7 +145,10 @@ This is similar to creating a pre-fab in engine's like Unity.
       ],
       "enabledRotations": { "x": false, "y": true, "z": false }
   },
-  "userInterfaces": [ // GameObjects can contain MeshUIComponents (created via three-mesh-ui) which will added to the GameObject's threeJSGroup
+
+  // GameObjects can also contain MeshUIComponents
+  // (created via three-mesh-ui) which will added to the GameObject's threeJSGroup
+  "userInterfaces": [
     {
       "type": "Block",
       "children": [
