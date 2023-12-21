@@ -80,21 +80,16 @@ class Scene {
         if (gameObjectJSON.type) {
             const type = gameObjectJSON.type;
 
-            const gameObjectTypeJSON = this.gameObjectTypes[type];
-            if (!gameObjectTypeJSON) {
+            if (!this.gameObjectTypes[type]) {
                 throw new Error(`Scene: error creating game object: unknown game object type: ${type}. You must define this type in the scene JSON .gameObjectTypes field`);
             }
-
-            // Merge the base set of options defined in the the game object type json, with any options for this individual object
-            // from the scene JSON.
-            const allOptions = Object.assign({}, gameObjectTypeJSON, options);
 
             const RegisteredGameObjectClass = this.getGameObjectClass(type);
             if (RegisteredGameObjectClass) {
                 // @ts-ignore
-                gameObject = new RegisteredGameObjectClass(parent, allOptions);
+                gameObject = new RegisteredGameObjectClass(parent, options);
             } else {
-                gameObject = new GameObject(parent, allOptions);
+                gameObject = new GameObject(parent, options);
             }
         } else {
             gameObject = new GameObject(parent, options);

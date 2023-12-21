@@ -27,41 +27,53 @@ class GameObject {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
 
-        this.name = options.name || '';
-        this.tags = options.tags || [];
+        this.parent = parent;
+
+        let allOptions;
+        if (options.type) {
+            // Merge the base set of options defined in the the game object
+            // type json, with any options for this individual object.
+            const scene = this.getScene();
+            const gameObjectTypeJSON = scene.gameObjectTypes[options.type];
+            allOptions = Object.assign({}, gameObjectTypeJSON, options);
+        } else {
+            allOptions = { ...options };
+        }
+
+        this.name = allOptions.name || '';
+        this.tags = allOptions.tags || [];
 
         this.gameObjects = [];
 
-        this.models = options.models || [];
-        this.lights = options.lights || [];
+        this.models = allOptions.models || [];
+        this.lights = allOptions.lights || [];
 
         this.loaded = false;
 
         this.threeJSGroup = new THREE.Group();
         this.threeJSGroup.name = `gameObject-${this.name}`;
 
-        const x = options.position?.x || 0;
-        const y = options.position?.y || 0;
-        const z = options.position?.z || 0;
+        const x = allOptions.position?.x || 0;
+        const y = allOptions.position?.y || 0;
+        const z = allOptions.position?.z || 0;
         this.setPosition(x, y, z);
 
-        const scaleX = options.scale?.x || 1;
-        const scaleY = options.scale?.y || 1;
-        const scaleZ = options.scale?.z || 1;
+        const scaleX = allOptions.scale?.x || 1;
+        const scaleY = allOptions.scale?.y || 1;
+        const scaleZ = allOptions.scale?.z || 1;
         this.setScale(scaleX, scaleY, scaleZ);
 
-        const rotX = options.rotation?.x || 0;
-        const rotY = options.rotation?.y || 0;
-        const rotZ = options.rotation?.z || 0;
-        const rotOrder = options.rotation?.order || 'XYZ';
+        const rotX = allOptions.rotation?.x || 0;
+        const rotY = allOptions.rotation?.y || 0;
+        const rotZ = allOptions.rotation?.z || 0;
+        const rotOrder = allOptions.rotation?.order || 'XYZ';
         this.setRotation(rotX, rotY, rotZ, rotOrder);
 
-        this.rigidBodyData = options.rigidBody || null;
+        this.rigidBodyData = allOptions.rigidBody || null;
 
-        this.userInterfacesData = options.userInterfaces || [];
+        this.userInterfacesData = allOptions.userInterfaces || [];
 
         parent.addGameObject(this);
-        this.parent = parent;
     }
 
     getScene() {

@@ -48,6 +48,7 @@ interface InputOptions {
 }
 
 interface GameObjectOptions {
+    type?: string;
     name?: string;
     tags?: string[];
     models?: ModelData[];
