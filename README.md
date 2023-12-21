@@ -165,7 +165,7 @@ GameObject:
 
 ```
   game.registerGameObjectClasses({
-    player: PlayerGameObject,  // game objects of type "player" will be instantiated from PlayerGameObject (which should extend GameObject)
+    player: PlayerGameObject, // game objects of type "player" will be instantiated from PlayerGameObject
     type2: Class2,
     ...
   })
