@@ -165,10 +165,14 @@ GameObject:
 
 ```
   game.registerGameObjectClasses({
-    player: PlayerGameObject, // game objects of type "player" will be instantiated from PlayerGameObject
+    player: PlayerGameObject, 
     type2: Class2,
     ...
   })
+
+  // Explanation: game objects of type "player" will be instantiated 
+  // using your PlayerGameObject class, game objects of type "type2"
+  // will use Class2, etc.
 ```
 
 This allows you to add scripting / behavior to your game objects:
