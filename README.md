@@ -1,6 +1,7 @@
 [![npm version](https://badge.fury.io/js/three-game-engine.svg)](https://badge.fury.io/js/three-game-engine)
 
-MUCH TO COME VERY SOON - THIS LIBRARY HAS JUST RECENTLY BEEN STARTED
+# UNDER CONSTRUCTION
+This library has just recently been started, but aims to provide a fully usable 1.0.0 release by sometime in January or February 2024.
 
 # three-game-engine
 Simple, lightweight game engine using:
@@ -65,7 +66,6 @@ This file controls game-level settings, and points to a series of scenes each de
 
 | Property                  | Description                                                                      |
 | ------------------------- | -------------------------------------------------------------------------------- |
-| .baseURL                  | Base URL that all asset paths are assumed to be relative too. Eg. "http://localhost:8000/assets". Thus an asset with asset path: "textures/image.png" would be fetched using the full URL of: "http://localhost:8000/assets/textures/image.png". |
 | .retainAssetsBetweenScene | (default: false) if true the game's assetstore will not clear assets when loading a scene, which can make switching back to scenes already loaded quicker, and loading scenes with assets used in previously loaded scenes quicker. |
 
 ### RendererOptions
@@ -160,7 +160,7 @@ These files are loaded and cached when the first game object using them is loade
 # GameObject Classes
 A GameObject type can also be (optionally) associated with a GameObject sub-class.
 
-Call game.registerGameObjectClasses() to link your javascript GameObject class to a type of
+Use game.registerGameObjectClasses() to link your javascript GameObject class to a type of
 GameObject:
 
 ```
