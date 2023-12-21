@@ -19,63 +19,81 @@ This library simply ties together several well known, capable javascript librari
  - maintain source code that is highly readable, and extendable
  - to offer VR support
 
+
 # Architecture
 This game engine allows you to manage a Scene of GameObjects.
 Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
 
 ![Screenshot](docs/three-game-engine-architecture.png)
 
-# Assets
-Your game will need to load and interact with various files such as gltfs, sounds, images, scene JSON files, game object type JSON files, etc.
-The game object manages an AssetStore (game.assetStore) which manages loading and caching files as they are needed.
 
-Your game will need to specify a base URL: (eg. https://localhost/assets or file://yourgamefiles/assets) to be used for all assets.
-All assets are specified by an asset path which is relative to this base URL: eg an asset path of models/player.glb thus would be loaded from https://localhost/assets/models/player.glb.
-
-# Scenes
-Scenes are represented by instances of the Scene class, or a sub-class of Scene.
-Scenes can (optionally) be initialized by JSON data that controls the positioning and layout of GameObjects representing scenary, items. characters, etc. in the scene.
-
-Creating a class that extends the Scene class will give you the ability to add scripting to control the behavior of the scene.
-
-Furthermore you can registerGameObjectClasses() to associate a javascript class with each type of GameObject, allowing you to control the behavior of types of GameObjects.
+# Project files
+A game consists of a folder, pointed to by a base URL (the first argument to the Game object contructor).
+All other URLs to various json files and other assets are assumed to be relative to the base URL.
+The base URL might be an HTTP, HTTPS or even a file:// URL (useful for building cordova and/or 
+electron apps which refer to application files storred locally).
 
 ```
-import { Scene } from 'three-game-engine';
-import testAreaJSON from './testArea.json';
-
-import PlayerGameObject from '../game_objects/PlayerGameObject.js';
-
-class TestAreaScene extends Scene {
-  constructor() {
-    super(testAreaJSON); // will use the layout defined in this json to populate this scene with game objects when loaded
-  
-    // Designate the PlayerGameObject JS class (a sub-class of GameObject),
-    // to controls all game objects of type 'playerGameObject', defined in the above testAreaJSON
-    this.registerGameObjectClasses({
-      'playerGameObject': PlayerGameObject 
-    })
-  }
-
-  afterLoaded() {
-    // called once when this scene is loaded by the game object
-  }
-
-  beforeRender() {
-    // called once per frame, before ThreeJS is used to render the scene
-  }
-}
+  const game = new Game('http://localhost:8000/myprojectfolder');
 ```
 
-# Scene JSON
-The best way to populate a scene with an initial set of game objects is by using a .json file like this:
+- Based on the above base URL your game.json would be fetched from http://localhost:8000/myprojectfolder/game.json
+
+## game.json
+This file controls game-level settings, and points to a series of scenes each described by a separate JSON file.
 
 ```
 {
-  "gameObjectTypes": {
-    "player": "game_objects/player.json" // asset path relative to assetOptions.baseURL 
-  },
+  "rendererOptions": { // optional
 
+  },
+  "assetOptions": { // optional
+
+  },
+  "scenes": {
+    "mainMenu": "scenes/main_menu.json",
+    "loadingScene": "scenes/loading.json",
+    "scene1": "scenes/scene1.json"
+  },
+  "gameObjectTypes": {
+    "player": "game_objects/player.json"   // game objects in scenes can reference this with "type": "player"
+  },
+}
+```
+
+### AssetOptions
+
+| Property                  | Description                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------- |
+| .baseURL                  | Base URL that all asset paths are assumed to be relative too. Eg. "http://localhost:8000/assets". Thus an asset with asset path: "textures/image.png" would be fetched using the full URL of: "http://localhost:8000/assets/textures/image.png". |
+| .retainAssetsBetweenScene | (default: false) if true the game's assetstore will not clear assets when loading a scene, which can make switching back to scenes already loaded quicker, and loading scenes with assets used in previously loaded scenes quicker. |
+
+### RendererOptions
+
+| Property                     | Description                                                                                       |
+| -----------------------------| ------------------------------------------------------------------------------------------------- |
+| .width                       | The width in pixels to be applied to the ThreeJS WebGL renderer.                                  |
+| .height                      | The height in pixels to be applied to the ThreeJS WebGL renderer.                                 |
+| .pixelRatio                  | The pixelRatio in pixels to be applied to the ThreeJS WebGL renderer, most apps pass in window.devicePixelRatio  |
+| .cameraOptions               | See CameraOptions below                                                                           |
+| .setupFullScreenCanvas       | If true, a canvas HTML element will automatically be created and added to the DOM, stretched to fill the window, and be used by ThreeJS to render onto.  |
+
+#### CameraOptions
+These values will be passed onto the ThreeJS PerspectiveCamera created automatically by game.renderer.
+
+| Property                 | Description                                                                      |
+| -------------------------| -------------------------------------------------------------------------------- |
+| .fov                     | Field of view.                                                                   |
+| .aspect                  | Aspect ratio                                                                     |
+| .near                    | Near value                                                                       |
+| .far                     | Far value                                                                        |
+
+
+# Scene JSON files
+Scenes are defined by a JSON file, that controls the layout of a hierarchy of game objects.
+
+```
+{
   "gameObjects": [
     // you can define individual, unique GameObjects like this:
     { 
@@ -89,7 +107,7 @@ The best way to populate a scene with an initial set of game objects is by using
       "position": { "x": 5, "y": 0, "z": 0 }
     },
 
-    // OR you can create a game object of a given "type", inheriting from the above game object type's .json file
+    // OR you can reference a type of game object (a prefab) of a given "type", inheriting from the above game object type's .json file
     { 
       "type": "player",
       "position": { "x": 5, "y": 0, "z": 0 }
@@ -99,8 +117,10 @@ The best way to populate a scene with an initial set of game objects is by using
 ```
 
 # GameObject Type JSON
-You can define a type of GameObject by a .json file, to create re-usable, generalized GameObjects that all
+You can define a "type" of GameObject by a .json file, to create re-usable, generalized GameObjects that all
 are based off a common set of properties (eg. all share the same models/physics properties etc.)
+
+This is similar to creating a pre-fab in engine's like Unity.
 
 ```
 {
@@ -131,13 +151,25 @@ are based off a common set of properties (eg. all share the same models/physics 
 }
 ```
 
+# Asset Files
+Game objects can reference various types of asset files such as 
+gltfs, sounds, images, scene JSON files, game object type JSON files, etc.
+These files are loaded and cached when the first game object using them is loaded into a scene.
+
+
 # GameObject Classes
 A GameObject type can also be (optionally) associated with a GameObject sub-class.
 
-Call game/scene.registerGameObjectClasses() to link your javascript GameObject class to a type of
-GameObject.
+Call game.registerGameObjectClasses() to link your javascript GameObject class to a type of
+GameObject:
 
-Registering a GameObject class allows you to define/control the behavior of GameObjects of this type.
+```
+  game.registerGameObjectClasses({
+    type1: Class1  // game objects of type "type1" will be instantiated from Class1 (which should extend GameObject)
+  })
+```
+
+This allows you to add scripting / behavior to your game objects.
 
 ```
   class PlayerGameObject extends GameObject {
@@ -148,9 +180,7 @@ Registering a GameObject class allows you to define/control the behavior of Game
 
       beforeRender({ deltaTimeInSec }) {
         // Called once per frame
-
         this.setRotation(0, this.y, 0);
-
         this.y += 1 * deltaTimeInSec;
       }
   }
@@ -166,15 +196,18 @@ To run the examples in your browser, clone this repo then run:
 ```
 
 # Desktop and Mobile Apps
-In addition to using this library to build web apps that run in your browser, with third party tools like electron, cordova, etc. you can easily package and distribute your game as a desktop app or mobile app.
+In addition to using this library to build web apps that run in your browser, 
+with third party tools like electron, cordova, etc. you can easily package and 
+distribute your game as a desktop app or mobile app.
 
 This repo contains complete working examples of:
-- How to use electron & electron-forge to package your game as a desktop app, see [examples/electron](https://github.com/WesUnwin/three-game-engine/tree/main/examples/electron)
-- How to package your app as an android or iOS app using Apache Cordova, see [examples/cordova](https://github.com/WesUnwin/three-game-engine/tree/main/examples/cordova)
+- How to use electron & electron-forge to package your game as a desktop app,
+  see [examples/electron](https://github.com/WesUnwin/three-game-engine/tree/main/examples/electron)
+- How to package your app as an android or iOS app using Apache Cordova,
+  see [examples/cordova](https://github.com/WesUnwin/three-game-engine/tree/main/examples/cordova)
 
 
 # API Reference
-
 Top level objects:
 
 ```
@@ -188,52 +221,12 @@ This is the top-level object that you typically create and configure just once.
 
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| new Game(options: GameOptions)               | Creates a new game, with a WebGL1 renderer setup with the specified options      |
-| async loadScene(scene)                       | Async function that loads and switches to rendering a Scene (see Scene API)      |
+| new Game(baseURL)                            | Creates a new game, reading the options specified in the game.json file found at the given base URL. |
+| async loadScene(sceneName)                    | Async function that loads and switches to rendering the scene with the given name. |
 | play()                                       | Starts (or resumes) rendering of the game, rendering the currently loaded scene. |
 | pause()                                      | Pauses rendering of the game till play() is called again.                        |
 | async loadAsset(assetPath)                   | Tells game.assetStore to fetch a given asset (such a .gltf/glb file) and store it for future use. Assets needed by GameObjects are automatically, loaded when the GameObject is loaded into a scene, but this can be used to make assets ready in advance. |
 | getAssetStore()                              | Returns the asset store instance game.assetStore used by this game object.       |
-
-### GameOptions
-This is a set of options in the form of a javascript object passed into new Game(gameOptions), to configure how the game engine should operate. Some of the settings will be passed to other features of the game engine like the internal
-Renderer, AsssetStore, Camera, etc.
-
-| Property                                     | Description                                                                      |
-| -------------------------------------------- | -------------------------------------------------------------------------------- |
-| .rendererOptions                             | See RendererOptions below. These are passed onto game.renderer                   |
-| .assetOptions                                | Seet AssetOptions. These are passed onto game.assetStore                         |
-
-### AssetOptions
-
-| Property                  | Description                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------- |
-| .baseURL                  | Base URL that all asset paths are assumed to be relative too. Eg. "http://localhost:8000/assets". Thus an asset with asset path: "textures/image.png" would be fetched using the full URL of: "http://localhost:8000/assets/textures/image.png". |
-| .retainAssetsBetweenScene | (default: false) if true the game's assetstore will not clear assets when loading a scene, which can make switching back to scenes already loaded quicker, and loading scenes with assets used in previously loaded scenes quicker. |
-
-## game.renderer
-A game object internally manages a Renderer object (accessed by game.renderer).
-This contains all the functionality that manages and implements a renderer loop using a Three.js WebGL1 Renderer object internally.
-
-### RendererOptions
-
-| Property                     | Description                                                                                       |
-| -----------------------------| ------------------------------------------------------------------------------------------------- |
-| .width                       | The width in pixels to be applied to the ThreeJS WebGL renderer.                                  |
-| .height                      | The height in pixels to be applied to the ThreeJS WebGL renderer.                                 |
-| .pixelRatio                  | The pixelRatio in pixels to be applied to the ThreeJS WebGL renderer, most apps pass in window.devicePixelRatio  |
-| .cameraOptions               | See CameraOptions below                                                                           |
-| .setupFullScreenCanvas       | If true, a canvas HTML element will automatically be created and added to the DOM, stretched to fill the window, and be used by ThreeJS to render onto.  |
-
-### CameraOptions
-These values will be passed onto the ThreeJS PerspectiveCamera created automatically by game.renderer.
-
-| Property                 | Description                                                                      |
-| -------------------------| -------------------------------------------------------------------------------- |
-| .fov                     | Field of view.                                                                   |
-| .aspect                  | Aspect ratio                                                                     |
-| .near                    | Near value                                                                       |
-| .far                     | Far value                                                                        |
 
 ## Scene API
 A game is developed as set of Scenes. The game can actively render just one scene (or none) at a given time.
@@ -242,8 +235,6 @@ A Scene internally manages a Three.js Scene object.
 
 | Function                                     | Description                                                                      |
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
-| new Scene()                                  | Creates a new empty Scene.                                                       |
-| new Scene(jsonAssetPath)                     | Creates a new scene, that will be populated with the layout of GameObjects in the specified json file. See Scene JSON. |
 | addGameObject(gameObject)                    | Adds the given GameObject to the scene.                                         |
 | removeGameObject(gameObject)                 | Removes the given GameObject from the scene.                                     |
 | getRootGameObjects()                         | Returns all top level game objects in the scene.                                 |
