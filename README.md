@@ -165,11 +165,13 @@ GameObject:
 
 ```
   game.registerGameObjectClasses({
-    type1: Class1  // game objects of type "type1" will be instantiated from Class1 (which should extend GameObject)
+    player: PlayerGameObject,  // game objects of type "player" will be instantiated from PlayerGameObject (which should extend GameObject)
+    type2: Class2,
+    ...
   })
 ```
 
-This allows you to add scripting / behavior to your game objects.
+This allows you to add scripting / behavior to your game objects:
 
 ```
   class PlayerGameObject extends GameObject {
