@@ -130,14 +130,14 @@ This is similar to creating a pre-fab in engine's like Unity.
   "lights": [
     { "type": "PointLight", "position": { "x": 0, "y": 5, "z": 0 } }
   ],
-  "rigidBody": { // Optional
+  "rigidBody": {
       "type": "kinematicPositionBased",
       "colliders": [
           { "type": "capsule", "halfHeight": 0.5, "radius", 0.5 }
       ],
       "enabledRotations": { "x": false, "y": true, "z": false }
   },
-  "userInterfaces": [ // Optional, GameObjects can create MeshUIComponents (via three-mesh-ui library) which will be added to the threeJSGroup
+  "userInterfaces": [ // GameObjects can contain MeshUIComponents (created via three-mesh-ui) which will added to the GameObject's threeJSGroup
     {
       "type": "Block",
       "children": [
