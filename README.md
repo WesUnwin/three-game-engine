@@ -45,28 +45,22 @@ This file controls game-level settings, and points to a series of scenes each de
 
 ```
 {
-  "rendererOptions": { // optional
+  "rendererOptions": { ... }, // optional, see RendererOptions
+  "assetOptions": { ... }, // optional, see AssetOptions
 
-  },
-  "assetOptions": { // optional
-
-  },
+  // A game contains a series of scenes that you can switch between (See Scene JSON files)
   "scenes": {
     "mainMenu": "scenes/main_menu.json",
     "loadingScene": "scenes/loading.json",
     "scene1": "scenes/scene1.json"
   },
+
+  // Scene JSON files can create game objects of several predefined "types"
   "gameObjectTypes": {
-    "player": "game_objects/player.json"   // game objects in scenes can reference this with "type": "player"
+    "player": "game_objects/player.json"
   },
 }
 ```
-
-### AssetOptions
-
-| Property                  | Description                                                                      |
-| ------------------------- | -------------------------------------------------------------------------------- |
-| .retainAssetsBetweenScene | (default: false) if true the game's assetstore will not clear assets when loading a scene, which can make switching back to scenes already loaded quicker, and loading scenes with assets used in previously loaded scenes quicker. |
 
 ### RendererOptions
 
@@ -77,6 +71,12 @@ This file controls game-level settings, and points to a series of scenes each de
 | .pixelRatio                  | The pixelRatio in pixels to be applied to the ThreeJS WebGL renderer, most apps pass in window.devicePixelRatio  |
 | .cameraOptions               | See CameraOptions below                                                                           |
 | .setupFullScreenCanvas       | If true, a canvas HTML element will automatically be created and added to the DOM, stretched to fill the window, and be used by ThreeJS to render onto.  |
+
+### AssetOptions
+
+| Property                  | Description                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------- |
+| .retainAssetsBetweenScene | (default: false) if true the game's assetstore will not clear assets when loading a scene, which can make switching back to scenes already loaded quicker, and loading scenes with assets used in previously loaded scenes quicker. |
 
 #### CameraOptions
 These values will be passed onto the ThreeJS PerspectiveCamera created automatically by game.renderer.
