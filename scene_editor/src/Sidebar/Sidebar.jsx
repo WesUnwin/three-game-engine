@@ -7,7 +7,7 @@ const Sidebar = () => {
     const [dirHandle, setDirHandle] = useState(null);
 
     return (
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch', backgroundColor: '#404040' }}>
+        <div className="sidebar">
             <ProjectFiles setDirHandle={setDirHandle} />
 
             <Hierarchy dirHandle={dirHandle} />

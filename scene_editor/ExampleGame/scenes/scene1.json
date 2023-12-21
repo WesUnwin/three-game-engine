@@ -1,0 +1,11 @@
+{
+
+    "gameObjects": [
+        {
+            "name": "GameObject1Name"
+        },
+        {
+            "name": "GameObject2Name"
+        }
+    ]
+}

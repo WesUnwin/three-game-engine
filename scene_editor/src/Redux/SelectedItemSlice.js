@@ -4,8 +4,8 @@ const selectedItemSlice = createSlice({
     name: 'selectedItem',
     initialState: {
         filePath: null, // null or a string to file related to selected item
-        type: null, // null | gameJSON | sceneJSON | gameObjectTypeJSON | GameObject
-        params: {} // identifying information (eg to identify which GameObject is selected)
+        type: null, // null | gameJSON | sceneJSON | gameObjectTypeJSON | gameObject
+        params: {} // identifying information (eg to identify which gameObject is selected)
     },
     reducers: {
         selectItem: (state, action) => {

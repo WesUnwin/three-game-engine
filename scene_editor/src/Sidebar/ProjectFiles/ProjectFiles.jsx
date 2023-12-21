@@ -66,19 +66,19 @@ const ProjectFiles = ({ setDirHandle }) => {
 
     return (
         <Panel label="Project Files">
-            <div>
+            <div className="row">
                 <button>
                     New Project
                 </button>
 
                 <button onClick={openASceneFile}>
-                    Open Scene...
+                    Open Project Folder...
                 </button> 
             </div>
 
             {projectFiles.name && (
                 <>
-                    <p>Folder: </p>
+                    <p className="project-files">Project files: </p>
                     {renderFileInfo(projectFiles, true)}
                 </>
             )}   

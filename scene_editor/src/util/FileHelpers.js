@@ -26,14 +26,23 @@ export const openProjectFolder = async (dirHandle) => {
 };
 
 export const loadFile = async (dirHandle, path, dispatch, metaData) => {
+    const handleFileError = (error, dispatch) => {
+        const customErrorMessages = {
+            'A requested file or directory could not be found at the time an operation was processed.': 'File not found'
+        };
+
+        const message = customErrorMessages[error.message] || error.message;
+        dispatch(reportFileError(path, { message }));
+    };
+
     const file = await getFileAtPath(dirHandle, path).catch(error => {
-        dispatch(reportFileError(path, { message: error.message }));
+        handleFileError(error, dispatch);
         return null;
     });
 
     if (file) {
         const json = await readJSONFile(file).catch(error => {
-            dispatch(reportFileError(path, { message: error.message }));
+            handleFileError(error, dispatch);
             return null;
         });
     

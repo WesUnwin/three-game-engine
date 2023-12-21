@@ -4,6 +4,7 @@ import * as FileHelpers from '../../util/FileHelpers.js'
 import { useDispatch, useSelector } from 'react-redux';
 import { getFile } from '../../Redux/FileDataSlice.js';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import GameObjectItem from './GameObjectItem.jsx';
 
 const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
     const dispatch = useDispatch();
@@ -20,11 +21,17 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
     const errorMessage = fileData?.error?.message;
 
     const onClick = () => {
-        dispatch(selectItem(scenePath, 'sceneJSON'));
+        if (!errorMessage) {
+            dispatch(selectItem(scenePath, 'sceneJSON'));
+        }
     };
 
     return (
-        <TreeView label={`${sceneName} (${scenePath})`} errorMessage={errorMessage} onClick={onClick} isSelected={isSelected} />
+        <TreeView label={`${sceneName} (${scenePath})`} errorMessage={errorMessage} onClick={onClick} isSelected={isSelected} maxChildrenHeight="250px">
+            {(fileData?.data?.gameObjects || []).map((gameObjectJSON, index) => (
+                <GameObjectItem dirHandle={dirHandle} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
+            ))}
+        </TreeView>
     );
 };
 

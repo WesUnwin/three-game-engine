@@ -1,0 +1,97 @@
+body {
+    height: 100%;
+    margin: 0px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.project-files {
+    margin: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#app {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+#app canvas {
+    max-width: 75%;
+}
+
+.sidebar {
+    flex-grow: 1;
+    height: 100%;
+    background-color: #404040;
+}
+
+.sidebar-panel {
+    margin: 10px;
+    margin-top: 0px;
+
+}
+
+.sidebar-panel h5 {
+    color: white;
+    margin-bottom: 0px;
+}
+
+.sidebar-panel-content {
+    border: 1px solid grey;
+    padding: 5px;
+    background-color: '#606060';
+    color: white;
+}
+
+.tree-view {
+    cursor: pointer;
+}
+
+.tree-view-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 5px;
+    padding: 2px;
+}
+
+.tree-view-header:hover {
+    background-color: #303030;
+}
+
+.tree-view-expand-button {
+    text-align: center;
+    width: 15px;
+    height: 15px;
+    font-weight: bold;
+}
+
+.tree-view-expand-placeholder {
+    width: 15px;
+    height: 15px;
+}
+
+.error-badge {
+    color: white;
+    font-size: small;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 50%;
+    background-color: #aa1414;
+    padding: 2px;
+    width: 15px;
+    height: 15px;
+}
+
+.tree-view-children {
+    margin-left: 15px;
+    overflow-y: auto;
+}
