@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ProjectFiles from './ProjectFiles/ProjectFiles.jsx';
 import Hierarchy from './Hierarchy/Hierarchy.jsx';
 import SelectedFile from './SelectedFile/SelectedFile.jsx';
 
-const Sidebar = () => {
-    const [dirHandle, setDirHandle] = useState(null);
-
+const Sidebar = ({ dirHandle, setDirHandle }) => {
     return (
         <div className="sidebar">
             <ProjectFiles setDirHandle={setDirHandle} />

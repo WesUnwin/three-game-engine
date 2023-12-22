@@ -1,14 +1,13 @@
 {
     "gameObjectTypes": {
-        "Platform10_10_1": "game_object_types/environment/Platform10_10_1.json",
-        "Platform2_2_2": "game_object_types/environment/Platform2_2_2.json",
-        "Platform2_2_1": "jgame_object_types/environment/Platform2_2_1.json",
-        "Platform2_2_05": "game_object_types/environment/Platform2_2_05.json",
-        "Platform2_10_1": "game_object_types/environment/Platform2_10_1.json"
+        "ExampleCharacter": "game_objects/ExampleCharacter.json",
+        "Platform10_10_1": "game_objects/environment/Platform10_10_1.json",
+        "Platform2_2_2": "game_objects/environment/Platform2_2_2.json",
+        "Platform2_2_1": "game_objects/environment/Platform2_2_1.json",
+        "Platform2_2_05": "game_objects/environment/Platform2_2_05.json",
+        "Platform2_10_1": "game_objects/environment/Platform2_10_1.json"
     },
     "scenes": {
-        "scene1": "assets/scenes/scene1.json",
-        "scene2": "assets/scenes/scene2.json",
         "TestAreaScene": "scenes/TestAreaScene.json"
     }
 }

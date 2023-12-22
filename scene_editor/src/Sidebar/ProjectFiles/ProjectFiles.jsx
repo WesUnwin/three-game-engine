@@ -29,12 +29,12 @@ const ProjectFiles = ({ setDirHandle }) => {
         }
     }, [selectedItem])
 
-    const openASceneFile = async () => {
+    const selectProjectFolder = async () => {
         const directoryHandle = await window.showDirectoryPicker({
             mode: 'readwrite'
         });
 
-        setDirHandle(directoryHandle)
+        setDirHandle(directoryHandle);
 
         const fileInfo = await FileHelpers.openProjectFolder(directoryHandle);
         dispatch(projectFilesSlice.actions.setState(fileInfo));
@@ -71,7 +71,7 @@ const ProjectFiles = ({ setDirHandle }) => {
                     New Project
                 </button>
 
-                <button onClick={openASceneFile}>
+                <button onClick={selectProjectFolder}>
                     Open Project Folder...
                 </button> 
             </div>
