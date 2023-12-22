@@ -1,12 +1,4 @@
 {
-  "gameObjectTypes": {
-    "ExampleCharacter": "game_objects/ExampleCharacter.json",
-    "Platform10_10_1": "game_objects/environment/Platform10_10_1.json",
-    "Platform2_2_2": "game_objects/environment/Platform2_2_2.json",
-    "Platform2_2_1": "game_objects/environment/Platform2_2_1.json",
-    "Platform2_2_05": "game_objects/environment/Platform2_2_05.json",
-    "Platform2_10_1": "game_objects/environment/Platform2_10_1.json"
-  },
   "gameObjects": [
     {
       "type": "ExampleCharacter",

@@ -1,7 +1,11 @@
 import { Game, KinematicCharacterController } from "../../dist/index";
 
 const runDemo = async () => {
-    const game = new Game('http://localhost:8080/examples/first_person_character_controller');
+    const game = new Game('http://localhost:8080/examples/first_person_character_controller', {
+      rendererOptions: {
+        setupFullScreenCanvas: true
+      }
+    });
 
     class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
