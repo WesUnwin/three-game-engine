@@ -5,11 +5,22 @@ import JSONAsset from './JSONAsset'
 import Asset from './Asset';
 
 class AssetStore {
-  baseURL: string;
+  baseURL: string | null;
+  dirHandle: FileSystemDirectoryHandle | null;
   loadedAssets: any;
 
-  constructor(baseURL: string) {
-    this.baseURL = baseURL;
+  constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle) {
+    if (typeof baseURLorDirHandle === 'string') {
+      this.baseURL = baseURLorDirHandle;
+      if (this.baseURL.endsWith('/')) {
+          this.baseURL = this.baseURL.slice(0, this.baseURL.length - 1);
+      }
+      this.dirHandle = null;
+    } else {
+      this.baseURL = null;
+      this.dirHandle = baseURLorDirHandle;
+    }
+
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
   }
 
@@ -39,10 +50,7 @@ class AssetStore {
   async load(path: string): Promise<Asset> {
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
-      if (!this.baseURL) {
-        throw new Error('AssetStore: load: assetOptions.baseURL must be set before loading any asset');
-      }
-      const asset = new AssetSubclass(this.baseURL, path);
+      const asset = new AssetSubclass(this.baseURL || this.dirHandle, path);
       await asset.load();
       this.loadedAssets[path] = asset;
       console.log(`AssetStore: successfully loaded asset: ${path}`);
@@ -54,6 +62,7 @@ class AssetStore {
   unload(path: string) {
     const asset = this.loadedAssets[path];
     if (asset) {
+      asset.unload();
       this.loadedAssets[path] = null;
       console.log(`Assets: unloaded ${path}`);
     } else {
@@ -63,7 +72,9 @@ class AssetStore {
 
   unloadAll() {
     console.log(`AssetStore: unloading all assets, clearing this store.`);
-    this.loadedAssets = {};
+    Object.keys(this.loadedAssets).forEach(assetPath => {
+      this.unload(assetPath)
+    });
   }
 }
 

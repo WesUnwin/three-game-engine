@@ -5,19 +5,20 @@ class JSONAsset extends Asset {
     async load() : Promise<void> {
         return new Promise((resolve, reject) => {
             const fileLoader = new THREE.FileLoader();
-            const fullURL = this.getFullURL();
-            fileLoader.load(fullURL,
-                text => {
-                    this.data = JSON.parse(text);
-                    resolve();
-                },
-                () => {
-                    // on progress
-                },
-                error => {
-                    reject(error);
-                }
-            );
+            this.getFullURL().then(fullURL => {
+                fileLoader.load(fullURL,
+                    text => {
+                        this.data = JSON.parse(text);
+                        resolve();
+                    },
+                    () => {
+                        // on progress
+                    },
+                    error => {
+                        reject(error);
+                    }
+                );
+            });
         })
     }
 }

@@ -34,7 +34,7 @@ class GameObject {
             // Merge the base set of options defined in the the game object
             // type json, with any options for this individual object.
             const scene = this.getScene();
-            const gameObjectTypeJSON = scene.gameObjectTypes[options.type];
+            const gameObjectTypeJSON = scene.game.getGameObjectTypeJSON(options.type);
             allOptions = Object.assign({}, gameObjectTypeJSON, options);
         } else {
             allOptions = { ...options };

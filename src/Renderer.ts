@@ -195,6 +195,10 @@ class Renderer {
 
         const deltaTimeInSec = deltaTimeMS / 1000;
 
+        if (this.options.beforeRender) {
+            this.options.beforeRender();
+        }
+
         ThreeMeshUI.update();
 
         const scene = this.game.scene;

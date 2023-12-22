@@ -2,31 +2,47 @@ import Renderer from './Renderer';
 import Scene from './Scene';
 import AssetStore from './assets/AssetStore';
 import InputManager from './input/InputManager';
-import { GameJSON } from './types';
+import { GameJSON, GameOptions } from './types';
 
 class Game {
+    gameOptions: GameOptions;
+
     initialized: boolean;
-    baseURL: string;
+
+    baseURL: null | string;
+    dirHandle: null | FileSystemDirectoryHandle;
+
     gameJSON: null | GameJSON;
     renderer: Renderer;
     scene: Scene | null;
     assetStore: AssetStore | null;
     inputManager: InputManager;
+    gameObjectTypes: Object;
     gameObjectClasses: Object;
 
-    constructor(baseURL: string) {
+    constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, gameOptions?: GameOptions) {
         this.initialized = false;
         this.gameJSON = null;
 
-        if (typeof baseURL !== 'string') {
-            throw new Error('Game must be constructed with a baseURL (first argument). Eg. new Game("file://myprojectfolder")');
+        this.gameOptions = gameOptions || {};
+
+        if ((typeof baseURLorDirHandle !== 'string') && !(baseURLorDirHandle instanceof FileSystemDirectoryHandle)) {
+            throw new Error('Game: first argument to Game constructor must be either a string or a FileSystemDirectoryHandle');
         }
-        this.baseURL = baseURL;
-        if (this.baseURL.endsWith('/')) {
-            this.baseURL = this.baseURL.slice(0, this.baseURL.length - 1);
+
+        if (typeof baseURLorDirHandle === 'string') {
+            this.baseURL = baseURLorDirHandle;
+            if (this.baseURL.endsWith('/')) {
+                this.baseURL = this.baseURL.slice(0, this.baseURL.length - 1);
+            }
+            this.dirHandle = null;
+        } else {
+            this.baseURL = null;
+            this.dirHandle = baseURLorDirHandle;
         }
 
         this.scene = null;
+        this.gameObjectTypes = {}; // keys a strings, each value is the JSON for the given GameObject type
         this.gameObjectClasses = {}; // key-values map game object types to GameObject sub-classes
     }
 
@@ -36,13 +52,20 @@ class Game {
         }
         console.log('Game: reading game.json file to initialize game...');
 
-        this.assetStore = new AssetStore(this.baseURL);
+        this.assetStore = new AssetStore(this.baseURL || this.dirHandle);
 
         const gameJSONAsset = await this.assetStore.load('game.json');
         this.gameJSON = gameJSONAsset.data;
 
-        this.renderer = new Renderer(this, this.gameJSON.rendererOptions);
-        this.inputManager = new InputManager(this.renderer.getCanvas(), this.gameJSON.inputOptions);
+        // Read all GameObject type JSON files referenced by the game.json file
+        const gameObjectTypes = this.gameJSON.gameObjectTypes || [];
+        for (const gameObjectType in gameObjectTypes) {
+            const gameObjectTypeAsset = await this.assetStore.load(gameObjectTypes[gameObjectType]);
+            this.gameObjectTypes[gameObjectType] = gameObjectTypeAsset.data;
+        }
+
+        this.renderer = new Renderer(this, this.gameOptions.rendererOptions);
+        this.inputManager = new InputManager(this.renderer.getCanvas(), this.gameOptions.inputOptions);
 
         this.initialized = true;
     };
@@ -53,7 +76,11 @@ class Game {
         }
     }
 
-    getGameObjectClass(type) {
+    getGameObjectTypeJSON(type: string) {
+        return this.gameObjectTypes[type];
+    }
+
+    getGameObjectClass(type: string) {
         const klass = this.gameObjectClasses[type];
         return klass || null;
     }
@@ -79,7 +106,7 @@ class Game {
             this.scene = null;
         }
 
-        if (!this.gameJSON.assetOptions?.retainAssetsBetweenScene) {
+        if (!this.gameOptions.assetOptions?.retainAssetsBetweenScene) {
             console.debug(`Game: clearing all assets as gameJSON.assetOptions.retainAssetsBetweenScene was not set`);
             this.assetStore.unloadAll();
         }

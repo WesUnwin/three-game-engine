@@ -97,7 +97,7 @@ export const createUIComponent = async (userInterfaceJSON, parentObject3D: Three
     // .fontTexture can be an asset path (instead of an absolute URL)
     if (typeof meshUIAttributes.fontTexture === 'string' && !meshUIAttributes.fontTexture.includes('://')) {
         const fontTextureAsset = await assetStore.load(meshUIAttributes.fontTexture);
-        meshUIAttributes.fontTexture = fontTextureAsset.getFullURL();
+        meshUIAttributes.fontTexture = await fontTextureAsset.getFullURL();
     }
 
     if (!type) {

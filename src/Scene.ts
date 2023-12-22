@@ -15,7 +15,6 @@ class Scene {
     sceneJSON: SceneJSON;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
-    gameObjectTypes: Object;
 
     constructor(jsonAssetPath?: string) {
         this.jsonAssetPath = jsonAssetPath;
@@ -24,8 +23,6 @@ class Scene {
 
         this.gameObjects = [];
         this.threeJSScene = null;
-
-        this.gameObjectTypes = {};
     }
 
     getGameObjectClass(type) {
@@ -38,14 +35,6 @@ class Scene {
         if (this.jsonAssetPath) {
             const jsonAsset = await this.game.loadAsset(this.jsonAssetPath);
             this.sceneJSON = jsonAsset.data;
-
-            if (this.sceneJSON?.gameObjectTypes) {
-                for (const gameObjectType in this.sceneJSON.gameObjectTypes) {
-                    const assetPath = this.sceneJSON.gameObjectTypes[gameObjectType];
-                    const gameObjectTypeJSON = await this.game.loadAsset(assetPath);
-                    this.gameObjectTypes[gameObjectType] = gameObjectTypeJSON.data;
-                }
-            }
         }
 
         this.threeJSScene = new THREE.Scene();
@@ -80,8 +69,8 @@ class Scene {
         if (gameObjectJSON.type) {
             const type = gameObjectJSON.type;
 
-            if (!this.gameObjectTypes[type]) {
-                throw new Error(`Scene: error creating game object: unknown game object type: ${type}. You must define this type in the scene JSON .gameObjectTypes field`);
+            if (!this.game.getGameObjectTypeJSON(type)) {
+                throw new Error(`Scene: error creating game object: unknown game object type: ${type}. You must define this type in your game.json file`);
             }
 
             const RegisteredGameObjectClass = this.getGameObjectClass(type);

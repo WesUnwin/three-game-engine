@@ -1,17 +1,15 @@
 import RAPIER from "@dimforge/rapier3d-compat";
 import { UserInterfaceJSON } from "./ui/UIHelpers";
 
+// JSON Files
+
 interface GameJSON {
-    rendererOptions?: RendererOptions;
-    assetOptions?: AssetOptions;
-    inputOptions?: InputOptions;
     scenes?: Object;
+    gameObjectTypes?: Object;
 }
 
 interface SceneJSON {
-    name?: string;
     background?: null;
-    gameObjectTypes: {};
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
 }
@@ -19,6 +17,14 @@ interface SceneJSON {
 interface GameObjectJSON extends GameObjectOptions {
     type?: string;
     children?: GameObjectJSON[];
+}
+
+// Options structures
+
+interface GameOptions {
+    rendererOptions?: RendererOptions;
+    assetOptions?: AssetOptions;
+    inputOptions?: InputOptions;
 }
 
 interface RendererOptions {
@@ -29,6 +35,7 @@ interface RendererOptions {
     cameraOptions?: CameraOptions;
     setupFullScreenCanvas?: boolean;
     canvas?: HTMLCanvasElement;
+    beforeRender?: () => void;
 }
 
 interface CameraOptions {
