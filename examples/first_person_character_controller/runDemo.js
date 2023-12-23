@@ -50,8 +50,6 @@ const runDemo = async () => {
   
     game.registerGameObjectClasses({ ExampleCharacter });
 
-    await game.loadScene('TestAreaScene');
-
     game.play();
 
     window.game = game;

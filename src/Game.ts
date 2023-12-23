@@ -20,6 +20,8 @@ class Game {
     gameObjectTypes: Object;
     gameObjectClasses: Object;
 
+    loadingScene: boolean;
+
     constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, gameOptions?: GameOptions) {
         this.initialized = false;
         this.gameJSON = null;
@@ -41,6 +43,7 @@ class Game {
             this.dirHandle = baseURLorDirHandle;
         }
 
+        this.loadingScene = false;
         this.scene = null;
         this.gameObjectTypes = {}; // keys a strings, each value is the JSON for the given GameObject type
         this.gameObjectClasses = {}; // key-values map game object types to GameObject sub-classes
@@ -86,6 +89,11 @@ class Game {
     }
 
     async loadScene(sceneName: string) {
+        if (this.loadingScene) {
+            throw new Error('loadScene(): error: game is currently working on loading a scene, you can only perform one loadScene() operation at a time');
+        }
+        this.loadingScene = true;
+
         if (typeof sceneName !== 'string') {
             throw new Error('loadScene(): sceneName must be a string, refering to a scene name defined in your game.json file');
         }
@@ -120,6 +128,8 @@ class Game {
         this.scene = scene;
         await this.scene.load(this);
 
+        this.loadingScene = false;
+
         console.debug(`Game: successfully loaded scene: ${scene.name}`);
 
         // Invoke afterLoaded() callback on scene and all its children,
@@ -138,9 +148,17 @@ class Game {
         return await this.assetStore.load(assetPath);
     }
 
-    play() {
+    async play() {
+        if (!this.initialized) {
+            await this._init();
+        }
         if (!this.scene) {
-            throw new Error('Game: you must call loadScene() before calling play()')
+            const sceneNames = Object.keys(this.gameJSON.scenes || {});
+            if (!sceneNames.length) {
+                throw new Error('game.json has no scenes');
+            }
+            const initialScene = this.gameJSON.initialScene || sceneNames[0];
+            await this.loadScene(initialScene);
         }
         this.renderer.play();
     }

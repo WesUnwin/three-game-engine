@@ -4,6 +4,7 @@ import { UserInterfaceJSON } from "./ui/UIHelpers";
 // JSON Files
 
 interface GameJSON {
+    initialScene?: string;
     scenes?: Object;
     gameObjectTypes?: Object;
 }

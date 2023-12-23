@@ -5,6 +5,7 @@
     "gameObjectTypes": {
         "ExampleCharacter": "game_objects/ExampleCharacter.json"
     },
+    "initialScene": "TestAreaScene",
     "scenes": {
         "TestAreaScene": "testArea.json"
     }
