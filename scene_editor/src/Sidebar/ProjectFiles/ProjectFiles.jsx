@@ -32,12 +32,21 @@ const ProjectFiles = ({ setDirHandle }) => {
     const selectProjectFolder = async () => {
         const directoryHandle = await window.showDirectoryPicker({
             mode: 'readwrite'
+        }).catch(error => {
+            if (error.name === 'AbortError') {
+                console.log('User abored window.showDirectoryPicker()');
+            } else {
+                alert('Error occured while trying to pick a foler: ', error.message);
+            }
+            return null;
         });
+    
+        if (directoryHandle) {
+            setDirHandle(directoryHandle);
 
-        setDirHandle(directoryHandle);
-
-        const fileInfo = await FileHelpers.openProjectFolder(directoryHandle);
-        dispatch(projectFilesSlice.actions.setState(fileInfo));
+            const fileInfo = await FileHelpers.openProjectFolder(directoryHandle);
+            dispatch(projectFilesSlice.actions.setState(fileInfo));
+        }
     };
 
     const renderFileInfo = (fileInfo, initiallyExpanded = false, index = 0, path = '') => {   

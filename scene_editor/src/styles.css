@@ -9,6 +9,13 @@ body {
     justify-content: space-evenly;
 }
 
+.divider {
+    margin-top: 5px;
+    color: gray;
+    text-align: left;
+    border-bottom: 1px solid gray;
+}
+
 .project-files {
     margin: 5px;
     font-weight: bold;

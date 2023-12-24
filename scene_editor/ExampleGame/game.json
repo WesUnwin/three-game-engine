@@ -1,4 +1,5 @@
 {
+    "initialScene": "TestAreaScene",
     "gameObjectTypes": {
         "ExampleCharacter": "game_objects/ExampleCharacter.json",
         "Platform10_10_1": "game_objects/environment/Platform10_10_1.json",

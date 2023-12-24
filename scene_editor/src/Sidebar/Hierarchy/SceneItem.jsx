@@ -29,7 +29,7 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
     return (
         <TreeView label={`${sceneName} (${scenePath})`} errorMessage={errorMessage} onClick={onClick} isSelected={isSelected} maxChildrenHeight="250px">
             {(fileData?.data?.gameObjects || []).map((gameObjectJSON, index) => (
-                <GameObjectItem dirHandle={dirHandle} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
+                <GameObjectItem key={index} dirHandle={dirHandle} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
             ))}
         </TreeView>
     );

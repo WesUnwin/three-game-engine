@@ -5,6 +5,7 @@ import SceneItem from './SceneItem.jsx';
 import { getFile } from '../../Redux/FileDataSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import GameObjectTypeItem from './GameObjectTypeItem.jsx';
 
 const GameItem = ({ gameFileInfo, dirHandle }) => {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
     }, [gameFileInfo]);
 
     const scenes = gameFileData?.data ? gameFileData.data.scenes : {};
+    const gameObjectTypes = gameFileData?.data ? gameFileData.data.gameObjectTypes : {};
 
     const errorMessage = gameFileData?.error?.message;
 
@@ -28,11 +30,28 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
 
     return (
         <TreeView label={'game.json'} errorMessage={errorMessage} initiallyExpanded={true} onClick={onClick} isSelected={isSelected}>
+            
             {gameFileData?.data ? (
                 <>
-                    {Object.entries(scenes).map((sceneEntry, i) => (
-                        <SceneItem key={i} dirHandle={dirHandle} sceneName={sceneEntry[0]} scenePath={sceneEntry[1]} />
-                    ))}
+                    <TreeView label="Scenes:" expandOnClick={true} initiallyExpanded={true}>
+                        {Object.keys(scenes).length === 0 ? (
+                            '(no scenes)'
+                        ) : (
+                            Object.entries(scenes).map((sceneEntry, i) => (
+                                <SceneItem key={i} dirHandle={dirHandle} sceneName={sceneEntry[0]} scenePath={sceneEntry[1]} />
+                            ))
+                        )}
+                    </TreeView>
+
+                    <TreeView label="GameObject Types:" expandOnClick={true}>
+                        {Object.keys(gameObjectTypes).length === 0 ? (
+                            '(no game object types)'
+                        ) : (
+                            Object.entries(gameObjectTypes).map((gameObjectTypeEntry, i) => (
+                                <GameObjectTypeItem key={i} dirHandle={dirHandle} gameObjectType={gameObjectTypeEntry[0]} filePath={gameObjectTypeEntry[1]} />
+                            ))
+                        )}
+                    </TreeView>
                 </>
             ) : gameFileData?.error ? (
                 'Reading...'
