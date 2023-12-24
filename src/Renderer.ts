@@ -205,7 +205,9 @@ class Renderer {
         if (scene) {
             this.game.inputManager.beforeRender();
 
-            scene.advancePhysics();
+            if (!this.game.gameOptions.disablePhysics) {
+                scene.advancePhysics();
+            }
 
             scene.updatePhysicsGraphics();
 

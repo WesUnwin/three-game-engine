@@ -26,6 +26,7 @@ interface GameOptions {
     rendererOptions?: RendererOptions;
     assetOptions?: AssetOptions;
     inputOptions?: InputOptions;
+    disablePhysics?: boolean;
 }
 
 interface RendererOptions {
