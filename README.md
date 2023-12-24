@@ -48,6 +48,8 @@ This file controls game-level settings, and points to a series of scenes each de
   "rendererOptions": { ... }, // optional, see RendererOptions
   "assetOptions": { ... }, // optional, see AssetOptions
 
+  "initialScene": "mainMenu",
+
   // A game contains a series of scenes that you can switch between (See Scene JSON files)
   "scenes": {
     "mainMenu": "scenes/main_menu.json",

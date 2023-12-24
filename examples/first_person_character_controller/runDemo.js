@@ -4,6 +4,11 @@ const runDemo = async () => {
     const game = new Game('http://localhost:8080/examples/first_person_character_controller', {
       rendererOptions: {
         setupFullScreenCanvas: true
+      },
+      inputOptions: {
+        mouseOptions: {
+          usePointerLock: true
+        }
       }
     });
 

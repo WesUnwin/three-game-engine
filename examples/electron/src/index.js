@@ -13,7 +13,13 @@ const runDemo = async () => {
         baseURL = `file://${dirName}/../../../assets`;
     }
 
-    const game = new Game(baseURL);
+    const game = new Game(baseURL, {
+      inputOptions: {
+        mouseOptions: {
+          usePointerLock: true
+        }
+      }
+    });
 
     class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {

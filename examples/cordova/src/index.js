@@ -2,7 +2,13 @@ import { Game, KinematicCharacterController } from "../../../dist/index"
 
 const runDemo = async () => {
     // Here with this example cordova app, the base URL refers to everything in the cordova/www folder
-    const game = new Game('https://localhost');
+    const game = new Game('https://localhost', {
+      inputOptions: {
+        mouseOptions: {
+          usePointerLock: true
+        }
+      }
+    });
 
     class ExampleCharacter extends KinematicCharacterController {
         constructor(parent, options) {
