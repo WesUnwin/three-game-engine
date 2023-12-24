@@ -195,8 +195,13 @@ class Renderer {
 
         const deltaTimeInSec = deltaTimeMS / 1000;
 
+        const beforeRenderArgs = {
+            deltaTimeInSec,
+            time
+        };
+
         if (this.options.beforeRender) {
-            this.options.beforeRender();
+            this.options.beforeRender(beforeRenderArgs);
         }
 
         ThreeMeshUI.update();
@@ -211,10 +216,7 @@ class Renderer {
 
             scene.updatePhysicsGraphics();
 
-            this._beforeRender({
-                deltaTimeInSec,
-                time
-            });
+            this._beforeRender(beforeRenderArgs);
 
             this.threeJSRenderer.render(scene.threeJSScene, this.threeJSCamera);
         }

@@ -37,7 +37,7 @@ interface RendererOptions {
     cameraOptions?: CameraOptions;
     setupFullScreenCanvas?: boolean;
     canvas?: HTMLCanvasElement;
-    beforeRender?: () => void;
+    beforeRender?: (args: { deltaTimeInSec: number, time: number}) => void;
 }
 
 interface CameraOptions {
