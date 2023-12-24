@@ -1,20 +1,25 @@
+import { MouseOptions } from "../types";
 
 class MouseHandler {
     canvas: HTMLCanvasElement;
     pointerX: number;
     pointerY: number;
+    options: MouseOptions;
 
-    constructor(canvas) {
+    constructor(canvas, options = {}) {
         this.canvas = canvas;
         this.pointerX = 0;
         this.pointerY = 0;
+        this.options = options;
         this.setupEventHandlers();
     }
 
     setupEventHandlers() {
-        this.canvas.addEventListener("click", () => {
-            this.canvas.requestPointerLock();
-        });
+        if (this.options.usePointerLock) {
+            this.canvas.addEventListener("click", () => {
+                this.canvas.requestPointerLock();
+            });
+        }
 
         const onMouseMove = (event: MouseEvent) => {
             // movementX the delta value of how much the point moved horizontally in pixels, negative is to the left, positive amounts are towards the right

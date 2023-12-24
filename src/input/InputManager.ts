@@ -13,10 +13,10 @@ class InputManager {
     mouseHandler: MouseHandler;
     gamepadHandler: GamepadHandler;
 
-    constructor(canvas: HTMLCanvasElement, options = {}) {
+    constructor(canvas: HTMLCanvasElement, options: InputOptions = {}) {
         this.options = Object.assign({}, defaultOptions, options);
         this.keyboardHandler = new KeyboardHandler();
-        this.mouseHandler = new MouseHandler(canvas);
+        this.mouseHandler = new MouseHandler(canvas, options.mouseOptions);
         this.gamepadHandler = new GamepadHandler();
     }
 

@@ -53,7 +53,12 @@ interface AssetOptions {
 }
 
 interface InputOptions {
-    wsadMovement: boolean; // use WSAD keyboard keys to move around, just like arrow keys
+    wsadMovement?: boolean; // use WSAD keyboard keys to move around, just like arrow keys
+    mouseOptions?: MediaStreamAudioSourceOptions;
+}
+
+interface MouseOptions {
+    usePointerLock?: boolean;
 }
 
 interface GameObjectOptions {
