@@ -51,7 +51,7 @@ class Scene {
         this.rapierWorld = PhysicsHelpers.createRapierWorld(this.initialGravity);
 
         this.gameObjects = [];
-        (this.sceneJSON?.gameObjects || []).forEach(g => this._createGameObject(this, g));
+        (this.sceneJSON?.gameObjects || []).forEach((g, index) => this._createGameObject(this, g, [index]));
 
         for(let i = 0; i<this.gameObjects.length; i++) {
             const gameObject = this.gameObjects[i];
@@ -59,9 +59,13 @@ class Scene {
         }
     }
 
-    _createGameObject(parent: Scene | GameObject, gameObjectJSON: GameObjectJSON) {
+    _createGameObject(parent: Scene | GameObject, gameObjectJSON: GameObjectJSON, indices: number[]) {
         const options = { ...gameObjectJSON };
         delete options.children;
+
+        options.userData = {
+            indices
+        };
 
         let gameObject = null;
 
@@ -90,8 +94,8 @@ class Scene {
 
         parent.addGameObject(gameObject);
         this.threeJSScene.add(gameObject.threeJSGroup);
-        (gameObjectJSON.children || []).forEach(childData => {
-            this._createGameObject(gameObject, childData);
+        (gameObjectJSON.children || []).forEach((childData, index) => {
+            this._createGameObject(gameObject, childData, indices.concat(index));
         });
     }
 
@@ -177,6 +181,25 @@ class Scene {
 
     findAllByTag(tag) {
         return this.findAll(g => g.hasTag(tag));
+    }
+
+    getGameObjectByID(id) {
+        return this.find(g => g.id === id);
+    }
+
+    getGameObjectByThreeJSObject(object3D) {
+        if (object3D instanceof THREE.Group) {
+            const { gameObjectID } = object3D.userData;
+            if (gameObjectID) {
+                return this.getGameObjectByID(gameObjectID);
+            } else {
+                return this.getGameObjectByThreeJSObject(object3D.parent);
+            }
+        } else if (object3D.parent) {
+            return this.getGameObjectByThreeJSObject(object3D.parent);
+        } else {
+            return null;
+        }
     }
 
     afterLoaded() {

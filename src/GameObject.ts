@@ -8,8 +8,10 @@ import * as PhysicsHelpers from './physics/PhysicsHelpers';
 import * as UIHelpers from './ui/UIHelpers';
 import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
 import { UserInterfaceJSON } from './ui/UIHelpers';
+import Util from './Util';
 
 class GameObject {
+    id: string;
     name: string;
     tags: string[];
     threeJSGroup: THREE.Group;
@@ -26,6 +28,7 @@ class GameObject {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
+        this.id = Util.getUUID();
 
         this.parent = parent;
 
@@ -51,6 +54,10 @@ class GameObject {
         this.loaded = false;
 
         this.threeJSGroup = new THREE.Group();
+        Object.assign(this.threeJSGroup.userData, {
+            ...(options.userData || {}),
+            gameObjectID: this.id
+        });
         this.threeJSGroup.name = `gameObject-${this.name}`;
 
         const x = allOptions.position?.x || 0;

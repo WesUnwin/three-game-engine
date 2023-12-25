@@ -65,6 +65,7 @@ interface GameObjectOptions {
     type?: string;
     name?: string;
     tags?: string[];
+    userData?: Object;
     models?: ModelData[];
     lights?: LightData[];
     position?: Vector3Data;
