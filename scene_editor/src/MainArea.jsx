@@ -1,17 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import { Game, THREE } from '../../dist/index';
 import { useDispatch, useSelector } from 'react-redux';
-import { getFile } from './Redux/FileDataSlice.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { selectItem } from "./Redux/SelectedItemSlice.js";
+import { TransformControls, TransformControlsPlane } from 'three/examples/jsm/controls/TransformControls.js';
+import { getSelectedItem, selectItem } from "./Redux/SelectedItemSlice.js";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
     const dispatch = useDispatch();
 
     const canvasRef = useRef();
+    const orbitControlsRef = useRef();
+    const transformControlsRef = useRef();
 
-    const gameFileData = useSelector(getFile('game.json'));
+    const selectedItem = useSelector(getSelectedItem());
 
     const createGame = async () => {
         const canvas = canvasRef.current;
@@ -19,8 +21,6 @@ const MainArea = ({ dirHandle }) => {
         if (!canvas) {
             throw new Error('MainArea: unable to reference canvas HTMLElement');
         }
-
-        let orbitControls = null;
 
         console.log('MainArea: creating Game...');
         window.game = new Game(dirHandle, {
@@ -42,8 +42,8 @@ const MainArea = ({ dirHandle }) => {
                         window.game.renderer.setSize(width, height)
                     }
 
-                    if (orbitControls) {
-                        orbitControls.update(deltaTimeInSec);
+                    if (orbitControlsRef.current) {
+                        orbitControlsRef.current.update(deltaTimeInSec);
                     }
                 }
             }
@@ -52,7 +52,32 @@ const MainArea = ({ dirHandle }) => {
         await game.play();
 
         const defaultCamera = game.renderer.getCamera();
-        orbitControls = new OrbitControls(defaultCamera, canvas);
+        const orbitControls = new OrbitControls(defaultCamera, canvas);
+        orbitControlsRef.current = orbitControls;
+
+        // TransformControls provides a threeJS widget that allows the user to adjust
+        // the position/scale/rotation of objects (similar to how three.js' scene editor does)
+        const transformControls = new TransformControls(
+            defaultCamera,
+            canvas
+        );
+        transformControls.setSize(0.5);
+
+        // disable orbitControls while using transformControls
+        transformControls.addEventListener('mouseDown', () => {
+            const orbitControls = orbitControlsRef.current;
+            if (orbitControls) {
+                orbitControls.enabled = false;
+            } 
+        });
+        transformControls.addEventListener('mouseUp', () => {
+            const orbitControls = orbitControlsRef.current;
+            if (orbitControls) {
+                orbitControls.enabled = true;
+            }               
+        });
+
+        transformControlsRef.current = transformControls;
     };
 
     useEffect(() => {
@@ -75,18 +100,38 @@ const MainArea = ({ dirHandle }) => {
             if (game.scene) {
                 const threeJScene = game.scene?.threeJSScene;
                 const intersections = raycaster.intersectObject(threeJScene);
-                if (intersections.length) {
-                    const intersect = intersections[0];
-                    const gameObject = game.scene.getGameObjectByThreeJSObject(intersect.object);
 
-                    if (gameObject) {
-                        const indices = gameObject.threeJSGroup.userData.indices;
-                        dispatch(selectItem(game.scene.jsonAssetPath, 'gameObject', { indices }));
+                const relevantIntersections = intersections.filter(intersect => {
+                    if (intersect.object instanceof TransformControlsPlane) {
+                        return false;
                     }
+                    return true;
+                })
+
+                const gameObjectsIntersected = relevantIntersections.map(intersect => game.scene.getGameObjectByThreeJSObject(intersect.object)).filter(g => g);
+
+                if (gameObjectsIntersected.length) {
+                    const gameObject = gameObjectsIntersected[0];
+                    const indices = gameObject.threeJSGroup.userData.indices;
+                    dispatch(selectItem(game.scene.jsonAssetPath, 'gameObject', { indices }));
                 }
             }
         }
     };
+
+    useEffect(() => {
+        if (selectedItem?.type === 'gameObject') {
+            const canvas = canvasRef.current;
+            const transformControls = transformControlsRef.current;
+   
+            const indices = selectedItem.params.indices;
+            const selectedGameObject = game.scene.find(gameObject => JSON.stringify(gameObject.threeJSGroup.userData.indices) === JSON.stringify(indices));
+
+            game.scene.threeJSScene.add(transformControls);
+            transformControls.detach();
+            transformControls.attach(selectedGameObject.threeJSGroup);
+        }
+    }, [selectedItem?.type, selectedItem?.params]);
 
     return <canvas ref={canvasRef} onClick={onClick} />;
 };
