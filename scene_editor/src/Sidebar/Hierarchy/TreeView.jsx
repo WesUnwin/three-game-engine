@@ -4,7 +4,8 @@ import { Tooltip } from 'react-tooltip';
 const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, errorMessage, isSelected, maxChildrenHeight }) => {
     const [expanded, setExpanded] = useState(initiallyExpanded || false);
 
-    const onTreeViewClick = () => {
+    const onTreeViewClick = event => {
+        event.stopPropagation();
         expandOnClick ? setExpanded(!expanded) : onClick();
     };
 

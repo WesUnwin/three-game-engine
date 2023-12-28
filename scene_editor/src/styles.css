@@ -6,7 +6,7 @@ body {
 .row {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-start;
 }
 
 .divider {
@@ -101,4 +101,23 @@ body {
 .tree-view-children {
     margin-left: 15px;
     overflow-y: auto;
+}
+
+.number-input {
+    display: flex;
+}
+
+.number-input input {
+    margin-left: 2px;
+    margin-right: 5px;
+    max-width: 80px;
+}
+
+.property-group h5 {
+    margin-top: 0px;
+    font-weight: bold;
+}
+
+.property-group {
+    margin-bottom: 5px;
 }

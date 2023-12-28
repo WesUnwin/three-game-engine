@@ -20,7 +20,7 @@ const ProjectFiles = ({ setDirHandle }) => {
         if (selectedProjectFileData) {
             dispatch(selectItem(selectedProjectFileData.path, selectedProjectFileData.metaData.type));
         }
-    }, [selectedProjectFileData]);
+    }, [selectedProjectFileData?.path]);
 
     useEffect(() => {
         // Update selectedProjectFilePath componenent state, to match newly selected hierarchy item if its associated with a file
@@ -75,7 +75,7 @@ const ProjectFiles = ({ setDirHandle }) => {
 
     return (
         <Panel label="Project Files">
-            <div className="row">
+            <div className="row" style={{ justifyContent: 'space-around' }}>
                 <button>
                     New Project
                 </button>

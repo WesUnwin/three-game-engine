@@ -30,7 +30,7 @@ const SelectedFile = () => {
             ) : selectedItem.type === 'sceneJSON' ? (
                 <SceneProperties sceneJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObject' ? (
-                <GameObjectProperties sceneJSON={selectedFile.data} indices={selectedItem.params.indices} />
+                <GameObjectProperties filePath={selectedItem.filePath} sceneJSON={selectedFile.data} indices={selectedItem.params.indices} />
             ) : (
                 `(Error no component configured to display seleted items of type: ${selectedItem.type})`
             )}       

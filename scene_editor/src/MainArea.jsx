@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TransformControls, TransformControlsPlane } from 'three/examples/jsm/controls/TransformControls.js';
 import { getSelectedItem, selectItem } from "./Redux/SelectedItemSlice.js";
+import { mergeFileData, updateGameObject } from "./Redux/FileDataSlice.js";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
@@ -76,6 +77,37 @@ const MainArea = ({ dirHandle }) => {
                 orbitControls.enabled = true;
             }               
         });
+        transformControls.addEventListener('change', event => {
+            const filePath = game.scene.jsonAssetPath;
+            const controls = event.target;
+            const threeJSObject = controls.object;
+
+            if (!threeJSObject) {
+                return; // todo find out why this happens
+            }
+
+            const { indices } = threeJSObject.userData;
+
+            let field = null;
+            let value = null;
+            if (controls.mode === 'translate') {
+                const { x, y, z } = threeJSObject.position;
+                field = ['position'];
+                value = { x, y, z };
+            } else if (controls.mode === 'scale') {
+                const { x, y, z } = threeJSObject.scale;
+                field = ['scale'];
+                value = { x, y, z };
+            } else if (controls.mode === 'rotate') {
+                const { x, y, z } = threeJSObject.rotation;
+                field = ['rotation'];
+                value = { x, y, z };
+            }
+
+            if (field) {
+                dispatch(updateGameObject(filePath, indices, field, value));
+            }
+        });
 
         transformControlsRef.current = transformControls;
     };
@@ -120,16 +152,18 @@ const MainArea = ({ dirHandle }) => {
     };
 
     useEffect(() => {
-        if (selectedItem?.type === 'gameObject') {
-            const canvas = canvasRef.current;
-            const transformControls = transformControlsRef.current;
-   
-            const indices = selectedItem.params.indices;
-            const selectedGameObject = game.scene.find(gameObject => JSON.stringify(gameObject.threeJSGroup.userData.indices) === JSON.stringify(indices));
-
-            game.scene.threeJSScene.add(transformControls);
-            transformControls.detach();
-            transformControls.attach(selectedGameObject.threeJSGroup);
+        const transformControls = transformControlsRef.current;
+        if (transformControls) {
+            if (selectedItem?.type === 'gameObject') {
+                const indices = selectedItem.params.indices;
+                const selectedGameObject = game.scene.find(gameObject => JSON.stringify(gameObject.threeJSGroup.userData.indices) === JSON.stringify(indices));
+    
+                game.scene.threeJSScene.add(transformControls);
+                
+                transformControls.attach(selectedGameObject.threeJSGroup);
+            } else {
+                transformControls.detach();
+            }
         }
     }, [selectedItem?.type, selectedItem?.params]);
 
