@@ -75,21 +75,20 @@ const ProjectFiles = ({ setDirHandle }) => {
 
     return (
         <Panel label="Project Files">
-            <div className="row" style={{ justifyContent: 'space-around' }}>
-                <button>
-                    New Project
-                </button>
-
-                <button onClick={selectProjectFolder}>
-                    Open Project Folder...
-                </button> 
-            </div>
-
-            {projectFiles.name && (
+            {projectFiles.name ? (
                 <>
-                    <p className="project-files">Project files: </p>
                     {renderFileInfo(projectFiles, true)}
                 </>
+            ) : (
+                <div className="row" style={{ justifyContent: 'space-around' }}>
+                    <button>
+                        New Project
+                    </button>
+
+                    <button onClick={selectProjectFolder}>
+                        Open Project Folder...
+                    </button> 
+                </div>
             )}   
         </Panel>
     );

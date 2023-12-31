@@ -189,7 +189,13 @@ const MainArea = ({ dirHandle }) => {
         }
     }, [selectedItem?.type, selectedItem?.params]);
 
-    window.addEventListener('keydown', onKeyDown);
+    useEffect(() => {
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, []);
+
     return (
         <div className="main-area">
             <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>

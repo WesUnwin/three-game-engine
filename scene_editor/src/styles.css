@@ -16,12 +16,6 @@ body {
     border-bottom: 1px solid gray;
 }
 
-.project-files {
-    margin: 5px;
-    font-weight: bold;
-    text-align: center;
-}
-
 #app {
     height: 100%;
     display: flex;
@@ -30,21 +24,18 @@ body {
 }
 
 .main-area {
-    width: 75%;
+    flex-grow: 1;
 }
 
-
-
 .sidebar {
-    flex-grow: 1;
+    width: 400px;
     height: 100%;
     background-color: #404040;
 }
 
 .sidebar-panel {
-    margin: 10px;
+    margin: 5px;
     margin-top: 0px;
-
 }
 
 .sidebar-panel h5 {
