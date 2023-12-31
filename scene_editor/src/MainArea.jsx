@@ -151,6 +151,26 @@ const MainArea = ({ dirHandle }) => {
         }
     };
 
+    const switchTransformControlsMode = mode => {
+        transformControlsRef.current?.setMode(mode);
+    };
+
+    const onKeyDown = event => {
+        console.log('MainArea: keydown: ', event.code);
+        switch(event.code) {
+            case 'KeyR':
+                switchTransformControlsMode('rotate');
+                break;
+            case 'KeyS':
+                switchTransformControlsMode('scale');
+                break;
+            case 'KeyT':
+            case 'KeyP':
+                switchTransformControlsMode('translate');
+                break;
+        }
+    };
+
     useEffect(() => {
         const transformControls = transformControlsRef.current;
         if (transformControls) {
@@ -167,7 +187,8 @@ const MainArea = ({ dirHandle }) => {
         }
     }, [selectedItem?.type, selectedItem?.params]);
 
-    return <canvas ref={canvasRef} onClick={onClick} />;
+    window.addEventListener('keydown', onKeyDown);
+    return <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>;
 };
 
 export default MainArea;
