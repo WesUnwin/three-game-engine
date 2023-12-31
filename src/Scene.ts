@@ -231,6 +231,20 @@ class Scene {
         // Optional: override and handle this event   
     }
 
+    showGrid(size: number = 100, divisions: number = 100, colorCenterLine: THREE.Color = new THREE.Color(0x444444), colorGrid: THREE.Color = new THREE.Color(0x888888)) {
+        this.hideGrid();
+        const gridHelper = new THREE.GridHelper(size, divisions, colorCenterLine, colorGrid);
+        gridHelper.name = 'GridHelper';
+        this.threeJSScene.add(gridHelper);
+    }
+
+    hideGrid() {
+        const gridHelper = this.threeJSScene.getObjectByName('GridHelper');
+        if (gridHelper) {
+            this.threeJSScene.remove(gridHelper);
+        }
+    }
+
     showPhysics() {
         if (!this.game) {
             throw new Error('showPhysics() must be called after the scene is loaded');
