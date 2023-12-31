@@ -52,6 +52,8 @@ const MainArea = ({ dirHandle }) => {
 
         await game.play();
 
+        game.scene?.showGrid();
+
         const defaultCamera = game.renderer.getCamera();
         const orbitControls = new OrbitControls(defaultCamera, canvas);
         orbitControlsRef.current = orbitControls;
@@ -188,7 +190,11 @@ const MainArea = ({ dirHandle }) => {
     }, [selectedItem?.type, selectedItem?.params]);
 
     window.addEventListener('keydown', onKeyDown);
-    return <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>;
+    return (
+        <div className="main-area">
+            <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>
+        </div>
+    );
 };
 
 export default MainArea;

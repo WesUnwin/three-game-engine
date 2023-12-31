@@ -29,9 +29,11 @@ body {
     flex-wrap: nowrap;
 }
 
-#app canvas {
-    max-width: 75%;
+.main-area {
+    width: 75%;
 }
+
+
 
 .sidebar {
     flex-grow: 1;
