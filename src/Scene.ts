@@ -187,6 +187,21 @@ class Scene {
         return this.find(g => g.id === id);
     }
 
+    getGameObjectByIndices(indices: number[]) {
+        let parent: Scene | GameObject = this;
+        for (let i = 0; i<indices.length; i++) {
+            const index = indices[i];
+            if (i == indices.length - 1) {
+                return parent.gameObjects[index];
+            } else {
+                parent = parent.gameObjects[index];
+            }
+            if (!parent) {
+                return null;
+            }
+        }
+    }
+
     getGameObjectByThreeJSObject(object3D) {
         if (object3D instanceof THREE.Group) {
             const { gameObjectID } = object3D.userData;
