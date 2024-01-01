@@ -109,7 +109,7 @@ const MainArea = ({ dirHandle }) => {
 
             if (field) {
                 ['x', 'y', 'z'].forEach(prop => {
-                    value[prop] = value[prop].toFixed(3);
+                    value[prop] = Number.parseFloat(value[prop].toFixed(3)) || 0;
                 });
                 dispatch(modifyGameObject(filePath, indices, field, value));
             }
