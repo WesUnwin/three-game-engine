@@ -14,7 +14,7 @@ const Slider = ({ value, onChange }) => {
     };
 
     const onSliderChange = newSliderValue => {
-        const newValueInRads = getRadsFromSliderValue(newSliderValue);
+        const newValueInRads = Number.parseFloat(getRadsFromSliderValue(newSliderValue).toFixed(3));
         onChange(newValueInRads);
     };
 
