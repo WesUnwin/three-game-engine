@@ -5,6 +5,7 @@ import { getSelectedItem } from '../../Redux/SelectedItemSlice.js';
 import { getFile } from '../../Redux/FileDataSlice.js';
 import GameObjectProperties from './GameObjectProperties.jsx';
 import SceneProperties from './SceneProperties.jsx';
+import GameProperties from './GameProperties.jsx';
 
 const displayType = {
     gameJSON: 'Game Properties:',
@@ -24,7 +25,7 @@ const SelectedItem = () => {
     return (
         <Panel label={displayType[selectedItem.type]}>
             {selectedItem.type === 'gameJSON' ? (
-                <></>
+                <GameProperties gameJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObjectTypeJSON' ? (
                 <></>
             ) : selectedItem.type === 'sceneJSON' ? (

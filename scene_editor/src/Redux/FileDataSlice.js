@@ -18,6 +18,24 @@ const fileDataSlice = createSlice({
                 state.files.push({ ...action.payload, modified: false });
             }
         },
+        modifyFileData: (state, action) => {
+            const { path, field, value } = action.payload
+            const file = state.files.find(f => f.path === path);
+            if (file) {
+                let subObject = file.data;
+                for (let i = 0; i<field.length; i++) {
+                    if (i === field.length - 1) {
+                        subObject[field[i]] = value;
+                    } else {
+                        if (!(field[i] in subObject)) {
+                            subObject[field[i]] = {};
+                        }
+                        subObject = subObject[field[i]];
+                    }
+                }
+            }
+            file.modified = true;
+        },
         modifyGameObject: (state, action) => {
             const { scenefilePath, gameObjectIndices, field, value } = action.payload;
 
