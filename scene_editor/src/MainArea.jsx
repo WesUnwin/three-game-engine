@@ -108,6 +108,9 @@ const MainArea = ({ dirHandle }) => {
             }
 
             if (field) {
+                ['x', 'y', 'z'].forEach(prop => {
+                    value[prop] = value[prop].toFixed(3);
+                });
                 dispatch(modifyGameObject(filePath, indices, field, value));
             }
         });
