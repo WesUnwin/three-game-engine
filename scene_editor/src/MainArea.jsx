@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TransformControls, TransformControlsPlane } from 'three/examples/jsm/controls/TransformControls.js';
 import { getSelectedItem, selectItem } from "./Redux/SelectedItemSlice.js";
-import { mergeFileData, updateGameObject } from "./Redux/FileDataSlice.js";
+import { modifyGameObject } from "./Redux/FileDataSlice.js";
+import StatusBar from "./StatusBar/StatusBar.jsx";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
@@ -31,7 +32,7 @@ const MainArea = ({ dirHandle }) => {
                 pixelRatio: window.devicePixelRatio,
                 beforeRender: ({ deltaTimeInSec }) => {
                     const width = window.innerWidth - 400;
-                    const height = window.innerHeight - 5;
+                    const height = window.innerHeight - 30;
                 
                     const currentWidth = window.game.renderer.options.width;
                     const currentHeight = window.game.renderer.options.height;
@@ -107,7 +108,7 @@ const MainArea = ({ dirHandle }) => {
             }
 
             if (field) {
-                dispatch(updateGameObject(filePath, indices, field, value));
+                dispatch(modifyGameObject(filePath, indices, field, value));
             }
         });
 
@@ -199,6 +200,7 @@ const MainArea = ({ dirHandle }) => {
     return (
         <div className="main-area">
             <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>
+            <StatusBar />
         </div>
     );
 };

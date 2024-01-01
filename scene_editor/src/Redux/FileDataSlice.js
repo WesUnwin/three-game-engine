@@ -3,10 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const fileDataSlice = createSlice({
     name: 'fileData',
     initialState: {
-        files: [] // Array of { path: "project_files/folder/file.json", data: <JSON>, error: null | { message: __ } }
+        files: [], // Array of { path: "project_files/folder/file.json", data: <JSON>, error: null | { message: __ } }
+        fileBeingSaved: null // null or path of file currently being saved
     },
     reducers: {
-        updateFile: (state, action) => {
+        addFileData: (state, action) => {
             const file = state.files.find(f => f.path === action.payload.path);
             if (file) {
                 file.path = action.payload.path;
@@ -14,10 +15,10 @@ const fileDataSlice = createSlice({
                 file.error = action.payload.error;
                 file.metaData = action.payload.metaData;
             } else {
-                state.files.push(action.payload);
+                state.files.push({ ...action.payload, modified: false });
             }
         },
-        updateGameObject: (state, action) => {
+        modifyGameObject: (state, action) => {
             const { scenefilePath, gameObjectIndices, field, value } = action.payload;
 
             const file = state.files.find(f => f.path == scenefilePath);
@@ -43,35 +44,57 @@ const fileDataSlice = createSlice({
                         subObject = subObject[field[i]];
                     }
                 }
+
+                file.modified = true;
             }
         },
-        mergeFileData: (state, action) => {
-            const file = state.files.find(f => f.path === action.payload.path);
+        setFileBeingSaved: (state, action) => {
+            state.fileBeingSaved = action.payload.filePath;
+        },
+        fileSaved: (state, action) => {
+            const file = state.files.find(f => f.path === action.payload.filePath);
             if (file) {
-                file.data = Object.assign({}, file.data, action.payload.data);
+                file.modified = false;
             }
+            state.fileBeingSaved = null;
         }
     }
 });
 
 export const addFileData = (path, data, metaData) => {
-    return fileDataSlice.actions.updateFile({ path, data, error: null, metaData });
-};
-
-export const mergeFileData = (path, data) => {
-    return fileDataSlice.actions.mergeFileData({ path, data });
-};
-
-export const updateGameObject = (scenefilePath, gameObjectIndices, field, value) => {
-    return fileDataSlice.actions.updateGameObject({ scenefilePath, gameObjectIndices, field, value });
+    return fileDataSlice.actions.addFileData({ path, data, error: null, metaData });
 };
 
 export const reportFileError = (path, error) => {
-    return fileDataSlice.actions.updateFile({ path, data: null, error: error });
+    return fileDataSlice.actions.addFileData({ path, data: null, error: error });
+};
+
+export const modifyGameObject = (scenefilePath, gameObjectIndices, field, value) => {
+    return fileDataSlice.actions.modifyGameObject({ scenefilePath, gameObjectIndices, field, value });
 };
 
 export const getFile = (path) => {
     return store => store.fileData.files.find(f => f.path === path);
+}
+
+export const getModifiedFileCount = () => {
+    return store => store.fileData.files.filter(f => f.modified).length;
+}
+
+export const setFileBeingSaved = filePath => {
+    return fileDataSlice.actions.setFileBeingSaved({ filePath });
+}
+
+export const getFileBeingSaved = () => {
+    return store => store.fileData.fileBeingSaved;
+}
+
+export const fileSaved = filePath => {
+    return fileDataSlice.actions.fileSaved({ filePath });
+}
+
+export const getModifiedFiles = () => {
+    return store => store.fileData.files.filter(f => f.modified);
 }
 
 export default fileDataSlice;

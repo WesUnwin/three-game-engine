@@ -25,6 +25,23 @@ body {
 
 .main-area {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-area canvas {
+    flex-grow: 1;
+    background-color: lightblue;
+}
+
+.status-bar {
+    border-top: 1px solid darkgray;
+    height: 30px;
+    background-color: lightgray;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .sidebar {

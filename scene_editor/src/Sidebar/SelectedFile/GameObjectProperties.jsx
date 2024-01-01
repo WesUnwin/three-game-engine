@@ -2,7 +2,7 @@ import React from 'react';
 import NumberInput from './NumberInput.jsx';
 import PropertyGroup from './PropertyGroup.jsx';
 import { useDispatch } from 'react-redux';
-import { updateGameObject } from '../../Redux/FileDataSlice.js';
+import { modifyGameObject } from '../../Redux/FileDataSlice.js';
 
 const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
     const dispatch = useDispatch();
@@ -34,7 +34,7 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
             obj[field[field.length - 1]] = newValue;
         }
 
-        dispatch(updateGameObject(filePath, indices, field, newValue));
+        dispatch(modifyGameObject(filePath, indices, field, newValue));
     };
 
     return (

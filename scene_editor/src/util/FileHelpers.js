@@ -53,6 +53,12 @@ export const loadFile = async (dirHandle, path, dispatch, metaData) => {
 };
 
 export const getFileAtPath = async (dirHandle, path) => {
+    const fileHandle = await getFileHandle(dirHandle, path);
+    const file = await fileHandle.getFile();
+    return file;
+};
+
+export const getFileHandle = async (dirHandle, path) => {
     let pathSegments = path.split('/');
 
     if (pathSegments[pathSegments.length - 1] === '/') {
@@ -64,8 +70,7 @@ export const getFileAtPath = async (dirHandle, path) => {
         const currentSegment = pathSegments[i];
         if (i === (pathSegments.length - 1)) {
             const fileHandle = await currentDirHandle.getFileHandle(currentSegment);
-            const file = await fileHandle.getFile();
-            return file;
+            return fileHandle;
         } else {
             currentDirHandle = await currentDirHandle.getDirectoryHandle(currentSegment);
         }
@@ -86,4 +91,17 @@ export const readJSONFile = async (file) => {
         };
         fr.readAsText(file);
     });
+};
+
+export const writeFile = async (dirHandle, path, data) => {
+  const fileHandle = await getFileHandle(dirHandle, path);
+
+  // Create a FileSystemWritableFileStream to write to.
+  const writable = await fileHandle.createWritable();
+
+  // Write the contents of the file to the stream.
+  await writable.write(data);
+
+  // Close the file and write the contents to disk.
+  await writable.close();
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReduxProvider from "./Redux/ReduxProvider.jsx";
 import Sidebar from "./Sidebar/Sidebar.jsx";
 import MainArea from './MainArea.jsx';
+import AutoSave from './AutoSave.jsx';
 import 'react-tooltip/dist/react-tooltip.css'
 import './styles.css';
 
@@ -10,8 +11,10 @@ const App = () => {
 
     return (
         <ReduxProvider>
-            <MainArea dirHandle={dirHandle} />
-            <Sidebar dirHandle={dirHandle} setDirHandle={setDirHandle} />      
+            <AutoSave dirHandle={dirHandle}>
+                <MainArea dirHandle={dirHandle} />
+                <Sidebar dirHandle={dirHandle} setDirHandle={setDirHandle} /> 
+            </AutoSave>
         </ReduxProvider>
     );
 };
