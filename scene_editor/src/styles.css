@@ -131,3 +131,51 @@ body {
 .property-group {
     margin-bottom: 5px;
 }
+
+.slider {
+    margin: auto;
+    width: 100%;
+    height: 30px;
+}
+  
+.slider-track {
+    top: 8px;
+    height: 4px;
+    background: #ddd;
+}
+
+.slider-track.slider-track-0 {
+    background: rgb(104, 117, 217);
+}
+
+.slider-thumb {
+    cursor: pointer;
+    /*color for the thumb */
+    background: rgb(104, 117, 217);
+    /* shape of the thumb: circle */
+    width: 20px;
+    height: 20px;
+    border-radius: 100%;
+    /* remove default outline when selected */
+    outline: none;
+}
+
+.slider-thumb:hover {
+    box-shadow: 0 0 0 8px rgb(104, 117, 217, 0.2);
+}
+
+.slider-mark {
+    cursor: pointer;
+    top: 6px;
+    width: 1.5px;
+    height: 8px;
+    background-color: #aaaaaa;
+}
+
+.slider-mark.slider-mark-before {
+    background-color: rgb(104, 117, 217);
+}
+
+.slider-mark.slider-mark-active {
+    display: none;
+}

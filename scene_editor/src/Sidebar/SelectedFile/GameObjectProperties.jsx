@@ -51,10 +51,25 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
                 <NumberInput label="z:" value={scale.z} onChange={val => changeProperty(['scale', 'z'], val)} />
             </PropertyGroup>
 
-            <PropertyGroup label="Rotation:">
-                <NumberInput label="x:" value={rotation.x} onChange={val => changeProperty(['rotation', 'x'], val)} />
-                <NumberInput label="y:" value={rotation.y} onChange={val => changeProperty(['rotation', 'y'], val)} />
-                <NumberInput label="z:" value={rotation.z} onChange={val => changeProperty(['rotation', 'z'], val)} />
+            <PropertyGroup label="Rotation:" inColumn={true}>
+                <NumberInput
+                    label="x:"
+                    value={rotation.x}
+                    onChange={val => changeProperty(['rotation', 'x'], val)}
+                    showSlider={true}
+                    max={Math.PI * 2.0} />
+                <NumberInput
+                    label="y:"
+                    value={rotation.y}
+                    onChange={val => changeProperty(['rotation', 'y'], val)}
+                    showSlider={true}
+                    max={Math.PI * 2.0} />
+                <NumberInput
+                    label="z:"
+                    value={rotation.z}
+                    onChange={val => changeProperty(['rotation', 'z'], val)}
+                    showSlider={true}
+                    max={Math.PI * 2.0} />
             </PropertyGroup>
         </>
     );
