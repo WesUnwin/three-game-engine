@@ -39,7 +39,15 @@ const fileDataSlice = createSlice({
                         subObject[field[i]] = value;
                     } else {
                         if (!(field[i] in subObject)) {
-                            subObject[field[i]] = {};
+                            if (['position', 'scale', 'rotation'].includes(field[i])) {
+                                subObject[field[i]] = {
+                                    "x": field[i] === 'scale' ? 1 : 0,
+                                    "y": field[i] === 'scale' ? 1 : 0,
+                                    "z": field[i] === 'scale' ? 1 : 0,
+                                };
+                            } else {
+                                subObject[field[i]] = {};
+                            }
                         }
                         subObject = subObject[field[i]];
                     }
