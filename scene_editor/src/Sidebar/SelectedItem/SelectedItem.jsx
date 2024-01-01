@@ -13,7 +13,7 @@ const displayType = {
     gameObject: 'GameObject Properties:'   
 };
 
-const SelectedFile = () => {
+const SelectedItem = () => {
     const selectedItem = useSelector(getSelectedItem());
     const selectedFile = useSelector(getFile(selectedItem?.filePath));
 
@@ -38,4 +38,4 @@ const SelectedFile = () => {
     );
 };
 
-export default SelectedFile;
+export default SelectedItem;

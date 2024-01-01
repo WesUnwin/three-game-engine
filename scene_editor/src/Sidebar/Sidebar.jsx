@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectFiles from './ProjectFiles/ProjectFiles.jsx';
 import Hierarchy from './Hierarchy/Hierarchy.jsx';
-import SelectedFile from './SelectedFile/SelectedFile.jsx';
+import SelectedItem from './SelectedItem/SelectedItem.jsx';
 
 const Sidebar = ({ dirHandle, setDirHandle }) => {
     return (
@@ -10,7 +10,7 @@ const Sidebar = ({ dirHandle, setDirHandle }) => {
 
             <Hierarchy dirHandle={dirHandle} />
 
-            <SelectedFile />
+            <SelectedItem />
         </div>
     );
 };
