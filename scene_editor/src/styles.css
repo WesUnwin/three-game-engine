@@ -52,11 +52,12 @@ body {
 
 .sidebar-panel {
     margin: 5px;
-    margin-top: 0px;
+    margin-top: 2px;
 }
 
 .sidebar-panel h5 {
     color: white;
+    margin-top: 0px;
     margin-bottom: 0px;
 }
 
