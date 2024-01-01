@@ -12,7 +12,8 @@ const saveFiles = debounce(async (dirHandle, dispatch) => {
     for (let file of filesToSave) {
         console.log('Saving file: ', file.path);
         dispatch(setFileBeingSaved(file.path));
-        await FileHelpers.writeFile(dirHandle, file.path, JSON.stringify(file.data));
+        const content = JSON.stringify(file.data, null, 4); // indent by 4 spaces
+        await FileHelpers.writeFile(dirHandle, file.path, content);
         dispatch(fileSaved(file.path));
         console.log('File saved: ', file.path);
     }
