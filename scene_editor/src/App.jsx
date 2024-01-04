@@ -5,6 +5,7 @@ import MainArea from './MainArea.jsx';
 import AutoSave from './AutoSave.jsx';
 import 'react-tooltip/dist/react-tooltip.css'
 import './styles.css';
+import CurrentModal from './CurrentModal.jsx';
 
 const App = () => {
     const [dirHandle, setDirHandle] = useState(null);
@@ -13,7 +14,8 @@ const App = () => {
         <ReduxProvider>
             <AutoSave dirHandle={dirHandle}>
                 <MainArea dirHandle={dirHandle} />
-                <Sidebar dirHandle={dirHandle} setDirHandle={setDirHandle} /> 
+                <Sidebar dirHandle={dirHandle} setDirHandle={setDirHandle} />
+                <CurrentModal />
             </AutoSave>
         </ReduxProvider>
     );

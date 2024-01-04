@@ -1,15 +1,17 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 
-import projectFilesSlice from './ProjectFilesSlice.js'
-import fileDataSlice from './FileDataSlice.js'
-import selectedItemSlice from './SelectedItemSlice.js'
+import projectFilesSlice from './ProjectFilesSlice.js';
+import fileDataSlice from './FileDataSlice.js';
+import selectedItemSlice from './SelectedItemSlice.js';
+import currentModalSlice from './CurrentModalSlice.js';
 
 const store = configureStore({
   reducer: {
     projectFiles: projectFilesSlice.reducer,
     fileData: fileDataSlice.reducer,
-    selectedItem: selectedItemSlice.reducer
+    selectedItem: selectedItemSlice.reducer,
+    currentModal: currentModalSlice.reducer
   }
-})
+});
 
 export default store

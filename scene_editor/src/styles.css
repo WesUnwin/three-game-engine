@@ -180,3 +180,32 @@ body {
 .slider-mark.slider-mark-active {
     display: none;
 }
+
+.modal {
+    z-index: 1;
+    position: fixed;
+    top: 200px;
+    left: 25%;
+    width: 50%;
+    background-color: rgb(64,64,64);
+    border-radius: 5px;
+    border: 1px solid gray;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.modal-header {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.modal-body {
+    border: 1px solid rgb(128, 128, 128);
+    min-height: 20px;
+    padding: 5px;
+}
+
+.modal-footer {
+    padding: 5px;
+}
