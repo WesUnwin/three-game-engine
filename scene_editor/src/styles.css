@@ -203,9 +203,23 @@ body {
 .modal-body {
     border: 1px solid rgb(128, 128, 128);
     min-height: 20px;
-    padding: 5px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
 }
 
 .modal-footer {
-    padding: 5px;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.modal-footer button {
+    font-size: 1em;
+    font-weight: 700;
+    color: rgb(50, 50, 50);
+    margin-left: 10px;
 }

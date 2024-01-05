@@ -83,6 +83,16 @@ const fileDataSlice = createSlice({
                 file.modified = false;
             }
             state.fileBeingSaved = null;
+        },
+        renameScene: (state, action) => {
+            const { sceneName, newSceneName } = action.payload;
+            const gameFile = state.files.find(f => f.path === 'game.json');
+            if (!gameFile.data.scenes || !gameFile.data.scenes[sceneName]) {
+                throw new Error(`No scene with name: ${sceneName} found in game.json`)
+            }
+            gameFile.data.scenes[newSceneName] = gameFile.data.scenes[sceneName];
+            delete gameFile.data.scenes[sceneName];
+            gameFile.modified = true;
         }
     }
 });
