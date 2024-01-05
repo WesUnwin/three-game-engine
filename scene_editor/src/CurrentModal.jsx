@@ -11,7 +11,7 @@ const modalClasses = {
     DeleteSceneModal
 };
 
-const CurrentModal = () => {
+const CurrentModal = ({ dirHandle }) => {
     const currentModal = useSelector(getCurrentModal());
 
     if (!currentModal.type) {
@@ -25,7 +25,7 @@ const CurrentModal = () => {
     }
 
     return (
-        <ModalClass {...currentModal.params} />
+        <ModalClass {...currentModal.params} dirHandle={dirHandle} />
     );
 };
 

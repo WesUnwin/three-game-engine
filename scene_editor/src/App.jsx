@@ -15,7 +15,7 @@ const App = () => {
             <AutoSave dirHandle={dirHandle}>
                 <MainArea dirHandle={dirHandle} />
                 <Sidebar dirHandle={dirHandle} setDirHandle={setDirHandle} />
-                <CurrentModal />
+                <CurrentModal dirHandle={dirHandle} />
             </AutoSave>
         </ReduxProvider>
     );

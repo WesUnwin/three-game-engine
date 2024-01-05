@@ -105,3 +105,8 @@ export const writeFile = async (dirHandle, path, data) => {
   // Close the file and write the contents to disk.
   await writable.close();
 };
+
+export const deleteFile = async (dirHandle, path) => {
+    const fileHandle = await getFileHandle(dirHandle, path);
+    await fileHandle.remove();
+};
