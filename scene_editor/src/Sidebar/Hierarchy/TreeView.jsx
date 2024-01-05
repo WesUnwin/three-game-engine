@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 
-const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, errorMessage, isSelected, maxChildrenHeight }) => {
+const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, errorMessage, isSelected, maxChildrenHeight, onContextMenu, actions }) => {
     const [expanded, setExpanded] = useState(initiallyExpanded || false);
 
     const onTreeViewClick = event => {
@@ -11,7 +11,7 @@ const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, 
 
     return (
         <div className='tree-view'>
-            <div className="tree-view-header" onClick={onTreeViewClick} style={{ backgroundColor: isSelected ? 'grey' : undefined }}>
+            <div className="tree-view-header" onClick={onTreeViewClick} style={{ backgroundColor: isSelected ? 'grey' : undefined }} onContextMenu={onContextMenu}>
                 {(children && !errorMessage) ? (
                     <span className="tree-view-expand-button" onClick={() => setExpanded(!expanded)}>
                         {expanded ? '-' : '+'}
@@ -23,6 +23,16 @@ const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, 
                 <span className="tree-view-label">
                     {label}
                 </span>
+
+                {actions ? (
+                    <>
+                        {actions.map(action => (
+                            <span onClick={action.onClick}>
+                                {action.icon}
+                            </span>
+                        ))}                    
+                    </>
+                ) : null}
 
                 {errorMessage ? (
                     <div className="error-badge" data-tooltip-id="error-tooltip" data-tooltip-content={errorMessage}>

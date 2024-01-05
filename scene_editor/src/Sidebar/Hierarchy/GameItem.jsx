@@ -6,6 +6,8 @@ import { getFile } from '../../Redux/FileDataSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
 import GameObjectTypeItem from './GameObjectTypeItem.jsx';
+import { FaPlus } from 'react-icons/fa';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 
 const GameItem = ({ gameFileInfo, dirHandle }) => {
     const dispatch = useDispatch();
@@ -28,17 +30,33 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
         dispatch(selectItem('game.json', 'gameJSON'));
     };
 
+    const addScene = () => {
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddSceneModal' }));
+    };
+
     return (
         <TreeView label={'game.json'} errorMessage={errorMessage} initiallyExpanded={true} onClick={onClick} isSelected={isSelected}>
             
             {gameFileData?.data ? (
                 <>
-                    <TreeView label="Scenes:" expandOnClick={true} initiallyExpanded={true}>
+                    <TreeView
+                        label="Scenes:"
+                        expandOnClick={true}
+                        initiallyExpanded={true}
+                        actions={[
+                            { icon: <FaPlus />, onClick: addScene }
+                        ]}
+                    >
                         {Object.keys(scenes).length === 0 ? (
                             '(no scenes)'
                         ) : (
                             Object.entries(scenes).map((sceneEntry, i) => (
-                                <SceneItem key={i} dirHandle={dirHandle} sceneName={sceneEntry[0]} scenePath={sceneEntry[1]} />
+                                <SceneItem
+                                    key={i}
+                                    dirHandle={dirHandle}
+                                    sceneName={sceneEntry[0]}
+                                    scenePath={sceneEntry[1]}
+                                />
                             ))
                         )}
                     </TreeView>
