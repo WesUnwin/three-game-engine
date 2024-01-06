@@ -58,7 +58,7 @@ export const getFileAtPath = async (dirHandle, path) => {
     return file;
 };
 
-export const getFileHandle = async (dirHandle, path) => {
+export const getFileHandle = async (dirHandle, path, create = false) => {
     let pathSegments = path.split('/');
 
     if (pathSegments[pathSegments.length - 1] === '/') {
@@ -69,11 +69,25 @@ export const getFileHandle = async (dirHandle, path) => {
     for (let i = 0; i<pathSegments.length; i++) {
         const currentSegment = pathSegments[i];
         if (i === (pathSegments.length - 1)) {
-            const fileHandle = await currentDirHandle.getFileHandle(currentSegment);
+            const fileHandle = await currentDirHandle.getFileHandle(currentSegment, { create });
             return fileHandle;
         } else {
             currentDirHandle = await currentDirHandle.getDirectoryHandle(currentSegment);
         }
+    }
+};
+
+export const doesFileExist = async (dirHandle, path) => {
+    try {
+        const fileHandle = await getFileHandle(dirHandle, path);
+        if (fileHandle) {
+            return true;
+        }
+    } catch (error) {
+        if (error.name === 'NotFoundError') {
+            return false;
+        }
+        throw error;
     }
 };
 
@@ -93,8 +107,8 @@ export const readJSONFile = async (file) => {
     });
 };
 
-export const writeFile = async (dirHandle, path, data) => {
-  const fileHandle = await getFileHandle(dirHandle, path);
+export const writeFile = async (dirHandle, path, data, create = false) => {
+  const fileHandle = await getFileHandle(dirHandle, path, create);
 
   // Create a FileSystemWritableFileStream to write to.
   const writable = await fileHandle.createWritable();
