@@ -17,7 +17,7 @@ const ProjectFiles = ({ setDirHandle }) => {
     const selectedItem = useSelector(getSelectedItem());
 
     useEffect(() => {
-        if (selectedProjectFileData) {
+        if (selectedProjectFileData && !selectedProjectFileData.error) {
             dispatch(selectItem(selectedProjectFileData.path, selectedProjectFileData.metaData.type));
         }
     }, [selectedProjectFileData?.path]);
