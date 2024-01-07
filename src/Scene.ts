@@ -187,6 +187,29 @@ class Scene {
         return this.find(g => g.id === id);
     }
 
+    getGameObjectIndices(gameObject: GameObject) {
+        return this._getGameObjectIndices(gameObject, this, []);
+    }
+
+    _getGameObjectIndices(gameObject: GameObject, parent: Scene | GameObject, indices: number[]) {
+        const currentIndices = [...indices];
+        currentIndices.push(0);
+        for (let i = 0; i < parent.gameObjects.length; i++) {
+            currentIndices[currentIndices.length - 1] = i;
+            const currentGameObject = parent.gameObjects[i];
+            if (currentGameObject === gameObject) {
+                return currentIndices;
+            }
+
+            // Now check all the children of this game object (recursively)
+            const result = this._getGameObjectIndices(gameObject, currentGameObject, currentIndices);
+            if (result) {
+                return result;
+            }
+        }
+        return null;
+    }
+
     getGameObjectByIndices(indices: number[]) {
         let parent: Scene | GameObject = this;
         for (let i = 0; i<indices.length; i++) {
