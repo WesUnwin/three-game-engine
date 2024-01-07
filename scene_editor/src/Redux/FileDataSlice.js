@@ -51,6 +51,11 @@ const fileDataSlice = createSlice({
                     }
                 }
 
+                if (!subObject) {
+                    console.error('modifyGameObject() indices do not refer to an existing game object TODO: stop using indices as they dont make sense after deletions');
+                    return;
+                }
+
                 // Set/update the given property within the game object
                 for (let i = 0; i<field.length; i++) {
                     if (i === field.length - 1) {

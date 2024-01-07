@@ -184,14 +184,14 @@ const MainArea = ({ dirHandle }) => {
     };
 
     const onDeleteKey = () => {
-        dispatch(selectedItemSlice.actions.unSelectItem()); // clear as the indices of any selected game object might have changed due to deleting a game object
-
         const selectedGameObject = getSelectedGameObject();
         if (selectedGameObject) {
             const scenePath = game.scene.jsonAssetPath;
 
             const currentSelectedItem = store.getState().selectedItem;
             const gameObjectIndices = currentSelectedItem.params.indices;
+
+            dispatch(selectedItemSlice.actions.unSelectItem()); // clear as the indices of any selected game object might have changed due to deleting a game object
 
             dispatch(fileDataSlice.actions.deleteGameObject({
                 scenePath,
