@@ -12,6 +12,11 @@ const selectedItemSlice = createSlice({
             state.filePath = action.payload.filePath;
             state.type = action.payload.type;
             state.params = action.payload.params || {};
+        },
+        unSelectItem: (state, action) => {
+            state.filePath = null;
+            state.type = null;
+            state.params = {};
         }
     }
 });

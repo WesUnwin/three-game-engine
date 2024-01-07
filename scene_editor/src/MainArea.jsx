@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { Game, THREE } from '../../dist/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -6,6 +6,8 @@ import { TransformControls, TransformControlsPlane } from 'three/examples/jsm/co
 import { getSelectedItem, selectItem } from "./Redux/SelectedItemSlice.js";
 import { modifyGameObject } from "./Redux/FileDataSlice.js";
 import StatusBar from "./StatusBar/StatusBar.jsx";
+import store from "./Redux/ReduxStore.js";
+import fileDataSlice from "./Redux/FileDataSlice.js";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
@@ -89,7 +91,8 @@ const MainArea = ({ dirHandle }) => {
                 return; // todo find out why this happens
             }
 
-            const { indices } = threeJSObject.userData;
+            const gameObject = game.scene.getGameObjectByThreeJSObject(threeJSObject)
+            const indices = game.scene.getGameObjectIndices(gameObject);
 
             let field = null;
             let value = null;
@@ -150,7 +153,7 @@ const MainArea = ({ dirHandle }) => {
 
                 if (gameObjectsIntersected.length) {
                     const gameObject = gameObjectsIntersected[0];
-                    const indices = gameObject.threeJSGroup.userData.indices;
+                    const indices = game.scene.getGameObjectIndices(gameObject);
                     dispatch(selectItem(game.scene.jsonAssetPath, 'gameObject', { indices }));
                 }
             }
@@ -174,18 +177,48 @@ const MainArea = ({ dirHandle }) => {
             case 'KeyP':
                 switchTransformControlsMode('translate');
                 break;
+            case 'Delete':
+                onDeleteKey();
         }
     };
 
+    const onDeleteKey = () => {
+        const selectedGameObject = getSelectedGameObject();
+        if (selectedGameObject) {
+            const scenePath = game.scene.jsonAssetPath;
+
+            const currentSelectedItem = store.getState().selectedItem;
+            const gameObjectIndices = currentSelectedItem.params.indices;
+
+            dispatch(fileDataSlice.actions.deleteGameObject({
+                scenePath,
+                gameObjectIndices
+            }));
+
+            deleteGameObject({ scenePath, gameObjectIndices });
+        }
+    };
+
+    const getSelectedGameObject = () => {
+        const currentSelectedItem = store.getState().selectedItem;
+        if (!window.game?.scene || !currentSelectedItem) {
+            return null;
+        }
+        if (currentSelectedItem.filePath === window.game.scene.jsonAssetPath && currentSelectedItem?.type === 'gameObject') {
+            const indices = currentSelectedItem.params.indices;
+            const selectedGameObject = window.game?.scene?.getGameObjectByIndices(indices);
+            return selectedGameObject;
+        } else {
+            return null;
+        }
+    };
+    
     useEffect(() => {
         const transformControls = transformControlsRef.current;
         if (transformControls) {
-            if (selectedItem?.type === 'gameObject') {
-                const indices = selectedItem.params.indices;
-                const selectedGameObject = game.scene.find(gameObject => JSON.stringify(gameObject.threeJSGroup.userData.indices) === JSON.stringify(indices));
-    
+            const selectedGameObject = getSelectedGameObject();
+            if (selectedGameObject) {
                 game.scene.threeJSScene.add(transformControls);
-                
                 transformControls.attach(selectedGameObject.threeJSGroup);
             } else {
                 transformControls.detach();
@@ -193,10 +226,31 @@ const MainArea = ({ dirHandle }) => {
         }
     }, [selectedItem?.type, selectedItem?.params]);
 
+    // Updates the running game (when needed), in response to a game object having been deleted from a scene
+    const deleteGameObject = ({ scenePath, gameObjectIndices }) => {
+        if (game?.scene?.jsonAssetPath === scenePath) {
+            transformControlsRef.current.detach(); // in case the object is selected
+            const gameObject = game.scene.getGameObjectByIndices(gameObjectIndices);
+            gameObject.destroy();
+        }
+    };
+
+    const onMessage = event => {
+        const gameDataEvents = {
+            deleteGameObject
+        };
+        const eventHandler = gameDataEvents[event.data.eventName];
+        if (eventHandler) {
+            eventHandler(event.data);
+        }
+    };
+
     useEffect(() => {
         window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('message', onMessage);
         return () => {
             window.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('message', onMessage);
         };
     }, []);
 

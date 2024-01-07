@@ -74,6 +74,26 @@ const fileDataSlice = createSlice({
                 file.modified = true;
             }
         },
+        deleteGameObject: (state, action) => {
+            const { scenePath, gameObjectIndices } = action.payload;
+            const file = state.files.find(f => f.path == scenePath);
+            if (file) {
+                const { data } = file;
+
+                let parent = data;
+                let subObject = data.gameObjects[gameObjectIndices[0]];
+                if (gameObjectIndices.length > 1) {
+                    for (let i = 1; i<gameObjectIndices.length; i++) {
+                        parent = subObject;
+                        subObject = subObject.gameObjects[gameObjectIndices[i]];
+                    }
+                }
+
+                const gameObjectToDelete = subObject;
+                parent.gameObjects = parent.gameObjects.filter(g => g !== gameObjectToDelete);
+                file.modified = true;
+            }
+        },
         setFileBeingSaved: (state, action) => {
             state.fileBeingSaved = action.payload.filePath;
         },

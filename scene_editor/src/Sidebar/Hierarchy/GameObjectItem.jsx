@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import TreeView from "./TreeView.jsx";
 import * as FileHelpers from '../../util/FileHelpers.js'
 import { useDispatch, useSelector } from 'react-redux';
-import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import selectedItemSlice, { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import fileDataSlice from '../../Redux/FileDataSlice.js';
+import { FaTrash } from 'react-icons/fa';
 
 const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
     const dispatch = useDispatch();
@@ -32,8 +34,34 @@ const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
         dispatch(selectItem(scenePath, 'gameObject', { indices }));
     };
 
+    const onDeleteClick = () => {
+        const gameObjectIndices = indices;
+
+        if (isSelected) {
+            dispatch(selectedItemSlice.actions.unSelectItem());
+        }
+
+        dispatch(fileDataSlice.actions.deleteGameObject({
+            scenePath,
+            gameObjectIndices
+        }));
+
+        window.postMessage({
+            eventName: 'deleteGameObject',
+            scenePath,
+            gameObjectIndices
+        });
+    };
+
     return (
-        <TreeView label={`GameObject ${indices[0]}`} onClick={onClick} isSelected={isSelected} />
+        <TreeView
+            label={`GameObject ${indices[0]}`}
+            onClick={onClick}
+            isSelected={isSelected}
+            actions={[
+                { icon: <FaTrash />, onClick: onDeleteClick }
+            ]}
+        />
     );
 };
 
