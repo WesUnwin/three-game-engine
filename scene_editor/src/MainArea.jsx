@@ -8,6 +8,7 @@ import { modifyGameObject } from "./Redux/FileDataSlice.js";
 import StatusBar from "./StatusBar/StatusBar.jsx";
 import store from "./Redux/ReduxStore.js";
 import fileDataSlice from "./Redux/FileDataSlice.js";
+import selectedItemSlice from "./Redux/SelectedItemSlice.js";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
@@ -183,6 +184,8 @@ const MainArea = ({ dirHandle }) => {
     };
 
     const onDeleteKey = () => {
+        dispatch(selectedItemSlice.actions.unSelectItem()); // clear as the indices of any selected game object might have changed due to deleting a game object
+
         const selectedGameObject = getSelectedGameObject();
         if (selectedGameObject) {
             const scenePath = game.scene.jsonAssetPath;

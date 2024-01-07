@@ -35,11 +35,9 @@ const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
     };
 
     const onDeleteClick = () => {
-        const gameObjectIndices = indices;
+        dispatch(selectedItemSlice.actions.unSelectItem()); // clear as the indices of any selected game object might have changed due to deleting a game object
 
-        if (isSelected) {
-            dispatch(selectedItemSlice.actions.unSelectItem());
-        }
+        const gameObjectIndices = indices;
 
         dispatch(fileDataSlice.actions.deleteGameObject({
             scenePath,
