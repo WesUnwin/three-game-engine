@@ -36,6 +36,21 @@ const fileDataSlice = createSlice({
             }
             file.modified = true;
         },
+        createGameObject: (state, action) => {
+            const { scenePath, gameObject } = action.payload;
+
+            const file = state.files.find(f => f.path == scenePath);
+            if (file) {
+                const { data } = file;
+
+                if ('gameObjects' in data) {
+                    data.gameObjects.push(gameObject);
+                } else {
+                    data.gameObjects = [gameObject];
+                }
+                file.modified = true;
+            }
+        },
         modifyGameObject: (state, action) => {
             const { scenefilePath, gameObjectIndices, field, value } = action.payload;
 

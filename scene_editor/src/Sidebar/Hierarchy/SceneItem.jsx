@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFile } from '../../Redux/FileDataSlice.js';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
 import GameObjectItem from './GameObjectItem.jsx';
-import { FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import { BsPencilFill } from 'react-icons/bs';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js'
 
@@ -37,6 +37,10 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'DeleteSceneModal', params: { sceneName } }));
     };
 
+    const addGameObject = () => {
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddGameObjectModal', params: { sceneName } }));
+    };
+
     return (
         <TreeView
             label={sceneName}
@@ -46,7 +50,8 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
             maxChildrenHeight="250px"
             actions={[
                 { icon: <BsPencilFill />, onClick: editScene },
-                { icon: <FaTrash />, onClick: deleteScene }
+                { icon: <FaTrash />, onClick: deleteScene },
+                { icon: <FaPlus />, onClick: addGameObject }
             ]}
         >
             {(fileData?.data?.gameObjects || []).map((gameObjectJSON, index) => (

@@ -4,11 +4,13 @@ import { useSelector } from 'react-redux';
 import AddSceneModal from './Modals/AddSceneModal.jsx';
 import EditSceneModal from './Modals/EditSceneModal.jsx';
 import DeleteSceneModal from './Modals/DeleteSceneModal.jsx';
+import AddGameObjectModal from './Modals/AddGameObjectModal.jsx';
 
 const modalClasses = {
     AddSceneModal,
     EditSceneModal,
-    DeleteSceneModal
+    DeleteSceneModal,
+    AddGameObjectModal
 };
 
 const CurrentModal = ({ dirHandle }) => {

@@ -9,6 +9,7 @@ import StatusBar from "./StatusBar/StatusBar.jsx";
 import store from "./Redux/ReduxStore.js";
 import fileDataSlice from "./Redux/FileDataSlice.js";
 import selectedItemSlice from "./Redux/SelectedItemSlice.js";
+import GameObject from "../../dist/GameObject.js";
 
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
@@ -198,7 +199,7 @@ const MainArea = ({ dirHandle }) => {
                 gameObjectIndices
             }));
 
-            deleteGameObject({ scenePath, gameObjectIndices });
+            deleteGameObjectInMainArea({ scenePath, gameObjectIndices });
         }
     };
 
@@ -229,8 +230,26 @@ const MainArea = ({ dirHandle }) => {
         }
     }, [selectedItem?.type, selectedItem?.params]);
 
-    // Updates the running game (when needed), in response to a game object having been deleted from a scene
-    const deleteGameObject = ({ scenePath, gameObjectIndices }) => {
+    const addGameObjectToMainArea = ({ scenePath, gameObject }) => {
+        if (game?.scene?.jsonAssetPath === scenePath) {
+            new GameObject(game.scene, gameObject);
+            console.log('GameObject added to main area')
+        }
+    };
+
+    const modifyGameObjectInMainArea = ({ scenePath, indices, field, value }) => {
+        const scene = window.game?.scene
+        if (scene?.jsonAssetPath === scenePath) {
+            let gameObject = scene.getGameObjectByIndices(indices);
+            let obj = gameObject.threeJSGroup;
+            for (let i = 0; i < field.length - 1; i++ ) {
+                obj = obj[field[i]];
+            }
+            obj[field[field.length - 1]] = value;
+        }
+    };
+
+    const deleteGameObjectInMainArea = ({ scenePath, gameObjectIndices }) => {
         if (game?.scene?.jsonAssetPath === scenePath) {
             transformControlsRef.current.detach(); // in case the object is selected
             const gameObject = game.scene.getGameObjectByIndices(gameObjectIndices);
@@ -240,7 +259,9 @@ const MainArea = ({ dirHandle }) => {
 
     const onMessage = event => {
         const gameDataEvents = {
-            deleteGameObject
+            addGameObjectToMainArea,
+            modifyGameObjectInMainArea,
+            deleteGameObjectInMainArea
         };
         const eventHandler = gameDataEvents[event.data.eventName];
         if (eventHandler) {

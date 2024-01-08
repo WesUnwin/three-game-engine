@@ -22,19 +22,17 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
     const scale = gameObjectJSON?.scale || { x: 1, y: 1, z: 1};
     const rotation = gameObjectJSON?.rotation || { x: 0, y: 0, z: 0};
 
-    const changeProperty = (field, newValue) => {
+    const changeProperty = (field, value) => {
         // Update the corresponding GameObject being rendered in the MainArea
-        const scene = window.game?.scene
-        if (scene?.jsonAssetPath === filePath) {
-            let gameObject = scene.getGameObjectByIndices(indices);
-            let obj = gameObject.threeJSGroup;
-            for (let i = 0; i < field.length - 1; i++ ) {
-                obj = obj[field[i]];
-            }
-            obj[field[field.length - 1]] = newValue;
-        }
+        window.postMessage({
+            eventName: 'modifyGameObjectInMainArea',
+            scenePath: filePath,
+            indices,
+            field,
+            value
+        });
 
-        dispatch(modifyGameObject(filePath, indices, field, newValue));
+        dispatch(modifyGameObject(filePath, indices, field, value));
     };
 
     return (

@@ -24,10 +24,6 @@ const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
                        selectedItem.type === 'gameObject' &&
                        compareIndices(selectedItem.params.indices, indices);
 
-    useEffect(() => {
-        FileHelpers.loadFile(dirHandle, scenePath, dispatch, { type: 'sceneJSON' })
-    }, [scenePath]);
-
     const onClick = () => {
         // indices is an array of numbers that identify which game object in the sceneJSON,
         // eg. [0][1] means within the 0th top-level gameObject, get the 2nd (index: 1) child GameObject
@@ -45,7 +41,7 @@ const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
         }));
 
         window.postMessage({
-            eventName: 'deleteGameObject',
+            eventName: 'deleteGameObjectInMainArea',
             scenePath,
             gameObjectIndices
         });
