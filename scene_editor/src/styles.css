@@ -55,10 +55,22 @@ body {
     margin-top: 2px;
 }
 
-.sidebar-panel h5 {
+.sidebar-panel-header {
+    margin: 5px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.sidebar-panel-label {
     color: white;
     margin-top: 0px;
     margin-bottom: 0px;
+}
+
+.sidebar-panel-header button {
+    margin-left: 10px;
+    font-size: 0.7em;
 }
 
 .sidebar-panel-content {

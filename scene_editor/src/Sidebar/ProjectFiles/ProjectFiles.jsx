@@ -5,6 +5,7 @@ import projectFilesSlice from '../../Redux/ProjectFilesSlice.js';
 import * as FileHelpers from '../../util/FileHelpers.js'
 import TreeView from '../Hierarchy/TreeView.jsx';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 
 const ProjectFiles = ({ setDirHandle }) => {
     const dispatch = useDispatch();
@@ -28,6 +29,12 @@ const ProjectFiles = ({ setDirHandle }) => {
             setSelectedProjectFilePath(selectedItem.filePath)
         }
     }, [selectedItem])
+
+    const createNewProject = () => {
+        dispatch(currentModalSlice.actions.openModal({
+            type: 'CreateProjectModal'
+        }));
+    };
 
     const selectProjectFolder = async () => {
         const directoryHandle = await window.showDirectoryPicker({
@@ -74,21 +81,21 @@ const ProjectFiles = ({ setDirHandle }) => {
     };
 
     return (
-        <Panel label="Project Files">
+        <Panel
+            label="Project Files"
+            actions={[
+                { label: 'New Project', onClick: createNewProject },
+                { label: 'Open Project', onClick: selectProjectFolder }                
+            ]}
+        >
             {projectFiles.name ? (
                 <>
-                    {renderFileInfo(projectFiles, true)}
+                    {renderFileInfo(projectFiles)}
                 </>
             ) : (
-                <div className="row" style={{ justifyContent: 'space-around' }}>
-                    <button>
-                        New Project
-                    </button>
-
-                    <button onClick={selectProjectFolder}>
-                        Open Project Folder...
-                    </button> 
-                </div>
+                <p style={{ textAlign: 'center' }}>
+                    (No project folder selected)
+                </p>
             )}   
         </Panel>
     );
