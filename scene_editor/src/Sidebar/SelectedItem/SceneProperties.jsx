@@ -1,15 +1,26 @@
 import React from 'react';
 import PropertyGroup from './PropertyGroup.jsx';
+import { useDispatch } from 'react-redux';
+import fileDataSlice from '../../Redux/FileDataSlice.js';
 
 const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
+    const dispatch = useDispatch();
+
+    const onSceneNameChange = event => {
+        const newSceneName = event.target.value;
+        if (newSceneName.length > 0) {
+            dispatch(fileDataSlice.actions.renameScene({ sceneName, newSceneName }));
+        }
+    };
+
     return (
         <>
             <PropertyGroup label="Name:">
-                <input type="text" value={sceneName} readOnly disabled />
+                <input type="text" value={sceneName} onChange={onSceneNameChange} />
             </PropertyGroup>  
 
             <PropertyGroup label="File:">
-                <input type="text" value={filePath} readOnly disabled />
+                <input type="text" defaultValue={filePath} readOnly disabled />
             </PropertyGroup>
         </>
     );

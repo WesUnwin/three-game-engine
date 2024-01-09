@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import projectFilesSlice from '../../Redux/ProjectFilesSlice.js';
 import * as FileHelpers from '../../util/FileHelpers.js'
 import TreeView from '../Hierarchy/TreeView.jsx';
-import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import { getSelectedItem } from '../../Redux/SelectedItemSlice.js';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 
 const ProjectFiles = ({ setDirHandle }) => {
@@ -13,15 +13,7 @@ const ProjectFiles = ({ setDirHandle }) => {
     const projectFiles = useSelector(store => store.projectFiles);
 
     const [selectedProjectFilePath, setSelectedProjectFilePath] = useState(null);
-    const selectedProjectFileData = useSelector(store => store.fileData.files.find(f => f.path === selectedProjectFilePath));
-
     const selectedItem = useSelector(getSelectedItem());
-
-    useEffect(() => {
-        if (selectedProjectFileData && !selectedProjectFileData.error) {
-            dispatch(selectItem(selectedProjectFileData.path, selectedProjectFileData.metaData.type));
-        }
-    }, [selectedProjectFileData?.path]);
 
     useEffect(() => {
         // Update selectedProjectFilePath componenent state, to match newly selected hierarchy item if its associated with a file

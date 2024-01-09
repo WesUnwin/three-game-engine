@@ -7,8 +7,8 @@ const Panel = ({ label, children, actions }) => {
                 <span className="sidebar-panel-label">
                     {label}
                 </span>
-                {(actions || []).map(action => (
-                    <button onClick={action.onClick}>
+                {(actions || []).map((action, index) => (
+                    <button key={index} onClick={action.onClick}>
                         {action.label || action.icon}
                     </button>
                 ))}

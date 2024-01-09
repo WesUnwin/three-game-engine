@@ -39,15 +39,37 @@ const Physics = ({ rigidBody }) => {
 
     const colliders = rigidBody?.colliders || [];
 
+    const addRigidBody = () => {
+
+    };
+
+    const removeRigidBody = () => {
+
+    };
+
+    const onRigidBodyTypeChange = event => {
+
+    };
+
+    const changeProperty = (field, value) => {
+
+    };
+
     return (
         <TreeView label="Physics:" expandOnClick={true} initiallyExpanded={true}>
             <div style={{ marginLeft: '10px' }}>
                 <div className="row">
-                    <input type="checkbox" checked={rigidBody != null} />
+                    <input type="checkbox" checked={rigidBody != null} onChange={() => rigidBody ? removeRigidBody() : addRigidBody()} />
                     <span>Has RigidBody, of type: &nbsp;</span>
-                    <select value={rigidBody?.type || 'fixed'} disabled={!rigidBody}>
+                    <select value={rigidBody?.type || 'fixed'} disabled={!rigidBody} onChange={onRigidBodyTypeChange}>
                         {rigidBodyTypes.map(bodyType => (
-                            <option key={bodyType} value={bodyType}>{bodyType}</option>
+                            <option
+                                key={bodyType}
+                                value={bodyType}
+                                onChange={() => { /* Needed to prevent a react warning, even though select element onChange is set */ }}
+                            >
+                                {bodyType}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -55,14 +77,34 @@ const Physics = ({ rigidBody }) => {
                 {rigidBody ? (
                     <div>
                         <PropertyGroup label="Enabled Translations:">
-                            <span><input type="checkbox" checked={rigidBody.enabledTranslations?.x || true} />x &nbsp;</span>
-                            <span><input type="checkbox" checked={rigidBody.enabledTranslations?.y || true} />y &nbsp;</span>
-                            <span><input type="checkbox" checked={rigidBody.enabledTranslations?.z || true} />z &nbsp;</span>
+                            {['x', 'y', 'z'].map(axis => {
+                                const isChecked = (rigidBody.enabledTranslations && rigidBody.enabledTranslations[axis]) || true;
+                                return (
+                                    <span key={axis}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isChecked}
+                                            onChange={() => changeProperty(['enableTranslations', axis], !isChecked)}
+                                        />
+                                        x &nbsp;
+                                    </span>
+                                );
+                            })}
                         </PropertyGroup>
                         <PropertyGroup label="Enabled Rotations:">
-                            <span><input type="checkbox" checked={rigidBody.enabledRotations?.x || true} />x &nbsp;</span>
-                            <span><input type="checkbox" checked={rigidBody.enabledRotations?.y || true} />y &nbsp;</span>
-                            <span><input type="checkbox" checked={rigidBody.enabledRotations?.z || true} />z &nbsp;</span>
+                            {['x', 'y', 'z'].map(axis => {
+                                const isChecked = (rigidBody.enabledRotations && rigidBody.enabledRotations[axis]) || true;
+                                return (
+                                    <span key={axis}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isChecked}
+                                            onChange={() => changeProperty(['enabledRotations', axis], !isChecked)}
+                                        />
+                                        x &nbsp;
+                                    </span>
+                                );
+                            })}
                         </PropertyGroup>
                         <TreeView label="Colliders:" expandOnClick={true} initiallyExpanded={true}>
                             {colliders.map((collider, index) => (
