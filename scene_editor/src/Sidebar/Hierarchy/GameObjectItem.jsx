@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import TreeView from "./TreeView.jsx";
-import * as FileHelpers from '../../util/FileHelpers.js'
 import { useDispatch, useSelector } from 'react-redux';
 import selectedItemSlice, { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
 import { FaTrash } from 'react-icons/fa';
 
-const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
+const GameObjectItem = ({ scenePath, indices, gameObjectJSON }) => {
     const dispatch = useDispatch();
 
     const selectedItem = useSelector(getSelectedItem());
@@ -47,9 +46,18 @@ const GameObjectItem = ({ dirHandle, scenePath, indices }) => {
         });
     };
 
+    let label = 'GameObject';
+    if (gameObjectJSON.type && gameObjectJSON.name) {
+        label = `${gameObjectJSON.name} [${gameObjectJSON.type}]`;
+    } else if (gameObjectJSON.type) {
+        label = gameObjectJSON.type;
+    } else if (gameObjectJSON.name) {
+        label = gameObjectJSON.name;
+    }
+
     return (
         <TreeView
-            label={`GameObject ${indices[0]}`}
+            label={label}
             onClick={onClick}
             isSelected={isSelected}
             actions={[

@@ -36,7 +36,26 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
     };
 
     return (
-        <>    
+        <>  
+            <div className="row">
+                <label>Name:</label> &nbsp;
+                <input
+                    type="text"
+                    value={gameObjectJSON.name || ''}
+                    onChange={event => changeProperty(['name'], event.target.value)}
+                    style={{ maxWidth: '120px' }}
+                />
+
+                &nbsp;
+
+                {gameObjectJSON.type ? (
+                    <>
+                        <label>Type:</label> &nbsp;
+                        <strong>{gameObjectJSON.type}</strong>
+                    </>
+                ) : null}
+            </div>
+
             <PropertyGroup label="Position:">
                 <NumberInput label="x:" value={position.x} onChange={val => changeProperty(['position', 'x'], val)} />
                 <NumberInput label="y:" value={position.y} onChange={val => changeProperty(['position', 'y'], val)} />
