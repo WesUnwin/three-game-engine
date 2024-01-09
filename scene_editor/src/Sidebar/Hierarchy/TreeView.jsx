@@ -27,7 +27,7 @@ const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, 
                 {actions ? (
                     <>
                         {actions.map((action, index) => (
-                            <span key={index} onClick={action.onClick}>
+                            <span key={index} onClick={event => { event.stopPropagation(); action.onClick() }}>
                                 {action.icon}
                             </span>
                         ))}                    
