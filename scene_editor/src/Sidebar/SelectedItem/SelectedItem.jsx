@@ -23,14 +23,29 @@ const SelectedItem = () => {
         return null; // nothing currently selected
     }
 
+    const getLabel = () => {
+        switch (selectedItem.type) {
+            case 'gameJSON':
+                return 'Game Properties:';
+            case 'gameObjectTypeJSON':
+                return `GameObject Type: ${selectedItem.params.type}`;
+            case 'sceneJSON':
+                return `Selected Scene: ${selectedItem.params.name}`;
+            case 'gameObject':
+                return `Selected GameObject:`;
+            default:
+                return 'Unknown Selection Type';
+        }
+    };
+
     return (
-        <Panel label={displayType[selectedItem.type]}>
+        <Panel label={getLabel()}>
             {selectedItem.type === 'gameJSON' ? (
                 <GameProperties gameJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObjectTypeJSON' ? (
                 <GameObjectTypeProperties type={selectedItem.params.type} />
             ) : selectedItem.type === 'sceneJSON' ? (
-                <SceneProperties sceneJSON={selectedFile.data} />
+                <SceneProperties sceneName={selectedItem.params.name} filePath={selectedItem.filePath} sceneJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObject' ? (
                 <GameObjectProperties filePath={selectedItem.filePath} sceneJSON={selectedFile.data} indices={selectedItem.params.indices} />
             ) : (

@@ -25,7 +25,7 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
 
     const onClick = () => {
         if (!errorMessage) {
-            dispatch(selectItem(scenePath, 'sceneJSON'));
+            dispatch(selectItem(scenePath, 'sceneJSON', { name: sceneName }));
         }
     };
 
@@ -55,7 +55,7 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
             ]}
         >
             {(fileData?.data?.gameObjects || []).map((gameObjectJSON, index) => (
-                <GameObjectItem key={index} dirHandle={dirHandle} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
+                <GameObjectItem key={index} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
             ))}
         </TreeView>
     );
