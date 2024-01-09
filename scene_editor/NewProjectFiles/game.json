@@ -1,7 +1,9 @@
 {
-  "initialScene": "Scene1",
+  "initialScene": "scene1",
   "gameObjectTypes": {
+    "platform": "game-object-types/environment/platform.json"
   },
   "scenes": {
+    "scene1": "scenes/scene1.json"
   }
 }

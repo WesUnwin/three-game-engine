@@ -72,7 +72,7 @@ export const getFileHandle = async (dirHandle, path, create = false) => {
             const fileHandle = await currentDirHandle.getFileHandle(currentSegment, { create });
             return fileHandle;
         } else {
-            currentDirHandle = await currentDirHandle.getDirectoryHandle(currentSegment);
+            currentDirHandle = await currentDirHandle.getDirectoryHandle(currentSegment, { create });
         }
     }
 };

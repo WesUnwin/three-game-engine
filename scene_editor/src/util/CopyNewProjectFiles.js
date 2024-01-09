@@ -1,9 +1,15 @@
 import * as FileHelpers from './FileHelpers';
 
 import gameJSON from '../../NewProjectFiles/game.json';
+import sceneJSON from '../../NewProjectFiles/scenes/scene1.json';
+import platformJSON from '../../NewProjectFiles/game-object-types/environment/platform.json';
+import platformGLTF from '../../NewProjectFiles/models/environment/platform.json';
 
 const newProjectFiles = [
-  { fileName: 'game.json', data: JSON.stringify(gameJSON, null, 4) }
+  { fileName: 'game.json', data: gameJSON },
+  { fileName: 'scenes/scene1.json', data: sceneJSON },
+  { fileName: 'game-object-types/environment/platform.json', data: platformJSON },
+  { fileName: 'models/environment/platform.gltf', data: platformGLTF },
 ];
 
 /**
@@ -12,7 +18,8 @@ const newProjectFiles = [
  */
 const copyNewProjectFiles = async (destinationDirHandle) => {
   for (let newProjectFile of newProjectFiles) {
-    await FileHelpers.writeFile(destinationDirHandle, newProjectFile.fileName, newProjectFile.data, true);
+    const prettyPrintedJSON = JSON.stringify(newProjectFile.data, null, 4);
+    await FileHelpers.writeFile(destinationDirHandle, newProjectFile.fileName, prettyPrintedJSON, true);
   }
 };
 
