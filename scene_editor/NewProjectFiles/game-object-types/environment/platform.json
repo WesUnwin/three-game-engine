@@ -3,7 +3,7 @@
     { "assetPath": "models/environment/platform.gltf" }
   ],
   "lights": [
-    { "type": "AmbientLight" }
+    { "type": "AmbientLight", "intensity": 0.5 }
   ],
   "rigidBody": {
     "type": "fixed",
