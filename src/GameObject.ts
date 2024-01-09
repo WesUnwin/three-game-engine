@@ -12,6 +12,7 @@ import Util from './Util';
 
 class GameObject {
     id: string;
+    type: string | null;
     name: string;
     tags: string[];
     threeJSGroup: THREE.Group;
@@ -32,18 +33,23 @@ class GameObject {
 
         this.parent = parent;
 
+        const scene = this.getScene();
+
         let allOptions;
         if (options.type) {
             // Merge the base set of options defined in the the game object
             // type json, with any options for this individual object.
-            const scene = this.getScene();
             const gameObjectTypeJSON = scene.game.getGameObjectTypeJSON(options.type);
             allOptions = Object.assign({}, gameObjectTypeJSON, options);
         } else {
             allOptions = { ...options };
         }
 
-        this.name = allOptions.name || '';
+        this.type = allOptions.type || null;
+
+        const typeCount = scene.gameObjects.filter(g => g.type === this.type).length;
+
+        this.name = allOptions.name || `${this.type}${typeCount + 1}` || '';
         this.tags = allOptions.tags || [];
 
         this.gameObjects = [];
