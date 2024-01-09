@@ -98,7 +98,7 @@ const CreateProjectModal = ({ setDirHandle }) => {
                     Choose folder
                   </button>
               </div>
-
+{/* 
               <div className="row">
                   <input
                     type="checkbox"
@@ -124,6 +124,7 @@ const CreateProjectModal = ({ setDirHandle }) => {
                     <small>(for building mobile apps)</small>
                   </p>                 
               </div>
+*/}
             </>
           )}
         </Modal>
