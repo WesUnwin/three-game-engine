@@ -6,7 +6,7 @@ import GameItem from './GameItem.jsx';
 const Hierarchy = ({ dirHandle }) => {
     const projectFiles = useSelector(store => store.projectFiles);
 
-    if (!projectFiles?.files) {
+    if (!projectFiles?.files || !dirHandle) {
         return null;
     }
 

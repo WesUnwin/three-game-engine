@@ -5,6 +5,9 @@ const projectFilesSlice = createSlice({
     initialState: {
     },
     reducers: {
+        clear: state => {
+            state = {};
+        },
         setState: (state, action) => {
             for (const prop in action.payload) {
                 state[prop] = action.payload[prop]

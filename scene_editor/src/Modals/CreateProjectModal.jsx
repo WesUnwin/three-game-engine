@@ -5,8 +5,10 @@ import currentModalSlice from '../Redux/CurrentModalSlice.js';
 import projectFilesSlice from '../Redux/ProjectFilesSlice.js';
 import * as FileHelpers from '../util/FileHelpers.js';
 import copyNewProjectFiles from '../util/CopyNewProjectFiles.js';
+import selectedItemSlice from '../Redux/SelectedItemSlice.js';
+import fileDataSlice from '../Redux/FileDataSlice.js';
 
-const CreateProjectModal = () => {
+const CreateProjectModal = ({ setDirHandle }) => {
     const dispatch = useDispatch();
 
     const [projectFolderDirHandle, setProjectFolderDirHandle] = useState(null);
@@ -45,9 +47,15 @@ const CreateProjectModal = () => {
         //await copyNewProjectFiles(projectFolderDirHandle);
         await copyNewProjectFiles(projectFolderDirHandle);
 
+        dispatch(selectedItemSlice.actions.unSelectItem());
+        dispatch(projectFilesSlice.actions.clear());
+        dispatch(fileDataSlice.actions.clear());
+
         // Open the created project folder
         const fileInfo = await FileHelpers.openProjectFolder(projectFolderDirHandle);
         dispatch(projectFilesSlice.actions.setState(fileInfo));
+
+        setDirHandle(projectFolderDirHandle);
 
         closeModal();
     };

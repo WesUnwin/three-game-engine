@@ -15,7 +15,7 @@ const modalClasses = {
     AddGameObjectModal
 };
 
-const CurrentModal = ({ dirHandle }) => {
+const CurrentModal = ({ dirHandle, setDirHandle }) => {
     const currentModal = useSelector(getCurrentModal());
 
     if (!currentModal.type) {
@@ -29,7 +29,7 @@ const CurrentModal = ({ dirHandle }) => {
     }
 
     return (
-        <ModalClass {...currentModal.params} dirHandle={dirHandle} />
+        <ModalClass {...currentModal.params} dirHandle={dirHandle} setDirHandle={setDirHandle} />
     );
 };
 

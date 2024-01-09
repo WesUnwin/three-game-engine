@@ -7,6 +7,10 @@ const fileDataSlice = createSlice({
         fileBeingSaved: null // null or path of file currently being saved
     },
     reducers: {
+        clear: (state) => {
+            state.files = [];
+            state.fileBeingSaved = null;
+        },
         addFileData: (state, action) => {
             const file = state.files.find(f => f.path === action.payload.path);
             if (file) {
