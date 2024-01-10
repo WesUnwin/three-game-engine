@@ -34,6 +34,10 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'AddSceneModal' }));
     };
 
+    const addGameObjectType = () => {
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddGameObjectTypeModal' }));
+    };
+
     return (
         <TreeView label={'game.json'} errorMessage={errorMessage} initiallyExpanded={true} onClick={onClick} isSelected={isSelected}>
             
@@ -61,7 +65,13 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
                         )}
                     </TreeView>
 
-                    <TreeView label="GameObject Types:" expandOnClick={true}>
+                    <TreeView
+                        label="GameObject Types:"
+                        expandOnClick={true}
+                        actions={[
+                            { icon: <FaPlus />, onClick: addGameObjectType }
+                        ]}
+                    >
                         {Object.keys(gameObjectTypes).length === 0 ? (
                             '(no game object types)'
                         ) : (
