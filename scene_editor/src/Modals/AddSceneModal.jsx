@@ -18,11 +18,15 @@ const AddSceneModal = ({ dirHandle }) => {
 
     const gameFile = useSelector(getFile('game.json'));
 
+    const [processing, setProcessing] = useState(false);
+
     const closeModal = () => {
         dispatch(currentModalSlice.actions.closeModal());
     };
 
     const onSubmit = async () => {
+        setProcessing(true);
+
         let sceneFilePath;
         if (createNew) {
             const folder = folderPath.endsWith('/') ? folderPath : `${folderPath}/`;
@@ -30,10 +34,11 @@ const AddSceneModal = ({ dirHandle }) => {
 
             if (await FileHelpers.doesFileExist(dirHandle, sceneFilePath)) {
                 alert('There is already a file with this folder/filename');
+                setProcessing(false);
                 return
             }
 
-            FileHelpers.writeFile(dirHandle, sceneFilePath, "{}", true);
+            await FileHelpers.writeFile(dirHandle, sceneFilePath, "{}", true);
         } else {
             sceneFilePath = existingFilePath;
         }
@@ -44,6 +49,9 @@ const AddSceneModal = ({ dirHandle }) => {
             value: sceneFilePath
         }));
 
+        await FileHelpers.loadFile(dirHandle, sceneFilePath, dispatch, { type: 'sceneJSON' })
+
+        setProcessing(false);
         closeModal();
     };
 
@@ -83,13 +91,17 @@ const AddSceneModal = ({ dirHandle }) => {
         disableSubmit = !existingFilePath;
     }
 
+    if (processing) {
+        disableSubmit = true;
+    }
+
     return (
         <Modal
             title="Add Scene"
             onSubmit={onSubmit}
             footer={
                 <>
-                    <button type="button" onClick={closeModal}>
+                    <button type="button" onClick={closeModal} disabled={processing}>
                         Cancel
                     </button>
 
@@ -99,64 +111,70 @@ const AddSceneModal = ({ dirHandle }) => {
                 </>
             }
         >
-            <div className='row'>
-                <label>
-                    Scene name:
-                </label>
-                &nbsp;
-                <input type="text" value={name} onChange={event => setName(event.target.value)} />
-            </div>
-            {sceneNameTaken &&
-                <p style={{color: 'red'}}>
-                    A scene with this name already exists in your game.json file.
-                </p>
-            }
-            <br />
-
-            <div className="row">
-                <input type="checkbox" checked={createNew} onClick={() => setCreateNew(true)} />&nbsp; Create a new scene file:
-            </div>
-            {createNew &&
+            {processing ? (
+                <p>Processing...</p>
+            ) : (
                 <>
                     <div className='row'>
                         <label>
-                            Folder:
+                            Scene name:
                         </label>
                         &nbsp;
-                        <input type="text" value={folderPath} onChange={event => setFolderPath(event.target.value)} />
+                        <input type="text" value={name} onChange={event => setName(event.target.value)} />
                     </div>
-                    <div className='row'>
-                        <label>
-                            File name:
-                        </label>
-                        &nbsp;
-                        <input type="text" value={fileName} onChange={event => setFileName(event.target.value)} />
-                    </div>
-                </>
-            }
-
-            <p>--- OR ---</p>
-
-            <div className="row">
-                <input type="checkbox" checked={!createNew} onClick={() => setCreateNew(false)} />&nbsp; Add an existing scene file to your game:
-            </div>
-
-            {!createNew &&
-                <>
+                    {sceneNameTaken &&
+                        <p style={{color: 'red'}}>
+                            A scene with this name already exists in your game.json file.
+                        </p>
+                    }
                     <br />
-                    <div className='row'>
-                        <label>
-                            Scene JSON file:
-                        </label>
-                        &nbsp;
-                        <input type="text" value={existingFilePath} disabled={true} />
-                        &nbsp;
-                        <button onClick={selectExistingFile}>
-                            Select file
-                        </button>
+
+                    <div className="row">
+                        <input type="checkbox" checked={createNew} onClick={() => setCreateNew(true)} />&nbsp; Create a new scene file:
                     </div>
+                    {createNew &&
+                        <>
+                            <div className='row'>
+                                <label>
+                                    Folder:
+                                </label>
+                                &nbsp;
+                                <input type="text" value={folderPath} onChange={event => setFolderPath(event.target.value)} />
+                            </div>
+                            <div className='row'>
+                                <label>
+                                    File name:
+                                </label>
+                                &nbsp;
+                                <input type="text" value={fileName} onChange={event => setFileName(event.target.value)} />
+                            </div>
+                        </>
+                    }
+
+                    <p>--- OR ---</p>
+
+                    <div className="row">
+                        <input type="checkbox" checked={!createNew} onClick={() => setCreateNew(false)} />&nbsp; Add an existing scene file to your game:
+                    </div>
+
+                    {!createNew &&
+                        <>
+                            <br />
+                            <div className='row'>
+                                <label>
+                                    Scene JSON file:
+                                </label>
+                                &nbsp;
+                                <input type="text" value={existingFilePath} disabled={true} />
+                                &nbsp;
+                                <button onClick={selectExistingFile}>
+                                    Select file
+                                </button>
+                            </div>
+                        </>
+                    }
                 </>
-            }
+            )}
         </Modal>
     );
 }
