@@ -28,7 +28,7 @@ const colliderProperties = {
     heightfield: ['nrows', 'ncols', 'heights', 'scale']
 };
 
-const Physics = ({ rigidBody }) => {
+const Physics = ({ rigidBody, changeProperty }) => {
     const getColliderLabel = collider => {
         let label = `${collider.type}`;
         for (let p of colliderProperties[collider.type]) {
@@ -40,19 +40,17 @@ const Physics = ({ rigidBody }) => {
     const colliders = rigidBody?.colliders || [];
 
     const addRigidBody = () => {
-
+        changeProperty(['rigidBody'], {
+            type: 'fixed'
+        });
     };
 
     const removeRigidBody = () => {
-
+        changeProperty(['rigidBody'], null);
     };
 
     const onRigidBodyTypeChange = event => {
-
-    };
-
-    const changeProperty = (field, value) => {
-
+        changeProperty(['rigidBody', 'type'], event.target.value);
     };
 
     return (
@@ -78,30 +76,36 @@ const Physics = ({ rigidBody }) => {
                     <div>
                         <PropertyGroup label="Enabled Translations:">
                             {['x', 'y', 'z'].map(axis => {
-                                const isChecked = (rigidBody.enabledTranslations && rigidBody.enabledTranslations[axis]) || true;
+                                let isChecked = true;
+                                if (('enabledTranslations' in rigidBody) && (axis in rigidBody.enabledTranslations)) {
+                                    isChecked = rigidBody.enabledTranslations[axis];
+                                }
                                 return (
                                     <span key={axis}>
                                         <input
                                             type="checkbox"
                                             checked={isChecked}
-                                            onChange={() => changeProperty(['enableTranslations', axis], !isChecked)}
+                                            onChange={() => changeProperty(['rigidBody', 'enabledTranslations', axis], !isChecked)}
                                         />
-                                        x &nbsp;
+                                        {axis} &nbsp;
                                     </span>
                                 );
                             })}
                         </PropertyGroup>
                         <PropertyGroup label="Enabled Rotations:">
                             {['x', 'y', 'z'].map(axis => {
-                                const isChecked = (rigidBody.enabledRotations && rigidBody.enabledRotations[axis]) || true;
+                                let isChecked = true;
+                                if (('enabledRotations' in rigidBody) && (axis in rigidBody.enabledRotations)) {
+                                    isChecked = rigidBody.enabledRotations[axis];
+                                }
                                 return (
                                     <span key={axis}>
                                         <input
                                             type="checkbox"
                                             checked={isChecked}
-                                            onChange={() => changeProperty(['enabledRotations', axis], !isChecked)}
+                                            onChange={() => changeProperty(['rigidBody', 'enabledRotations', axis], !isChecked)}
                                         />
-                                        x &nbsp;
+                                        {axis} &nbsp;
                                     </span>
                                 );
                             })}
