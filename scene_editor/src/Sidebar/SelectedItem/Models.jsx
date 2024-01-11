@@ -2,7 +2,8 @@ import React from 'react';
 import TreeView from '../Hierarchy/TreeView.jsx';
 import { useDispatch } from 'react-redux';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
+import fileDataSlice from '../../Redux/FileDataSlice.js';
 
 const Models = ({ models, gameObjectType }) => {
     const dispatch = useDispatch();
@@ -11,6 +12,13 @@ const Models = ({ models, gameObjectType }) => {
         dispatch(currentModalSlice.actions.openModal({
             type: 'AddModelModal',
             params: { gameObjectType }
+        }));
+    };
+
+    const removeModel = modelIndex => {
+        dispatch(fileDataSlice.actions.removeModelFromGameObjectType({
+            gameObjectType,
+            modelIndex
         }));
     };
 
@@ -23,8 +31,14 @@ const Models = ({ models, gameObjectType }) => {
                 { icon: <FaPlus />, onClick: addModel }
             ]}
         >
-            {models.map(model => (
-                <TreeView key={model.assetPath} label={model.assetPath} />
+            {models.map((model, index) => (
+                <TreeView
+                    key={model.assetPath}
+                    label={model.assetPath}
+                    actions={[
+                        { icon: <FaTrash />, onClick: () => removeModel(index) }
+                    ]}
+                />
             ))}
             {models.length === 0 ? (
                 '(none)'

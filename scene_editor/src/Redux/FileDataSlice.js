@@ -157,6 +157,14 @@ const fileDataSlice = createSlice({
             }
             gameObjectTypeFile.data.models.push(model)
             gameObjectTypeFile.modified = true;
+        },
+        removeModelFromGameObjectType: (state, action) => {
+            const { gameObjectType, modelIndex } = action.payload;
+            const gameFile = state.files.find(f => f.path === 'game.json');
+            const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];
+            const gameObjectTypeFile = state.files.find(f => f.path === gameObjectTypeFilePath);
+            gameObjectTypeFile.data.models.splice(modelIndex, 1)
+            gameObjectTypeFile.modified = true;
         }
     }
 });
