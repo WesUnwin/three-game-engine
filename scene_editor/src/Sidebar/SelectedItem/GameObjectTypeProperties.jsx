@@ -29,6 +29,7 @@ const GameObjectTypeProperties = ({ type }) => {
     return (
         <>    
             <Models
+                gameObjectType={type}
                 models={gameObjectTypeFile.data.models || []}
                 changeProperty={changeProperty}
             />
