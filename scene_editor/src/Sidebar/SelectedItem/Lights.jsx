@@ -1,7 +1,12 @@
 import React from 'react';
 import TreeView from '../Hierarchy/TreeView.jsx';
+import { FaPlus } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 
-const Lights = ({ lights }) => {
+const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
+    const dispatch = useDispatch();
+
     const getLightLabel = light => {
         let label = '';
         for (let p in light) {
@@ -10,8 +15,24 @@ const Lights = ({ lights }) => {
         return label;
     }
 
+    const openAddLightModal = () => {
+        const params = {
+            gameObjectType,
+            scenePath,
+            gameObjectIndices
+        };
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
+    };
+
     return (
-        <TreeView label="Lights:" expandOnClick={true} initiallyExpanded={true}>
+        <TreeView
+            label="Lights:"
+            expandOnClick={true}
+            initiallyExpanded={true}
+            actions={[
+                { icon: <FaPlus />, onClick: openAddLightModal }
+            ]}
+        >
             {lights.map((light, index) => (
                 <TreeView key={index} label={getLightLabel(light)} />
             ))}

@@ -36,6 +36,7 @@ const GameObjectTypeProperties = ({ type }) => {
             <Lights
                 lights={gameObjectTypeFile.data.lights || []}
                 changeProperty={changeProperty}
+                gameObjectType={type}
             />
             <Physics
                 rigidBody={gameObjectTypeFile.data.rigidBody}
