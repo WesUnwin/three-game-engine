@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from './Modal.jsx';
-import { useDispatch } from 'react-redux';
-import fileDataSlice from '../Redux/FileDataSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
+import fileDataSlice, { getFile } from '../Redux/FileDataSlice.js';
 import currentModalSlice from '../Redux/CurrentModalSlice.js';
 
 const lightTypes = [
@@ -13,20 +13,29 @@ const lightTypes = [
   'SpotLight'
 ];
 
-const AddLightModal = ({  gameObjectType, sceneName, gameObjectIndices }) => {
+const AddLightModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
     const dispatch = useDispatch();
 
     const [type, setType] = useState('AmbientLight');
-  
+
+    const gameFile = useSelector(getFile('game.json'));
+    const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];
+    const gameObjectTypeFile = useSelector(getFile(gameObjectTypeFilePath || null));
+
     const closeModal = () => {
         dispatch(currentModalSlice.actions.closeModal());
     };
 
     const onSubmit = () => {
-        const light = { type };
+        const newLight = { type };
+        const updateLights = gameObjectTypeFile.data.lights.concat([newLight]);
 
         if (gameObjectType) {
-          dispatch(fileDataSlice.actions.addLightToGameObjectType({ gameObjectType, light }));
+          dispatch(fileDataSlice.actions.modifyFileData({
+              path: gameObjectTypeFilePath,
+              field: ['lights'],
+              value: updateLights
+          }));
         } else {
           // TODO: support adding/editing lights directly assigned to individual GameObjects
         }

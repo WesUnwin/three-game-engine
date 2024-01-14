@@ -13,7 +13,6 @@ const GameObjectTypeProperties = ({ type }) => {
     const gameFile = useSelector(getFile('game.json'));
 
     const gameObjectTypeFilePath = gameFile?.data?.gameObjectTypes[type];
-
     const gameObjectTypeFile = useSelector(getFile(gameObjectTypeFilePath || null));
 
     const changeProperty = (field, value) => {
@@ -26,9 +25,7 @@ const GameObjectTypeProperties = ({ type }) => {
 
     const onAddLight = () => {
         const params = {
-            gameObjectType,
-            scenePath,
-            gameObjectIndices
+            gameObjectType: type
         };
         dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
     };
