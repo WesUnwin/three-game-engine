@@ -1,8 +1,9 @@
 import React from 'react';
 import TreeView from '../Hierarchy/TreeView.jsx';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
+import fileDataSlice from '../../Redux/FileDataSlice.js';
 
 const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
     const dispatch = useDispatch();
@@ -24,6 +25,12 @@ const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
     };
 
+    const deleteLight = lightIndex => {
+        if (gameObjectType) {
+            dispatch(fileDataSlice.actions.removeLightFromGameObjectType({ gameObjectType, lightIndex }));
+        }
+    };
+
     return (
         <TreeView
             label="Lights:"
@@ -34,7 +41,13 @@ const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
             ]}
         >
             {lights.map((light, index) => (
-                <TreeView key={index} label={getLightLabel(light)} />
+                <TreeView
+                    key={index}
+                    label={getLightLabel(light)}
+                    actions={[
+                        { icon: <FaTrash />, onClick: () => deleteLight(index) },  
+                    ]}
+                />
             ))}
             {lights.length === 0 ? (
                 '(none)'
