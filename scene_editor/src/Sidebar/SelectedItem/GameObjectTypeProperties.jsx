@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import fileDataSlice, { getFile } from '../../Redux/FileDataSlice.js';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 import Models from './Models.jsx';
 import Lights from './Lights.jsx';
 import Physics from './Physics.jsx';
@@ -23,6 +24,15 @@ const GameObjectTypeProperties = ({ type }) => {
         }));
     };
 
+    const onAddLight = () => {
+        const params = {
+            gameObjectType,
+            scenePath,
+            gameObjectIndices
+        };
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
+    };
+
     if (!gameObjectTypeFile?.data) {
         return null;
     }
@@ -36,8 +46,8 @@ const GameObjectTypeProperties = ({ type }) => {
             />
             <Lights
                 lights={gameObjectTypeFile.data.lights || []}
-                changeProperty={changeProperty}
-                gameObjectType={type}
+                onChange={lights => changeProperty(['lights'], lights)}
+                onAdd={onAddLight}
             />
             <Physics
                 rigidBody={gameObjectTypeFile.data.rigidBody}

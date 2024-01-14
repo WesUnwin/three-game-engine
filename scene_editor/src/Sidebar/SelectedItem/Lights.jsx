@@ -1,34 +1,19 @@
 import React from 'react';
 import TreeView from '../Hierarchy/TreeView.jsx';
-import { FaPlus, FaTrash } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
-import currentModalSlice from '../../Redux/CurrentModalSlice.js';
-import fileDataSlice from '../../Redux/FileDataSlice.js';
+import { FaPlus } from 'react-icons/fa';
+import LightProperties from './LightProperties.jsx';
 
-const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
-    const dispatch = useDispatch();
-
-    const getLightLabel = light => {
-        let label = '';
-        for (let p in light) {
-            label += `${p}: ${light[p]} `;
-        }
-        return label;
-    }
-
-    const openAddLightModal = () => {
-        const params = {
-            gameObjectType,
-            scenePath,
-            gameObjectIndices
-        };
-        dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
+const Lights = ({ lights, onChange, onAdd }) => {
+    const onChangeLight = (lightIndex, updatedLight) => {
+        const updatedLights = [...lights];
+        updatedLights[lightIndex] = updatedLight;
+        onChange(updatedLights);
     };
 
     const deleteLight = lightIndex => {
-        if (gameObjectType) {
-            dispatch(fileDataSlice.actions.removeLightFromGameObjectType({ gameObjectType, lightIndex }));
-        }
+        const updatedLights = [...lights];
+        updatedLights.splice(lightIndex, 1);
+        onChange(updatedLights);
     };
 
     return (
@@ -37,16 +22,14 @@ const Lights = ({ lights, gameObjectType, scenePath, gameObjectIndices }) => {
             expandOnClick={true}
             initiallyExpanded={true}
             actions={[
-                { icon: <FaPlus />, onClick: openAddLightModal }
+                { icon: <FaPlus />, onClick: onAdd }
             ]}
         >
             {lights.map((light, index) => (
-                <TreeView
-                    key={index}
-                    label={getLightLabel(light)}
-                    actions={[
-                        { icon: <FaTrash />, onClick: () => deleteLight(index) },  
-                    ]}
+                <LightProperties
+                    light={light}
+                    onChange={updatedLight => onChangeLight(index, updatedLight)}
+                    onDelete={() => deleteLight(index)}
                 />
             ))}
             {lights.length === 0 ? (
