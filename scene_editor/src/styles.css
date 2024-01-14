@@ -136,13 +136,31 @@ body {
     max-width: 80px;
 }
 
+.property-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .property-group h5 {
     margin: 0px;
     font-weight: bold;
 }
 
-.property-group {
-    margin-bottom: 5px;
+.property {
+    display: flex;
+    gap: 5px;
+}
+
+.property-children {
+    display: flex;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.property-children input {
+    max-width: 80px;
+    margin-right: 10px;
 }
 
 .slider {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropertyGroup from './PropertyGroup.jsx';
 import { useDispatch } from 'react-redux';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
+import PropertyList from './PropertyList.jsx';
 
 const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
     };
 
     return (
-        <>
+        <PropertyList>
             <PropertyGroup label="Name:">
                 <input type="text" value={sceneName} onChange={onSceneNameChange} />
             </PropertyGroup>  
@@ -22,7 +23,7 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
             <PropertyGroup label="File:">
                 <input type="text" defaultValue={filePath} readOnly disabled />
             </PropertyGroup>
-        </>
+        </PropertyList>
     );
 };
 

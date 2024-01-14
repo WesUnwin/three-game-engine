@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import fileDataSlice from '../../Redux/FileDataSlice';
+import PropertyList from './PropertyList.jsx';
+import Property from './Property.jsx';
 
 const GameProperties = ({ gameJSON }) => {
     const dispatch = useDispatch();
@@ -17,17 +19,15 @@ const GameProperties = ({ gameJSON }) => {
     };
 
     return (
-        <>        
-            <div className="row">
-                <span>Initial Scene:</span>
-                &nbsp;
+        <PropertyList>
+            <Property label="Initial Scene:">
                 <select value={gameJSON.initialScene || null} onChange={onInitialSceneChange}>
                     {sceneOptions.map(sceneName => (
                         <option key={sceneName} value={sceneName}>{sceneName}</option>
                     ))}                    
                 </select>
-            </div>
-        </>
+            </Property>
+        </PropertyList>
     )
 };
 

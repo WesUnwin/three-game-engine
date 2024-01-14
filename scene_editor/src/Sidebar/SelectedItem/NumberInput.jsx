@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import RotationSlider from '../Slider.jsx';
 
-const NumberInput = ({ label, value, onChange, showSlider, max }) => {
+const NumberInput = ({ label, value, onChange }) => {
     const [text, setText] = useState(value); // independent state from value
 
     const [hasFocus, setHasFocus] = useState(false);
@@ -46,18 +45,13 @@ const NumberInput = ({ label, value, onChange, showSlider, max }) => {
     }, [value]);
 
     return (
-        <span className="number-input">
-            {label}
-            <input
-                type="text" 
-                onFocus={() => setHasFocus(true)}
-                onBlur={() => setHasFocus(false)}
-                value={text}
-                onChange={onInputChange} />
-            {showSlider &&
-                <RotationSlider value={value} onChange={onChange} max={max} />
-            }
-        </span>
+        <input
+            type="text" 
+            onFocus={() => setHasFocus(true)}
+            onBlur={() => setHasFocus(false)}
+            value={text}
+            onChange={onInputChange}
+        />
     );
 };
 

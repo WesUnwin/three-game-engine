@@ -1,8 +1,11 @@
 import React from 'react';
 import NumberInput from './NumberInput.jsx';
+import Slider from '../Slider.jsx';
 import PropertyGroup from './PropertyGroup.jsx';
 import { useDispatch } from 'react-redux';
 import { modifyGameObject } from '../../Redux/FileDataSlice.js';
+import Property from './Property.jsx';
+import PropertyList from './PropertyList.jsx';
 
 const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
     const dispatch = useDispatch();
@@ -36,59 +39,82 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
     };
 
     return (
-        <>  
-            <div className="row">
-                <label>Name:</label> &nbsp;
+        <PropertyList>
+            <Property label="Name:">
                 <input
                     type="text"
                     value={gameObjectJSON.name || ''}
                     onChange={event => changeProperty(['name'], event.target.value)}
                     style={{ maxWidth: '120px' }}
                 />
+            </Property>
 
-                &nbsp;
-
-                {gameObjectJSON.type ? (
-                    <>
-                        <label>Type:</label> &nbsp;
-                        <strong>{gameObjectJSON.type}</strong>
-                    </>
-                ) : null}
-            </div>
+            {gameObjectJSON.type ? (
+                <Property label="Type:">
+                    {gameObjectJSON.type}
+                </Property>
+            ) : null}
 
             <PropertyGroup label="Position:">
-                <NumberInput label="x:" value={position.x} onChange={val => changeProperty(['position', 'x'], val)} />
-                <NumberInput label="y:" value={position.y} onChange={val => changeProperty(['position', 'y'], val)} />
-                <NumberInput label="z:" value={position.z} onChange={val => changeProperty(['position', 'z'], val)} />
+                <Property label="x:">
+                    <NumberInput value={position.x} onChange={val => changeProperty(['position', 'x'], val)} />
+                </Property>
+                <Property label="y:">
+                    <NumberInput value={position.y} onChange={val => changeProperty(['position', 'y'], val)} />
+                </Property>
+                <Property label="z:">
+                    <NumberInput value={position.z} onChange={val => changeProperty(['position', 'z'], val)} />
+                </Property>
             </PropertyGroup>
             
             <PropertyGroup label="Scale:">
-                <NumberInput label="x:" value={scale.x} onChange={val => changeProperty(['scale', 'x'], val)} />
-                <NumberInput label="y:" value={scale.y} onChange={val => changeProperty(['scale', 'y'], val)} />
-                <NumberInput label="z:" value={scale.z} onChange={val => changeProperty(['scale', 'z'], val)} />
+                <Property label="x:">
+                    <NumberInput value={scale.x} onChange={val => changeProperty(['scale', 'x'], val)} />
+                </Property>
+                <Property label="y:">
+                    <NumberInput value={scale.y} onChange={val => changeProperty(['scale', 'y'], val)} />
+                </Property>
+                <Property label="z:">
+                    <NumberInput value={scale.z} onChange={val => changeProperty(['scale', 'z'], val)} />
+                </Property>
             </PropertyGroup>
 
             <PropertyGroup label="Rotation:" inColumn={true}>
-                <NumberInput
-                    label="x:"
-                    value={rotation.x}
-                    onChange={val => changeProperty(['rotation', 'x'], val)}
-                    showSlider={true}
-                    max={Math.PI * 2.0} />
-                <NumberInput
-                    label="y:"
-                    value={rotation.y}
-                    onChange={val => changeProperty(['rotation', 'y'], val)}
-                    showSlider={true}
-                    max={Math.PI * 2.0} />
-                <NumberInput
-                    label="z:"
-                    value={rotation.z}
-                    onChange={val => changeProperty(['rotation', 'z'], val)}
-                    showSlider={true}
-                    max={Math.PI * 2.0} />
+                <Property label="x:">
+                    <NumberInput
+                        value={rotation.x}
+                        onChange={val => changeProperty(['rotation', 'x'], val)}
+                    />
+                    <Slider
+                        value={rotation.x}
+                        onChange={val => changeProperty(['rotation', 'x'], val)}
+                        max={Math.PI * 2.0}
+                    />
+                </Property>
+                <Property label="y:">
+                    <NumberInput
+                        value={rotation.y}
+                        onChange={val => changeProperty(['rotation', 'y'], val)}
+                    />
+                    <Slider
+                        value={rotation.y}
+                        onChange={val => changeProperty(['rotation', 'y'], val)}
+                        max={Math.PI * 2.0}
+                    />
+                </Property>
+                <Property label="z:">
+                    <NumberInput
+                        value={rotation.z}
+                        onChange={val => changeProperty(['rotation', 'z'], val)}
+                    />
+                    <Slider
+                        value={rotation.z}
+                        onChange={val => changeProperty(['rotation', 'z'], val)}
+                        max={Math.PI * 2.0}
+                    />
+                </Property>
             </PropertyGroup>
-        </>
+        </PropertyList>
     );
 };
 

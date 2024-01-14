@@ -4,6 +4,7 @@ import fileDataSlice, { getFile } from '../../Redux/FileDataSlice.js';
 import Models from './Models.jsx';
 import Lights from './Lights.jsx';
 import Physics from './Physics.jsx';
+import PropertyList from './PropertyList.jsx';
 
 const GameObjectTypeProperties = ({ type }) => {
     const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const GameObjectTypeProperties = ({ type }) => {
     }
 
     return (
-        <>    
+        <PropertyList>    
             <Models
                 gameObjectType={type}
                 models={gameObjectTypeFile.data.models || []}
@@ -42,7 +43,7 @@ const GameObjectTypeProperties = ({ type }) => {
                 rigidBody={gameObjectTypeFile.data.rigidBody}
                 changeProperty={changeProperty}
             />
-        </>
+        </PropertyList>
     );
 };
 
