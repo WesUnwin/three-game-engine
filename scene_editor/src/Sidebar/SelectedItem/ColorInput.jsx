@@ -9,7 +9,6 @@ const ColorInput = ({ value, onChange }) => {
 
     const onColorPickerChange = ({ hex }) => {
         const newNumericValue = Number(hex.replace('#', '0x'));
-        console.log(newNumericValue);
         onChange(newNumericValue);
     }
 
@@ -25,7 +24,6 @@ const ColorInput = ({ value, onChange }) => {
         left: '0px',
     };
 
-    console.log('==> colorAsHexString: ', colorAsHexString);
     return (
         <span className="color-input">
             <div className="color-input-sample" style={{ backgroundColor: colorAsHexString }} />
