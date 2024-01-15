@@ -4,13 +4,7 @@ import TreeView from '../Hierarchy/TreeView.jsx';
 import PropertyList from './PropertyList.jsx';
 import NumberInput from './NumberInput.jsx';
 import { FaTrash } from 'react-icons/fa';
-import colliderProperties from '../../RapierColliderProps.js';
-
-const commonProperties = [
-  { name: 'density', type: 'number', default: 1.0 },
-  { name: 'friction', type: 'number', default: 0.5 },
-  { name: 'sensor', type: 'boolean', default: false }
-];
+import { commonProperties, colliderProperties } from '../../RapierColliderProps.js';
 
 const ColliderProperties = ({ collider, onChange, onDelete }) => {
   const isValidType = collider.type in colliderProperties;
@@ -35,10 +29,18 @@ const ColliderProperties = ({ collider, onChange, onDelete }) => {
             return (
               <Property label={`${prop.name}:`}>
                 {prop.type === 'number'? (
-                  <NumberInput
-                    value={value}
-                    onChange={val => onChangeProperty([prop.name], val)}
-                  />
+                  <>
+                    <NumberInput
+                      value={value}
+                      onChange={val => onChangeProperty([prop.name], val)}
+                    />
+
+                    {prop.unit ? (
+                      <>
+                        {prop.unit}
+                      </>
+                    ) : null}
+                  </>
                 ) : prop.type === 'boolean' ? (
                   <input
                     type="checkbox"

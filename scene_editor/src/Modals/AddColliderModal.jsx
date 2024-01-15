@@ -3,7 +3,7 @@ import Modal from './Modal.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import fileDataSlice, { getFile } from '../Redux/FileDataSlice.js';
 import currentModalSlice from '../Redux/CurrentModalSlice.js';
-import colliderProperties from '../RapierColliderProps.js';
+import { commonProperties, colliderProperties } from '../RapierColliderProps.js';
 
 const colliderTypes = [
   'ball',
@@ -30,12 +30,9 @@ const AddColliderModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
 
     const onSubmit = () => {
         const newCollider = {
-          type,
-          density: 1.0,
-          friction: 0.5,
-          sensor: false
+          type
         };
-        colliderProperties[type].forEach(prop => {
+        commonProperties.concat(colliderProperties[type]).forEach(prop => {
           newCollider[prop.name] = prop.default;
         });
         const existingColliders = gameObjectTypeFile.data.rigidBody.colliders || [];

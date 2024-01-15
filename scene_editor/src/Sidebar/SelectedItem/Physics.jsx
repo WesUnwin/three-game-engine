@@ -61,42 +61,45 @@ const Physics = ({ rigidBody, changeProperty, addCollider }) => {
 
                 {rigidBody ? (
                     <div>
-                        <PropertyGroup label="Enabled Translations:">
-                            {['x', 'y', 'z'].map(axis => {
-                                let isChecked = true;
-                                if (('enabledTranslations' in rigidBody) && (axis in rigidBody.enabledTranslations)) {
-                                    isChecked = rigidBody.enabledTranslations[axis];
-                                }
-                                return (
-                                    <span key={axis}>
-                                        <input
-                                            type="checkbox"
-                                            checked={isChecked}
-                                            onChange={() => changeProperty(['rigidBody', 'enabledTranslations', axis], !isChecked)}
-                                        />
-                                        {axis} &nbsp;
-                                    </span>
-                                );
-                            })}
-                        </PropertyGroup>
-                        <PropertyGroup label="Enabled Rotations:">
-                            {['x', 'y', 'z'].map(axis => {
-                                let isChecked = true;
-                                if (('enabledRotations' in rigidBody) && (axis in rigidBody.enabledRotations)) {
-                                    isChecked = rigidBody.enabledRotations[axis];
-                                }
-                                return (
-                                    <span key={axis}>
-                                        <input
-                                            type="checkbox"
-                                            checked={isChecked}
-                                            onChange={() => changeProperty(['rigidBody', 'enabledRotations', axis], !isChecked)}
-                                        />
-                                        {axis} &nbsp;
-                                    </span>
-                                );
-                            })}
-                        </PropertyGroup>
+                        <div className="row" style={{ justifyContent: 'space-around' }}>
+                            <PropertyGroup label="Enabled Translations:">
+                                {['x', 'y', 'z'].map(axis => {
+                                    let isChecked = true;
+                                    if (('enabledTranslations' in rigidBody) && (axis in rigidBody.enabledTranslations)) {
+                                        isChecked = rigidBody.enabledTranslations[axis];
+                                    }
+                                    return (
+                                        <span key={axis}>
+                                            <input
+                                                type="checkbox"
+                                                checked={isChecked}
+                                                onChange={() => changeProperty(['rigidBody', 'enabledTranslations', axis], !isChecked)}
+                                            />
+                                            {axis} &nbsp;
+                                        </span>
+                                    );
+                                })}
+                            </PropertyGroup>
+                            <PropertyGroup label="Enabled Rotations:">
+                                {['x', 'y', 'z'].map(axis => {
+                                    let isChecked = true;
+                                    if (('enabledRotations' in rigidBody) && (axis in rigidBody.enabledRotations)) {
+                                        isChecked = rigidBody.enabledRotations[axis];
+                                    }
+                                    return (
+                                        <span key={axis}>
+                                            <input
+                                                type="checkbox"
+                                                checked={isChecked}
+                                                onChange={() => changeProperty(['rigidBody', 'enabledRotations', axis], !isChecked)}
+                                            />
+                                            {axis} &nbsp;
+                                        </span>
+                                    );
+                                })}
+                            </PropertyGroup>
+                        </div>
+
                         <TreeView
                             label="Colliders:"
                             expandOnClick={true}
