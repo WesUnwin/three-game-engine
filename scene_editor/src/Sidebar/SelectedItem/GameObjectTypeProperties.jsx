@@ -30,6 +30,13 @@ const GameObjectTypeProperties = ({ type }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
     };
 
+    const addCollider = () => {
+        const params = {
+            gameObjectType: type
+        };
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddColliderModal', params }));
+    };
+
     if (!gameObjectTypeFile?.data) {
         return null;
     }
@@ -49,6 +56,7 @@ const GameObjectTypeProperties = ({ type }) => {
             <Physics
                 rigidBody={gameObjectTypeFile.data.rigidBody}
                 changeProperty={changeProperty}
+                addCollider={addCollider}
             />
         </PropertyList>
     );

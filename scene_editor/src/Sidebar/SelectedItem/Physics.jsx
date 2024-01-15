@@ -1,6 +1,8 @@
 import React from 'react';
 import TreeView from '../Hierarchy/TreeView.jsx';
 import PropertyGroup from './PropertyGroup.jsx';
+import ColliderProperties from './ColliderProperties.jsx';
+import { FaPlus } from 'react-icons/fa';
 
 const rigidBodyTypes = [
     'fixed',
@@ -9,34 +11,7 @@ const rigidBodyTypes = [
     'kinematicVelocityBased'
 ];
 
-const colliderProperties = {
-    ball: ['radius'],
-    capsule: ['halfHeight', 'radius'],
-    cone: ['halfHeight', 'radius'],
-    convexHull: ['points'],
-    convexMesh: ['vertices', 'indices'],
-    cuboid: ['hx', 'hy', 'hz'],
-    cylinder: ['halfHeight', 'radius'],
-    polyline: ['vertices', 'indices'],
-    roundCone: ['halfHeight', 'radius', 'borderRadius'],
-    roundConvexHull: ['points', 'borderRadius'],
-    roundConvexMesh: ['vertices', 'indices', 'borderRadius'],
-    roundCuboid: ['hx', 'hy', 'hz', 'borderRadius'],
-    roundCylinder: ['halfHeight', 'radius', 'borderRadius'],
-    roundTriangle: ['a', 'b', 'c', 'borderRadius'],
-    trimesh: ['vertices', 'indices'],
-    heightfield: ['nrows', 'ncols', 'heights', 'scale']
-};
-
-const Physics = ({ rigidBody, changeProperty }) => {
-    const getColliderLabel = collider => {
-        let label = `${collider.type}`;
-        for (let p of colliderProperties[collider.type]) {
-            label += ` ${p}: ${collider[p]}`;
-        }
-        return label;
-    }
-
+const Physics = ({ rigidBody, changeProperty, addCollider }) => {
     const colliders = rigidBody?.colliders || [];
 
     const addRigidBody = () => {
@@ -51,6 +26,18 @@ const Physics = ({ rigidBody, changeProperty }) => {
 
     const onRigidBodyTypeChange = event => {
         changeProperty(['rigidBody', 'type'], event.target.value);
+    };
+
+    const onChangeCollider = (colliderIndex, updatedCollider) => {
+        const updatedColliders = [...colliders];
+        updatedColliders[colliderIndex] = updatedCollider;
+        changeProperty(['rigidBody', 'colliders'], updatedColliders);
+    };
+
+    const deleteCollider = colliderIndex => {
+        const updatedColliders = [...colliders];
+        updatedColliders.splice(colliderIndex, 1);
+        changeProperty(['rigidBody', 'colliders'], updatedColliders);
     };
 
     return (
@@ -110,9 +97,21 @@ const Physics = ({ rigidBody, changeProperty }) => {
                                 );
                             })}
                         </PropertyGroup>
-                        <TreeView label="Colliders:" expandOnClick={true} initiallyExpanded={true}>
+                        <TreeView
+                            label="Colliders:"
+                            expandOnClick={true}
+                            initiallyExpanded={true}
+                            actions={[
+                                { icon: <FaPlus />, onClick: addCollider }
+                            ]}
+                        >
                             {colliders.map((collider, index) => (
-                                <TreeView key={index} label={getColliderLabel(collider)} />
+                                <ColliderProperties
+                                    key={index}
+                                    collider={collider}
+                                    onChange={updatedCollider => onChangeCollider(index, updatedCollider)}
+                                    onDelete={() => deleteCollider(index)}
+                                />
                             ))}
                             {colliders.length === 0 ? (
                                 '(none)'
