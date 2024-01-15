@@ -3,6 +3,7 @@ import Property from './Property.jsx';
 import TreeView from '../Hierarchy/TreeView.jsx';
 import PropertyList from './PropertyList.jsx';
 import NumberInput from './NumberInput.jsx';
+import ColorInput from './ColorInput.jsx';
 import { FaTrash } from 'react-icons/fa';
 
 const commonProperties = [
@@ -11,7 +12,37 @@ const commonProperties = [
 
 const lightProperties = {
   AmbientLight: [
-    { name: 'intensity', type: 'number', default: 1.0 }
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'color', type: 'color', default: 'FFFFFF' }
+  ],
+  DirectionalLight: [
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'color', type: 'color', default: 'FFFFFF' }
+  ],
+  HemisphereLight: [
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'skyColor', type: 'color', default: 1.0 },
+    { name: 'groundColor', type: 'color', default: 1.0 }
+  ],
+  PointLight: [
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'color', type: 'color', default: 'FFFFFF' },
+    { name: 'distance', type: 'number', default: 0 },
+    { name: 'decay', type: 'number', default: 2 },
+  ],
+  RectAreaLight: [
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'color', type: 'color', default: 'FFFFFF' },
+    { name: 'width', type: 'number', default: 10 },
+    { name: 'height', type: 'number', default: 10 }
+  ],
+  SpotLight: [
+    { name: 'intensity', type: 'number', default: 1.0 },
+    { name: 'color', type: 'color', default: 'FFFFFF' },
+    { name: 'distance', type: 'number', default: 0 },
+    { name: 'angle', type: 'number', default: 0 },
+    { name: 'penumbra', type: 'number', default: 0 },
+    { name: 'decay', type: 'number', default: 0 },
   ]
 };
 
@@ -39,6 +70,11 @@ const LightProperties = ({ light, onChange, onDelete }) => {
               <Property label={`${prop.name}:`}>
                 {prop.type === 'number'? (
                   <NumberInput
+                    value={value}
+                    onChange={val => onChangeProperty([prop.name], val)}
+                  />
+                ) : prop.type === 'color' ? (
+                  <ColorInput
                     value={value}
                     onChange={val => onChangeProperty([prop.name], val)}
                   />

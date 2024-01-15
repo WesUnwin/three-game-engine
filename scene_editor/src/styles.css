@@ -136,6 +136,22 @@ body {
     max-width: 80px;
 }
 
+.color-input {
+    display: flex;
+    align-items: center;
+}
+
+.color-input-sample {
+    width: 15px;
+    height: 15px;
+    border: 1px groove gray;
+}
+
+.color-picker-popover {
+    position: absolute;
+    z-index: 2;
+}
+
 .property-list {
     display: flex;
     flex-direction: column;
