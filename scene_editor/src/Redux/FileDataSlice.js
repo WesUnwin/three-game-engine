@@ -4,7 +4,7 @@ const fileDataSlice = createSlice({
     name: 'fileData',
     initialState: {
         files: [], // Array of { path: "project_files/folder/file.json", data: <JSON>, error: null | { message: __ } }
-        fileBeingSaved: null // null or path of file currently being saved
+        currentFileOperation: null // null | string describing the current file writing/deletion going on
     },
     reducers: {
         clear: (state) => {
@@ -118,15 +118,17 @@ const fileDataSlice = createSlice({
                 file.modified = true;
             }
         },
-        setFileBeingSaved: (state, action) => {
-            state.fileBeingSaved = action.payload.filePath;
+        setCurrentFileOperation: (state, action) => {
+            state.currentFileOperation = action.payload.currentFileOperation;
         },
         fileSaved: (state, action) => {
             const file = state.files.find(f => f.path === action.payload.filePath);
             if (file) {
                 file.modified = false;
             }
-            state.fileBeingSaved = null;
+        },
+        fileDeleted: (state, action) => {
+            state.files = state.files.filter(f => f.path !== action.payload.filePath);
         },
         renameScene: (state, action) => {
             const { sceneName, newSceneName } = action.payload;
@@ -139,11 +141,17 @@ const fileDataSlice = createSlice({
             gameFile.modified = true;
         },
         removeScene: (state, action) => {
-            const { sceneName } = action.payload;
+            const { sceneName, deleteFile } = action.payload;
             const gameFile = state.files.find(f => f.path === 'game.json');
             if (!gameFile.data.scenes || !gameFile.data.scenes[sceneName]) {
                 throw new Error(`No scene with name: ${sceneName} found in game.json`)
             }
+
+            if (deleteFile) {
+                const sceneFilePath = gameFile.data.scenes[sceneName];
+                state.files.filter(f => f.path === sceneFilePath).forEach(f => f.toBeDeleted = true);
+            }
+
             delete gameFile.data.scenes[sceneName];
             gameFile.modified = true;
         },
@@ -165,6 +173,40 @@ const fileDataSlice = createSlice({
             const gameObjectTypeFile = state.files.find(f => f.path === gameObjectTypeFilePath);
             gameObjectTypeFile.data.models.splice(modelIndex, 1)
             gameObjectTypeFile.modified = true;
+        },
+        deleteGameObjectType: (state, action) => {
+            const { gameObjectType } = action.payload;
+            const gameFile = state.files.find(f => f.path === 'game.json');
+
+            const recursivelyDeleteGameObject = (parentObject, gameObjectType) => {
+                let deletionsMade = false;
+                (parentObject.gameObjects || []).forEach(childObject => {
+                    deletionsMade = recursivelyDeleteGameObject(childObject, gameObjectType);
+                });
+                if (parentObject.gameObjects) {
+                    const objCount = parentObject.gameObjects.length;
+                    parentObject.gameObjects = parentObject.gameObjects.filter(g => g.type !== gameObjectType);
+                    if (objCount !== parentObject.gameObjects.length) {
+                        deletionsMade = true;
+                    } 
+                }
+                return deletionsMade;
+            };
+
+            for (const sceneFilePath of Object.values(gameFile.data.scenes)) {
+                const sceneFile = state.files.find(f => f.path === sceneFilePath);
+                const dataCopy = JSON.parse(JSON.stringify(sceneFile.data));
+                const deletionsMade = recursivelyDeleteGameObject(dataCopy, gameObjectType);
+                sceneFile.modified = deletionsMade;
+                sceneFile.data = dataCopy;
+            }
+
+            const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];
+            state.files.filter(f => f.path === gameObjectTypeFilePath).forEach(gameObjectTypeFile => {
+                gameObjectTypeFile.toBeDeleted = true;
+            });
+
+            delete gameFile.data.gameObjectTypes[gameObjectType];
         }
     }
 });
@@ -189,16 +231,12 @@ export const getModifiedFileCount = () => {
     return store => store.fileData.files.filter(f => f.modified).length;
 }
 
-export const setFileBeingSaved = filePath => {
-    return fileDataSlice.actions.setFileBeingSaved({ filePath });
+export const getFilesToBeDeletedCount = () => {
+    return store => store.fileData.files.filter(f => f.toBeDeleted).length;
 }
 
-export const getFileBeingSaved = () => {
-    return store => store.fileData.fileBeingSaved;
-}
-
-export const fileSaved = filePath => {
-    return fileDataSlice.actions.fileSaved({ filePath });
+export const getCurrentFileOperation = () => {
+    return store => store.fileData.currentFileOperation;
 }
 
 export const getModifiedFiles = () => {

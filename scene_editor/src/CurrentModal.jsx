@@ -10,6 +10,7 @@ import AddGameObjectTypeModal from './Modals/AddGameObjectTypeModal.jsx';
 import AddModelModal from './Modals/AddModelModal.jsx';
 import AddLightModal from './Modals/AddLightModal.jsx';
 import AddColliderModal from './Modals/AddColliderModal.jsx';
+import DeleteGameObjectTypeModal from './Modals/DeleteGameObjectTypeModal.jsx';
 
 const modalClasses = {
     CreateProjectModal,
@@ -20,7 +21,8 @@ const modalClasses = {
     AddGameObjectModal,
     AddModelModal,
     AddLightModal,
-    AddColliderModal
+    AddColliderModal,
+    DeleteGameObjectTypeModal
 };
 
 const CurrentModal = ({ dirHandle, setDirHandle }) => {

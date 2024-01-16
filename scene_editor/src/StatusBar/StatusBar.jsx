@@ -1,10 +1,10 @@
 import React from 'react';
-import SaveStatus from './SaveStatus.jsx';
+import FileWritingStatus from './FileWritingStatus.jsx';
 
 const StatusBar = () => {
     return (
         <div className="status-bar">
-            <SaveStatus />
+            <FileWritingStatus />
         </div>
     );
 };

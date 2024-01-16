@@ -3,6 +3,8 @@ import TreeView from "./TreeView.jsx";
 import * as FileHelpers from '../../util/FileHelpers.js'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js'
+import { FaTrash } from 'react-icons/fa';
 
 const GameObjectTypeItem = ({ dirHandle, gameObjectType, filePath }) => {
     const dispatch = useDispatch();
@@ -21,8 +23,19 @@ const GameObjectTypeItem = ({ dirHandle, gameObjectType, filePath }) => {
         dispatch(selectItem('game.json', 'gameObjectTypeJSON', { type: gameObjectType }));
     };
 
+    const onDelete = () => {
+        dispatch(currentModalSlice.actions.openModal({ type: 'DeleteGameObjectTypeModal', params: { gameObjectType } }));
+    };
+
     return (
-        <TreeView label={gameObjectType} onClick={onClick} isSelected={isSelected} />
+        <TreeView
+            label={gameObjectType}
+            onClick={onClick}
+            isSelected={isSelected}
+            actions={[
+                { icon: <FaTrash />, onClick: onDelete }
+            ]}
+        />
     );
 };
 
