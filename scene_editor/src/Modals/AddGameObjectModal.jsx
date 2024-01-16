@@ -7,12 +7,11 @@ import currentModalSlice from '../Redux/CurrentModalSlice.js';
 const AddGameObjectModal = ({ sceneName }) => {
     const dispatch = useDispatch();
 
-    const [name, setName] = useState('');
-    const [type, setType] = useState(null);
-
     const gameFile = useSelector(getFile('game.json'));
-  
     const gameObjectTypes = Object.keys(gameFile.data.gameObjectTypes || {});
+
+    const [name, setName] = useState('');
+    const [type, setType] = useState(gameObjectTypes[0] || null);
 
     const closeModal = () => {
         dispatch(currentModalSlice.actions.closeModal());
