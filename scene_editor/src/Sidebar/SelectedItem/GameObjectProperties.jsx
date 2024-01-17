@@ -45,7 +45,6 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
                     type="text"
                     value={gameObjectJSON.name || ''}
                     onChange={event => changeProperty(['name'], event.target.value)}
-                    style={{ maxWidth: '120px' }}
                 />
             </Property>
 

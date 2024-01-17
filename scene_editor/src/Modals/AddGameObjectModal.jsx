@@ -11,6 +11,8 @@ const AddGameObjectModal = ({ sceneName }) => {
     const gameObjectTypes = Object.keys(gameFile.data.gameObjectTypes || {});
 
     const [name, setName] = useState('');
+    const [useType, setUseType] = useState(false);
+
     const [type, setType] = useState(gameObjectTypes[0] || null);
 
     const closeModal = () => {
@@ -19,10 +21,15 @@ const AddGameObjectModal = ({ sceneName }) => {
 
     const onSubmit = () => {
         const scenePath = gameFile.data.scenes[sceneName];
-        const gameObject = {
-           name,
-           type
-        };
+        const gameObject = {};
+
+        if (name) {
+            gameObject.name = name;
+        }
+
+        if (useType) {
+            gameObject.type = type;
+        }
 
         window.postMessage({
             eventName: 'addGameObjectToMainArea',
@@ -58,7 +65,9 @@ const AddGameObjectModal = ({ sceneName }) => {
             <br />
 
             <div className="row">
-                <label>Type:</label>
+                <input type="checkbox" value={useType} onChange={() => setUseType(!useType)} />
+                &nbsp;
+                Inherit properties from type:
                 &nbsp;
                 <select value={type} onChange={event => setType(event.target.value)}>
                    {gameObjectTypes.map(gameObjectType => (

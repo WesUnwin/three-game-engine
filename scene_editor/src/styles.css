@@ -169,10 +169,6 @@ body {
     gap: 5px;
 }
 
-.property-label {
-    min-width: 80px;
-}
-
 .property-children {
     display: flex;
     gap: 5px;
@@ -180,7 +176,6 @@ body {
 }
 
 .property-children input {
-    max-width: 80px;
     margin-right: 10px;
 }
 

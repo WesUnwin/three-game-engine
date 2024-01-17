@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const NumberInput = ({ label, value, onChange }) => {
+const NumberInput = ({ label, value, onChange, maxWidth }) => {
     const [text, setText] = useState(value); // independent state from value
 
     const [hasFocus, setHasFocus] = useState(false);
@@ -51,6 +51,7 @@ const NumberInput = ({ label, value, onChange }) => {
             onBlur={() => setHasFocus(false)}
             value={text}
             onChange={onInputChange}
+            style={{ maxWidth: maxWidth || '85px' }}
         />
     );
 };
