@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Modal from './Modal.jsx';
 import { useDispatch } from 'react-redux';
 import fileDataSlice from '../Redux/FileDataSlice.js';
@@ -6,7 +6,6 @@ import currentModalSlice from '../Redux/CurrentModalSlice.js';
 
 const DeleteGameObjectTypeModal = ({ gameObjectType }) => {
     const dispatch = useDispatch();
-    const [deleteSceneFile, setDeleteSceneFile] = useState(true);
 
     const closeModal = () => {
         dispatch(currentModalSlice.actions.closeModal());
