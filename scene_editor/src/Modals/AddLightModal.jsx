@@ -28,7 +28,7 @@ const AddLightModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
 
     const onSubmit = () => {
         const newLight = { type };
-        const updateLights = gameObjectTypeFile.data.lights.concat([newLight]);
+        const updateLights = (gameObjectTypeFile.data.lights || []).concat([newLight]);
 
         if (gameObjectType) {
           dispatch(fileDataSlice.actions.modifyFileData({
