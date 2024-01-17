@@ -67,7 +67,7 @@ const LightProperties = ({ light, onChange, onDelete }) => {
             const value = prop.name in light ? light[prop.name] : prop.default
 
             return (
-              <Property label={`${prop.name}:`}>
+              <Property key={prop.name} label={`${prop.name}:`}>
                 {prop.type === 'number'? (
                   <NumberInput
                     value={value}

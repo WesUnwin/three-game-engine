@@ -27,6 +27,7 @@ const Lights = ({ lights, onChange, onAdd }) => {
         >
             {lights.map((light, index) => (
                 <LightProperties
+                    key={index}
                     light={light}
                     onChange={updatedLight => onChangeLight(index, updatedLight)}
                     onDelete={() => deleteLight(index)}

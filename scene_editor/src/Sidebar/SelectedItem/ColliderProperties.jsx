@@ -27,7 +27,7 @@ const ColliderProperties = ({ collider, onChange, onDelete }) => {
             const value = prop.name in collider ? collider[prop.name] : prop.default;
 
             return (
-              <Property label={`${prop.name}:`}>
+              <Property key={prop.name} label={`${prop.name}:`}>
                 {prop.type === 'number'? (
                   <>
                     <NumberInput
