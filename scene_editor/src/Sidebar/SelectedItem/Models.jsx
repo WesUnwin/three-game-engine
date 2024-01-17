@@ -38,6 +38,7 @@ const Models = ({ models, gameObjectType }) => {
                     actions={[
                         { icon: <FaTrash />, onClick: () => removeModel(index) }
                     ]}
+                    onClick={() => {}}
                 />
             ))}
             {models.length === 0 ? (
