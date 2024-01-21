@@ -65,11 +65,13 @@ const AddGameObjectModal = ({ sceneName }) => {
             <br />
 
             <div className="row">
-                <input type="checkbox" value={useType} onChange={() => setUseType(!useType)} />
+                <input type="checkbox" checked={useType} onChange={() => setUseType(!useType)} />
                 &nbsp;
-                Inherit properties from type:
+                <span onClick={() => setUseType(!useType)}>
+                    Inherit properties from type:
+                </span>
                 &nbsp;
-                <select value={type} onChange={event => setType(event.target.value)}>
+                <select value={type} onChange={event => setType(event.target.value)} disabled={!useType}>
                    {gameObjectTypes.map(gameObjectType => (
                       <option key={gameObjectType} value={gameObjectType}>
                         {gameObjectType}
