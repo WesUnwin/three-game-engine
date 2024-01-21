@@ -48,6 +48,10 @@ const ProjectFiles = ({ setDirHandle }) => {
         }
     };
 
+    const openSettingsModal = () => {
+        dispatch(currentModalSlice.actions.openModal({ type: 'SettingsModal' }));
+    };
+
     const renderFileInfo = (fileInfo, initiallyExpanded = false, index = 0, path = '') => {   
         let filePath = path === '' ? fileInfo.name : `${path}${fileInfo.name}`;
         filePath = filePath.startsWith(projectFiles.name) ? filePath.slice(projectFiles.name.length, filePath.length) : filePath;
@@ -74,10 +78,12 @@ const ProjectFiles = ({ setDirHandle }) => {
 
     return (
         <Panel
-            label="Project Files"
+            className="project-files-panel"
+            label="Project Files:"
             actions={[
                 { label: 'New Project', onClick: createNewProject },
-                { label: 'Open Project', onClick: selectProjectFolder }                
+                { label: 'Open Project', onClick: selectProjectFolder },
+                { label: 'Settings', onClick: openSettingsModal }              
             ]}
         >
             {projectFiles.name ? (

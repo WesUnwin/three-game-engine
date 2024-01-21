@@ -269,3 +269,55 @@ body {
     color: rgb(50, 50, 50);
     margin-left: 10px;
 }
+
+.project-files-panel .sidebar-panel-header button:last-child {
+    margin-left: auto; /* Pull settings button to right */
+}
+
+.settings {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.settings-sidebar-tab {
+    border: 1px solid lightgray;
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: large;
+}
+
+.settings-sidebar-tab.active {
+    font-weight: bold;
+}
+
+.settings-sidebar-tab:hover {
+    background-color: lightgray;
+    color: black;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.editor-controls-table tr {
+    margin: 10px 0;
+}
+
+.editor-controls-key {
+    background-color: white;
+    border-radius: 5px;
+    border-style: groove;
+    color: black;
+    padding: 5px;
+    margin: 5px;
+}

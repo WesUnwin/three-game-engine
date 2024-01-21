@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Panel = ({ label, children, actions }) => {
+const Panel = ({ label, children, actions, className }) => {
     return (
-        <div className="sidebar-panel">
+        <div className={"sidebar-panel" + (className ? ` ${className}` : '')}>
             <div className="sidebar-panel-header">
                 <span className="sidebar-panel-label">
                     {label}
