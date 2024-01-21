@@ -137,6 +137,9 @@ const fileDataSlice = createSlice({
                 throw new Error(`No scene with name: ${sceneName} found in game.json`)
             }
             gameFile.data.scenes[newSceneName] = gameFile.data.scenes[sceneName];
+            if (gameFile.data.initialScene === sceneName) {
+                gameFile.data.initialScene = newSceneName;
+            }
             delete gameFile.data.scenes[sceneName];
             gameFile.modified = true;
         },
