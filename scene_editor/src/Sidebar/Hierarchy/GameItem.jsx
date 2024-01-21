@@ -39,7 +39,7 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
     };
 
     return (
-        <TreeView label={'game.json'} errorMessage={errorMessage} initiallyExpanded={true} onClick={onClick} isSelected={isSelected}>
+        <TreeView label={<strong>game.json</strong>} errorMessage={errorMessage} initiallyExpanded={true} onClick={onClick} isSelected={isSelected}>
             
             {gameFileData?.data ? (
                 <>

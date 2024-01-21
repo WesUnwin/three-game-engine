@@ -40,7 +40,7 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
 
     return (
         <TreeView
-            label={sceneName}
+            label={<strong>{sceneName}</strong>}
             errorMessage={errorMessage}
             onClick={onClick}
             isSelected={isSelected}

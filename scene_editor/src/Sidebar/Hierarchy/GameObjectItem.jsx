@@ -57,7 +57,7 @@ const GameObjectItem = ({ scenePath, indices, gameObjectJSON }) => {
 
     return (
         <TreeView
-            label={label}
+            label={<strong>{label}</strong>}
             onClick={onClick}
             isSelected={isSelected}
             actions={[

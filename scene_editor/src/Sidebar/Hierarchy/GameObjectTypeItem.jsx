@@ -29,7 +29,7 @@ const GameObjectTypeItem = ({ dirHandle, gameObjectType, filePath }) => {
 
     return (
         <TreeView
-            label={gameObjectType}
+            label={<strong>{gameObjectType}</strong>}
             onClick={onClick}
             isSelected={isSelected}
             actions={[
