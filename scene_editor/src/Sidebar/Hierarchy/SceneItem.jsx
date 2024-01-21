@@ -36,6 +36,8 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'AddGameObjectModal', params: { sceneName } }));
     };
 
+    const gameObjects = fileData?.data?.gameObjects || [];
+
     return (
         <TreeView
             label={sceneName}
@@ -48,7 +50,9 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
                 { icon: <FaPlus />, onClick: addGameObject }
             ]}
         >
-            {(fileData?.data?.gameObjects || []).map((gameObjectJSON, index) => (
+            {gameObjects.length === 0 ? (
+                '(no game objects)'
+            ) : gameObjects.map((gameObjectJSON, index) => (
                 <GameObjectItem key={index} scenePath={scenePath} gameObjectJSON={gameObjectJSON} indices={[index]} />
             ))}
         </TreeView>
