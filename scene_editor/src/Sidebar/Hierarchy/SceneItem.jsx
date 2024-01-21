@@ -6,7 +6,6 @@ import { getFile } from '../../Redux/FileDataSlice.js';
 import { getSelectedItem, selectItem } from '../../Redux/SelectedItemSlice.js';
 import GameObjectItem from './GameObjectItem.jsx';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import { BsPencilFill } from 'react-icons/bs';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js'
 
 const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
@@ -29,10 +28,6 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
         }
     };
 
-    const editScene = () => {
-        dispatch(currentModalSlice.actions.openModal({ type: 'EditSceneModal', params: { sceneName } }));
-    };
-
     const deleteScene = () => {
         dispatch(currentModalSlice.actions.openModal({ type: 'DeleteSceneModal', params: { sceneName } }));
     };
@@ -49,7 +44,6 @@ const SceneItem = ({ dirHandle, sceneName, scenePath }) => {
             isSelected={isSelected}
             maxChildrenHeight="250px"
             actions={[
-                { icon: <BsPencilFill />, onClick: editScene },
                 { icon: <FaTrash />, onClick: deleteScene },
                 { icon: <FaPlus />, onClick: addGameObject }
             ]}

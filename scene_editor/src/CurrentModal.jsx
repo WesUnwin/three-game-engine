@@ -2,7 +2,6 @@ import React from 'react';
 import { getCurrentModal } from './Redux/CurrentModalSlice';
 import { useSelector } from 'react-redux';
 import AddSceneModal from './Modals/AddSceneModal.jsx';
-import EditSceneModal from './Modals/EditSceneModal.jsx';
 import DeleteSceneModal from './Modals/DeleteSceneModal.jsx';
 import AddGameObjectModal from './Modals/AddGameObjectModal.jsx';
 import CreateProjectModal from './Modals/CreateProjectModal.jsx';
@@ -16,7 +15,6 @@ const modalClasses = {
     CreateProjectModal,
     AddSceneModal,
     AddGameObjectTypeModal,
-    EditSceneModal,
     DeleteSceneModal,
     AddGameObjectModal,
     AddModelModal,
