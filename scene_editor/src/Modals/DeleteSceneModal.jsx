@@ -3,6 +3,7 @@ import Modal from './Modal.jsx';
 import { useDispatch } from 'react-redux';
 import fileDataSlice from '../Redux/FileDataSlice.js';
 import currentModalSlice from '../Redux/CurrentModalSlice.js';
+import selectedItemsSlice from '../Redux/SelectedItemSlice.js';
 
 const DeleteSceneModal = ({ sceneName }) => {
     const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const DeleteSceneModal = ({ sceneName }) => {
     };
 
     const onDelete = async () => {
+        dispatch(selectedItemsSlice.actions.unSelectItem());
         dispatch(fileDataSlice.actions.removeScene({ sceneName, deleteFile: deleteSceneFile }));
         closeModal();
     };

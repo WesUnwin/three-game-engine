@@ -155,6 +155,11 @@ const fileDataSlice = createSlice({
                 state.files.filter(f => f.path === sceneFilePath).forEach(f => f.toBeDeleted = true);
             }
 
+            if (gameFile.data.initialScene === sceneName) {
+                const otherScenes = Object.keys(gameFile.data.scenes || {}).filter(sName => sName !== sceneName);
+                gameFile.data.initialScene = otherScenes.length ? otherScenes[0] : null
+            }
+
             delete gameFile.data.scenes[sceneName];
             gameFile.modified = true;
         },
