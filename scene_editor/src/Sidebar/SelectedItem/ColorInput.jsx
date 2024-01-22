@@ -26,7 +26,11 @@ const ColorInput = ({ value, onChange }) => {
 
     return (
         <span className="color-input">
-            <div className="color-input-sample" style={{ backgroundColor: colorAsHexString }} />
+            <div
+                className="color-input-sample"
+                onClick={() => setShowColorPicker(!showColorPicker)}
+                style={{ backgroundColor: colorAsHexString }}
+            />
             &nbsp;
             <button onClick={() => setShowColorPicker(!showColorPicker)}>
                 Pick Color
