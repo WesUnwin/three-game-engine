@@ -1,8 +1,13 @@
 import Renderer from './Renderer';
 import Scene from './Scene';
 import AssetStore from './assets/AssetStore';
+import JSONAsset from './assets/JSONAsset';
 import InputManager from './input/InputManager';
-import { GameJSON, GameOptions } from './types';
+import { GameOptions } from './types';
+
+interface GameObjectTypeMap {
+    [type: string]: JSONAsset;
+}
 
 class Game {
     gameOptions: GameOptions;
@@ -12,19 +17,20 @@ class Game {
     baseURL: null | string;
     dirHandle: null | FileSystemDirectoryHandle;
 
-    gameJSON: null | GameJSON;
+    gameJSONAsset: null | JSONAsset;
+
     renderer: Renderer;
     scene: Scene | null;
     assetStore: AssetStore | null;
     inputManager: InputManager;
-    gameObjectTypes: Object;
+    gameObjectTypes: GameObjectTypeMap;
     gameObjectClasses: Object;
 
     loadingScene: boolean;
 
     constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, gameOptions?: GameOptions) {
         this.initialized = false;
-        this.gameJSON = null;
+        this.gameJSONAsset = null;
 
         this.gameOptions = gameOptions || {};
 
@@ -57,14 +63,12 @@ class Game {
 
         this.assetStore = new AssetStore(this.baseURL || this.dirHandle);
 
-        const gameJSONAsset = await this.assetStore.load('game.json');
-        this.gameJSON = gameJSONAsset.data;
-
+        this.gameJSONAsset = await this.assetStore.load('game.json');
+ 
         // Read all GameObject type JSON files referenced by the game.json file
-        const gameObjectTypes = this.gameJSON.gameObjectTypes || [];
+        const gameObjectTypes = this.gameJSONAsset.data.gameObjectTypes || [];
         for (const gameObjectType in gameObjectTypes) {
-            const gameObjectTypeAsset = await this.assetStore.load(gameObjectTypes[gameObjectType]);
-            this.gameObjectTypes[gameObjectType] = gameObjectTypeAsset.data;
+            this.gameObjectTypes[gameObjectType] = await this.assetStore.load(gameObjectTypes[gameObjectType]);
         }
 
         this.renderer = new Renderer(this, this.gameOptions.rendererOptions);
@@ -79,7 +83,7 @@ class Game {
         }
     }
 
-    getGameObjectTypeJSON(type: string) {
+    getGameObjectTypeJSON(type: string): JSONAsset {
         return this.gameObjectTypes[type];
     }
 
@@ -119,7 +123,7 @@ class Game {
             this.assetStore.unloadAll();
         }
 
-        const sceneJSONassetPath = this.gameJSON.scenes[sceneName];
+        const sceneJSONassetPath = this.gameJSONAsset.data.scenes[sceneName];
         if (!sceneJSONassetPath) {
             throw new Error(`Game: no scene with name ${sceneName} defined in game.json`);
         }
@@ -153,11 +157,11 @@ class Game {
             await this._init();
         }
         if (!this.scene) {
-            const sceneNames = Object.keys(this.gameJSON.scenes || {});
+            const sceneNames = Object.keys(this.gameJSONAsset.data.scenes || {});
             if (!sceneNames.length) {
                 throw new Error('game.json has no scenes');
             }
-            const initialScene = this.gameJSON.initialScene || sceneNames[0];
+            const initialScene = this.gameJSONAsset.data.initialScene || sceneNames[0];
             await this.loadScene(initialScene);
         }
         this.renderer.play();

@@ -4,7 +4,8 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { GameObjectJSON, SceneJSON } from './types';
+import { GameObjectJSON } from './types';
+import JSONAsset from './assets/JSONAsset';
 
 class Scene {
     name: string;
@@ -12,12 +13,13 @@ class Scene {
     gameObjects: GameObject[];
     game: Game | null;
     jsonAssetPath: string; // (optional) assetPath to the a .json file containing scene json
-    sceneJSON: SceneJSON;
+    sceneJSONAsset: null | JSONAsset;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
 
     constructor(jsonAssetPath?: string) {
         this.jsonAssetPath = jsonAssetPath;
+        this.sceneJSONAsset = null;
 
         this.name = 'unnamed-scene';
 
@@ -33,25 +35,24 @@ class Scene {
         this.game = game;
 
         if (this.jsonAssetPath) {
-            const jsonAsset = await this.game.loadAsset(this.jsonAssetPath);
-            this.sceneJSON = jsonAsset.data;
+            this.sceneJSONAsset = await this.game.loadAsset(this.jsonAssetPath);
         }
 
         this.threeJSScene = new THREE.Scene();
         this.threeJSScene.name = this.name;
-        this.threeJSScene.background = this.sceneJSON?.background || new THREE.Color('lightblue');
+        this.threeJSScene.background = this.sceneJSONAsset?.data?.background || new THREE.Color('lightblue');
 
         await PhysicsHelpers.initRAPIER();
 
         this.initialGravity = {
-            x: this.sceneJSON?.gravity?.x || 0,
-            y: this.sceneJSON?.gravity?.y || -9.8,
-            z: this.sceneJSON?.gravity?.z || 0,
+            x: this.sceneJSONAsset?.data?.gravity?.x || 0,
+            y: this.sceneJSONAsset?.data?.gravity?.y || -9.8,
+            z: this.sceneJSONAsset?.data?.gravity?.z || 0,
         };
         this.rapierWorld = PhysicsHelpers.createRapierWorld(this.initialGravity);
 
         this.gameObjects = [];
-        (this.sceneJSON?.gameObjects || []).forEach((g, index) => this._createGameObject(this, g, [index]));
+        (this.sceneJSONAsset?.data?.gameObjects || []).forEach((g, index) => this._createGameObject(this, g, [index]));
 
         for(let i = 0; i<this.gameObjects.length; i++) {
             const gameObject = this.gameObjects[i];
