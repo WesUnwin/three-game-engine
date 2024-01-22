@@ -133,6 +133,7 @@ body {
     display: flex;
     align-items: center;
 }
+
 .error-badge {
     color: white;
     font-size: small;
@@ -166,7 +167,7 @@ body {
 }
 
 .color-input-sample {
-    width: 15px;
+    width: 60px;
     height: 15px;
     border: 1px groove gray;
 }
