@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Game, THREE } from '../../dist/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -21,7 +21,11 @@ const MainArea = ({ dirHandle }) => {
 
     const selectedItem = useSelector(getSelectedItem());
 
+    const [error, setError] = useState(null);
+
     const createGame = async () => {
+        setError(null);
+
         const canvas = canvasRef.current;
 
         if (!canvas) {
@@ -55,7 +59,9 @@ const MainArea = ({ dirHandle }) => {
             }
         });
 
-        await game.play();
+        await game.play().catch(error => {
+            setError(error);
+        });
 
         game.scene?.showGrid();
 
@@ -280,7 +286,20 @@ const MainArea = ({ dirHandle }) => {
 
     return (
         <div className="main-area">
-            <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>
+            {error ? (
+                <div className="main-area-error">
+                    <div>
+                        <h5>The following error has occured while trying to run this game:</h5>
+                        <p>
+                            <strong>
+                                {error.message}
+                            </strong>
+                        </p>
+                    </div>
+                </div>
+            ) : (
+                <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>
+            )}
             <StatusBar />
         </div>
     );
