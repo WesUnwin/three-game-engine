@@ -6,6 +6,7 @@ import * as FileHelpers from '../../util/FileHelpers.js'
 import TreeView from '../Hierarchy/TreeView.jsx';
 import { getSelectedItem } from '../../Redux/SelectedItemSlice.js';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
+import { FaFile, FaFolder } from 'react-icons/fa';
 
 const ProjectFiles = ({ setDirHandle }) => {
     const dispatch = useDispatch();
@@ -62,7 +63,15 @@ const ProjectFiles = ({ setDirHandle }) => {
         };
 
         return (
-            <TreeView key={index} label={fileInfo.name} initiallyExpanded={initiallyExpanded} expandOnClick={fileInfo.kind === 'directory'} onClick={onClick} isSelected={filePath === selectedProjectFilePath}>
+            <TreeView
+                key={index}
+                icon={fileInfo.kind === 'file' ? <FaFile color="rgb(239 236 236)" /> : <FaFolder color="#d5c25c" />}
+                label={fileInfo.name}
+                initiallyExpanded={initiallyExpanded}
+                expandOnClick={fileInfo.kind === 'directory'}
+                onClick={onClick}
+                isSelected={filePath === selectedProjectFilePath}
+            >
                 {fileInfo.kind === 'file' ? (
                     null
                 ) : fileInfo.files.length ? (

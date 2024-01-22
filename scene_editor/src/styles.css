@@ -129,6 +129,10 @@ body {
     height: 15px;
 }
 
+.tree-view-label {
+    display: flex;
+    align-items: center;
+}
 .error-badge {
     color: white;
     font-size: small;

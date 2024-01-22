@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 
-const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, errorMessage, isSelected, maxChildrenHeight, onContextMenu, actions }) => {
+const TreeView = ({ icon, label, children, initiallyExpanded, onClick, expandOnClick, errorMessage, isSelected, maxChildrenHeight, onContextMenu, actions }) => {
     const [expanded, setExpanded] = useState(initiallyExpanded || false);
 
     const onTreeViewClick = event => {
@@ -21,7 +21,7 @@ const TreeView = ({ label, children, initiallyExpanded, onClick, expandOnClick, 
                 )}
 
                 <span className="tree-view-label">
-                    {label}
+                    {icon && <>{icon} &nbsp;</>} {label}
                 </span>
 
                 {actions ? (
