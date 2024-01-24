@@ -44,6 +44,11 @@ const AddColliderModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
               field: ['rigidBody', 'colliders'],
               value: updatedColliders
           }));
+
+          window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType
+          });
         } else {
           // TODO: support adding/editing lights directly assigned to individual GameObjects
         }

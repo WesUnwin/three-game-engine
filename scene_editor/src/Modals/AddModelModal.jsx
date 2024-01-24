@@ -45,6 +45,11 @@ const AddModelModal = ({ gameObjectType, dirHandle }) => {
         assetPath: modelFilePath
       }
     }));
+
+    window.postMessage({
+      eventName: 'modifyGameObjectTypeInMainArea',
+      gameObjectType
+    });
     closeModal();
   };
 

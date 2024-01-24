@@ -263,11 +263,24 @@ const MainArea = ({ dirHandle }) => {
         }
     };
 
+    const modifyGameObjectTypeInMainArea = ({ gameObjectType }) => {
+        const gameJSONFile = store.getState().fileData.files.find(f => f.path === 'game.json');
+        const gameObjectTypeFilePath = (gameJSONFile.data.gameObjectTypes || {})[gameObjectType];
+        const gameObjectTypeFile = store.getState().fileData.files.find(f => f.path === gameObjectTypeFilePath);
+        if (game?.scene) {
+            const asset = game.assetStore.get(gameObjectTypeFilePath);
+            if (asset) {
+                asset.setData(gameObjectTypeFile.data);
+            }
+        }
+    };
+
     const onMessage = event => {
         const gameDataEvents = {
             addGameObjectToMainArea,
             modifyGameObjectInMainArea,
-            deleteGameObjectInMainArea
+            deleteGameObjectInMainArea,
+            modifyGameObjectTypeInMainArea
         };
         const eventHandler = gameDataEvents[event.data.eventName];
         if (eventHandler) {

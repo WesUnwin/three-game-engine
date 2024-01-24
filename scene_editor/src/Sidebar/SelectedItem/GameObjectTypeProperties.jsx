@@ -21,6 +21,11 @@ const GameObjectTypeProperties = ({ type }) => {
             field,
             value
         }));
+
+        window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType: type
+        });
     };
 
     const onAddLight = () => {
