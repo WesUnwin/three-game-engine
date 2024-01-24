@@ -1,3 +1,5 @@
+import EventEmitter from "../util/EventEmitter";
+
 class Asset {
     baseURL: string | null;
     dirHandle: FileSystemDirectoryHandle | null;
@@ -6,6 +8,8 @@ class Asset {
     data: any;
 
     objectURL: string | null;
+
+    eventEmitter: EventEmitter;
 
     constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, path: string) {
         if (typeof baseURLorDirHandle === 'string') {
@@ -21,6 +25,7 @@ class Asset {
 
         this.path = path;
         this.data = null;
+        this.eventEmitter = new EventEmitter();
     }
 
     /**
@@ -72,6 +77,17 @@ class Asset {
 
     getData() {
         return this.data;
+    }
+
+    // Allows you to change the data of an Asset to a given state, without reloading it from file.
+    // useful for making in memory changes without yet saving/modifying the underlying asset file. (as with the Scene Editor)
+    setData(data) {
+        this.data = data;
+        this.eventEmitter.emit('change');
+    }
+
+    once(eventName, fn) {
+        this.eventEmitter.once(eventName, fn);
     }
 
     unload() {

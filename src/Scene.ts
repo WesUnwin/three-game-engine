@@ -12,6 +12,7 @@ class Scene {
     threeJSScene: THREE.Scene;
     gameObjects: GameObject[];
     game: Game | null;
+    active: boolean;
     jsonAssetPath: string; // (optional) assetPath to the a .json file containing scene json
     sceneJSONAsset: null | JSONAsset;
     initialGravity: { x: number, y: number, z: number };
@@ -25,6 +26,8 @@ class Scene {
 
         this.gameObjects = [];
         this.threeJSScene = null;
+
+        this.active = false;
     }
 
     getGameObjectClass(type) {
@@ -94,6 +97,7 @@ class Scene {
         }
 
         parent.addGameObject(gameObject);
+
         this.threeJSScene.add(gameObject.threeJSGroup);
         (gameObjectJSON.children || []).forEach((childData, index) => {
             this._createGameObject(gameObject, childData, indices.concat(index));
@@ -108,7 +112,7 @@ class Scene {
     }
 
     isActive(): boolean {
-        return Boolean(this.game);
+        return Boolean(this.game) && this.active;
     }
 
     addGameObject(gameObject) {

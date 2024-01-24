@@ -114,13 +114,9 @@ class Game {
             this.scene.forEachGameObject(gameObject => {
                 gameObject.beforeUnloaded();
             });
-            this.scene.game = null; // Signals that the scene is no longer active
+            this.scene.game = null;
+            this.scene.active = false;
             this.scene = null;
-        }
-
-        if (!this.gameOptions.assetOptions?.retainAssetsBetweenScene) {
-            console.debug(`Game: clearing all assets as gameJSON.assetOptions.retainAssetsBetweenScene was not set`);
-            this.assetStore.unloadAll();
         }
 
         const sceneJSONassetPath = this.gameJSONAsset.data.scenes[sceneName];

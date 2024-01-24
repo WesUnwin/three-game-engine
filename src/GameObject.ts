@@ -6,7 +6,7 @@ import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import GLTFAsset from './assets/GLTFAsset';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
 import * as UIHelpers from './ui/UIHelpers';
-import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
+import { GameObjectJSON, GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
 import { UserInterfaceJSON } from './ui/UIHelpers';
 import Util from './Util';
 
@@ -21,28 +21,64 @@ class GameObject {
     models: ModelData[];
     lights: LightData[];
     loaded: boolean;
+    loadPromise: Promise<void>;
     rigidBodyData: RigidBodyData | null;
     rapierRigidBody: RAPIER.RigidBody | null;
     userInterfacesData: UserInterfaceJSON[];
+    options: GameObjectOptions;
 
     constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
             throw new Error('When creating a GameObject, the parent must be a Scene or another GameObject')
         }
         this.id = Util.getUUID();
-
         this.parent = parent;
+        this.options = options;
+        this.loadPromise = Promise.resolve();
+        this.reset();
+    }
 
+    getScene() {
+        let currentParent = this.parent;
+        // go up the hierachy untill you hit something that is not a GameObject
+        while(currentParent && currentParent instanceof GameObject) {
+            currentParent = currentParent.parent;
+        }
+        if (currentParent instanceof Scene) {
+            return currentParent
+        } else  {
+            return null;
+        }
+    }
+
+    getRapierWorld() {
+        const scene = this.getScene();
+        return scene?.rapierWorld;
+    }
+
+    onGameObjectTypeChange = () => {
+        this.reset();
+
+        const scene = this.getScene();
+        if (scene) {
+            this.load(); // asynchonous
+        }
+    };
+
+    // Resets/sets the state of this gameObject to the GameObjectOptions and it's type's options
+    reset() {
         const scene = this.getScene();
 
         let allOptions;
-        if (options.type) {
+        if (this.options.type) {
             // Merge the base set of options defined in the the game object
             // type json, with any options for this individual object.
-            const gameObjectTypeJSONAsset = scene.game.getGameObjectTypeJSON(options.type);
-            allOptions = Object.assign({}, gameObjectTypeJSONAsset.data, options);
+            const gameObjectTypeJSONAsset = scene.game.getGameObjectTypeJSON(this.options.type);
+            gameObjectTypeJSONAsset.once('change', this.onGameObjectTypeChange);
+
+            allOptions = Object.assign({}, gameObjectTypeJSONAsset.data, this.options);
         } else {
-            allOptions = { ...options };
+            allOptions = { ...this.options };
         }
 
         this.type = allOptions.type || null;
@@ -59,9 +95,13 @@ class GameObject {
 
         this.loaded = false;
 
-        this.threeJSGroup = new THREE.Group();
+        if (!this.threeJSGroup) {
+            this.threeJSGroup = new THREE.Group();
+        }
+        this.threeJSGroup.clear();
+
         Object.assign(this.threeJSGroup.userData, {
-            ...(options.userData || {}),
+            ...(this.options.userData || {}),
             gameObjectID: this.id
         });
         this.threeJSGroup.name = `gameObject-${this.name}`;
@@ -85,37 +125,19 @@ class GameObject {
         this.rigidBodyData = allOptions.rigidBody || null;
 
         this.userInterfacesData = allOptions.userInterfaces || [];
-
-        parent.addGameObject(this);
-    }
-
-    getScene() {
-        let currentParent = this.parent;
-        // go up the hierachy untill you hit something that is not a GameObject
-        while(currentParent && currentParent instanceof GameObject) {
-            currentParent = currentParent.parent;
-        }
-        if (currentParent instanceof Scene) {
-            return currentParent
-        } else  {
-            return null;
-        }
-    }
-
-    getRapierWorld() {
-        const scene = this.getScene();
-        return scene?.rapierWorld;
+        
+        this.parent.addGameObject(this);
     }
 
     // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
     async load() {
-        if (this.isLoaded()) {
-            console.warn('GameObject: load(): already loaded, exiting');
-            return
-        }
+        this.loadPromise = this.loadPromise.then(() => this._load());
+        await this.loadPromise;
+    }
 
+    async _load() {
         const scene = this.getScene();
         if (!scene) {
             throw new Error('GameObject: load() this GameObject must be attached to a scene (directly or through its ancestor GameObjects) to be loaded');

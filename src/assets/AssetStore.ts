@@ -59,6 +59,10 @@ class AssetStore {
     return this.loadedAssets[path];
   }
 
+  get(path: string) {
+    return this.loadedAssets[path];
+  }
+
   unload(path: string) {
     const asset = this.loadedAssets[path];
     if (asset) {

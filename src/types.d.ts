@@ -49,7 +49,6 @@ interface CameraOptions {
 
 interface AssetOptions {
     baseURL?: string;
-    retainAssetsBetweenScene?: boolean;
 }
 
 interface InputOptions {
