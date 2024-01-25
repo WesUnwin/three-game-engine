@@ -20,6 +20,11 @@ const Models = ({ models, gameObjectType }) => {
             gameObjectType,
             modelIndex
         }));
+
+        window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType
+        });
     };
 
     return (
