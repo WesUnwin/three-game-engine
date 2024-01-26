@@ -76,7 +76,7 @@ const GameItem = ({ gameFileInfo, dirHandle }) => {
                             '(no game object types)'
                         ) : (
                             Object.entries(gameObjectTypes).map((gameObjectTypeEntry, i) => (
-                                <GameObjectTypeItem key={i} dirHandle={dirHandle} gameObjectType={gameObjectTypeEntry[0]} filePath={gameObjectTypeEntry[1]} />
+                                <GameObjectTypeItem key={i} gameObjectType={gameObjectTypeEntry[0]} />
                             ))
                         )}
                     </TreeView>

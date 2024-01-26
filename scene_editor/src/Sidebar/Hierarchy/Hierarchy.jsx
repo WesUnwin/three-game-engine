@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Panel from '../Panel.jsx';
 import { useSelector } from 'react-redux';
 import GameItem from './GameItem.jsx';

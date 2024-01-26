@@ -9,7 +9,7 @@ import PropertyList from './PropertyList.jsx';
 import GameObjectTypeProperties from './GameObjectTypeProperties.jsx';
 import Divider from '../Divider.jsx';
 
-const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
+const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
     const dispatch = useDispatch();
 
     const getGameObjectJSON = (parent, gameObjectIndices) => {
@@ -126,6 +126,7 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices }) => {
 
                     <GameObjectTypeProperties
                         type={gameObjectJSON.type}
+                        dirHandle={dirHandle}
                     />
                 </>
             ) : null}

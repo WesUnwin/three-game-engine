@@ -15,7 +15,7 @@ const displayType = {
     gameObject: 'GameObject Properties:'   
 };
 
-const SelectedItem = () => {
+const SelectedItem = ({ dirHandle }) => {
     const selectedItem = useSelector(getSelectedItem());
     const selectedFile = useSelector(getFile(selectedItem?.filePath));
 
@@ -43,11 +43,11 @@ const SelectedItem = () => {
             {selectedItem.type === 'gameJSON' ? (
                 <GameProperties gameJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObjectTypeJSON' ? (
-                <GameObjectTypeProperties type={selectedItem.params.type} />
+                <GameObjectTypeProperties type={selectedItem.params.type} dirHandle={dirHandle} />
             ) : selectedItem.type === 'sceneJSON' ? (
                 <SceneProperties sceneName={selectedItem.params.name} filePath={selectedItem.filePath} sceneJSON={selectedFile.data} />
             ) : selectedItem.type === 'gameObject' ? (
-                <GameObjectProperties filePath={selectedItem.filePath} sceneJSON={selectedFile.data} indices={selectedItem.params.indices} />
+                <GameObjectProperties filePath={selectedItem.filePath} sceneJSON={selectedFile.data} indices={selectedItem.params.indices} dirHandle={dirHandle} />
             ) : (
                 `(Error no component configured to display seleted items of type: ${selectedItem.type})`
             )}       

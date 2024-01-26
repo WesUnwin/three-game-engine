@@ -10,7 +10,7 @@ const Sidebar = ({ dirHandle, setDirHandle }) => {
 
             <Hierarchy dirHandle={dirHandle} />
 
-            <SelectedItem />
+            <SelectedItem dirHandle={dirHandle} />
         </div>
     );
 };

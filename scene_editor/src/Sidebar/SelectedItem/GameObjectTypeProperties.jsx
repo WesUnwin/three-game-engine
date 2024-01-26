@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import fileDataSlice, { getFile } from '../../Redux/FileDataSlice.js';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
@@ -6,14 +6,19 @@ import Models from './Models.jsx';
 import Lights from './Lights.jsx';
 import Physics from './Physics.jsx';
 import PropertyList from './PropertyList.jsx';
+import * as FileHelpers from '../../util/FileHelpers.js'
 
-const GameObjectTypeProperties = ({ type }) => {
+const GameObjectTypeProperties = ({ dirHandle, type }) => {
     const dispatch = useDispatch();
 
     const gameFile = useSelector(getFile('game.json'));
 
     const gameObjectTypeFilePath = gameFile?.data?.gameObjectTypes[type];
     const gameObjectTypeFile = useSelector(getFile(gameObjectTypeFilePath || null));
+
+    useEffect(() => {
+        FileHelpers.loadFile(dirHandle, gameObjectTypeFilePath, dispatch, { type: 'gameObjectTypeJSON' })
+    }, [gameObjectTypeFilePath]);
 
     const changeProperty = (field, value) => {
         dispatch(fileDataSlice.actions.modifyFileData({
@@ -43,7 +48,7 @@ const GameObjectTypeProperties = ({ type }) => {
     };
 
     if (!gameObjectTypeFile?.data) {
-        return null;
+        return <div style={{ textAlign: 'center' }}>Loading...</div>;
     }
 
     return (
