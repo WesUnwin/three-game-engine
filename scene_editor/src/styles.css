@@ -10,10 +10,21 @@ body {
 }
 
 .divider {
-    margin-top: 5px;
-    color: gray;
-    text-align: left;
-    border-bottom: 1px solid gray;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.divider-line {
+    height: 1px;
+    border-top: 1px solid darkgray;
+    flex-grow: 1;
+}
+
+.divider-label {
+    margin: 0 5px;
 }
 
 #app {
