@@ -294,13 +294,13 @@ class GameObject {
         });
     }
 
-    find(fn: (gameObject: GameObject) => {}): GameObject | null {
+    getGameObject(fn: (gameObject: GameObject) => {}): GameObject | null {
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
             if (fn(obj)) {
                 return obj
             }
-            const child = obj.find(fn)
+            const child = obj.getGameObject(fn)
             if (child) {
                 return child
             }
@@ -308,25 +308,25 @@ class GameObject {
         return null
     }
 
-    findAll(fn: (gameObject: GameObject) => {}): GameObject[] {
+    getGameObjects(fn: (gameObject: GameObject) => {}): GameObject[] {
         let results = []
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
             if (fn(obj)) {
                 results.push(obj);
             }
-            const childResults = obj.findAll(fn)
+            const childResults = obj.getGameObjects(fn)
             results = results.concat(childResults)
         }
         return results
     }
 
-    findByName(name: string): GameObject | null {
-        return this.find(g => g.name === name);
+    getGameObjectWithName(name: string): GameObject | null {
+        return this.getGameObject(g => g.name === name);
     }
 
-    findAllByTag(tag: string): GameObject[] {
-        return this.findAll(g => g.hasTag(tag));
+    getGameObjectsWithTag(tag: string): GameObject[] {
+        return this.getGameObjects(g => g.hasTag(tag));
     }
 
     destroy() {

@@ -36,7 +36,7 @@ const runDemo = async () => {
           const scene = this.getScene();
           const game = scene.game;
         
-          const player = scene.findByName('player');
+          const player = scene.getGameObjectWithName('player');
 
           game.renderer.setCameraPosition(-4, 5, 10);
           game.renderer.makeCameraLookAt(0,0,0);

@@ -112,7 +112,7 @@ const MainArea = ({ dirHandle }) => {
                 return; // todo find out why this happens
             }
 
-            const gameObject = game.scene.getGameObjectByThreeJSObject(threeJSObject)
+            const gameObject = game.scene.getGameObjectWithThreeJSObject(threeJSObject)
             const indices = game.scene.getGameObjectIndices(gameObject);
 
             let field = null;
@@ -170,7 +170,7 @@ const MainArea = ({ dirHandle }) => {
                     return true;
                 })
 
-                const gameObjectsIntersected = relevantIntersections.map(intersect => game.scene.getGameObjectByThreeJSObject(intersect.object)).filter(g => g);
+                const gameObjectsIntersected = relevantIntersections.map(intersect => game.scene.getGameObjectWithThreeJSObject(intersect.object)).filter(g => g);
 
                 if (gameObjectsIntersected.length) {
                     const gameObject = gameObjectsIntersected[0];

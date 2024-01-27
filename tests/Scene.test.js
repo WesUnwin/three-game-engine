@@ -52,7 +52,7 @@ describe('removeGameObject', () => {
                 { name: 'game-object-1' }
             ]
         });
-        const gameObject = scene.findByName('game-object-1');
+        const gameObject = scene.getGameObjectWithName('game-object-1');
         expect(scene.getRootGameObjects().length).toBe(1);
         scene.removeGameObject(gameObject);
         expect(scene.getRootGameObjects().length).toBe(0);
@@ -78,7 +78,7 @@ describe('getRootGameObjects', () => {
     });
 });
 
-describe('findByName', () => {
+describe('getGameObjectWithName', () => {
     it('returns the GameObject with the specified name', () => {
         const scene = new Scene({
             gameObjects: [
@@ -93,7 +93,7 @@ describe('findByName', () => {
                 }
             ]
         });
-        const gameObject = scene.findByName('game-object-3');
+        const gameObject = scene.getGameObjectWithName('game-object-3');
         expect(gameObject).not.toBe(null);
         expect(gameObject.name).toEqual('game-object-3');
     });
@@ -104,12 +104,12 @@ describe('findByName', () => {
                 { name: 'game-object-1' }
             ]
         });
-        const gameObject = scene.findByName('game-object-2');
+        const gameObject = scene.getGameObjectWithName('game-object-2');
         expect(gameObject).toBe(null);
     });
 });
 
-describe('findAllByTag', () => {
+describe('getGameObjectsWithTag', () => {
     it('returns the GameObjects that have the given tag', () => {
         const scene = new Scene({
             gameObjects: [
@@ -117,7 +117,7 @@ describe('findAllByTag', () => {
                 { name: 'game-object-2', tags: ['enemy'] }
             ]
         });
-        const gameObjects = scene.findAllByTag('enemy');
+        const gameObjects = scene.getGameObjectsWithTag('enemy');
         expect(gameObjects.length).toBe(1);
         expect(gameObjects[0].name).toBe('game-object-2');
     });

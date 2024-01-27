@@ -103,30 +103,30 @@ describe('getRootGameObjects', () => {
     });
 });
 
-describe('findByName', () => {
+describe('getGameObjectWithName', () => {
     it('returns the descendent GameObject with the specified name', () => {
         const scene = new Scene();
         const parentObject = new GameObject(scene);
         const childObject = new GameObject(parentObject, { name: 'child-object'});
-        const gameObject = parentObject.findByName('child-object');
+        const gameObject = parentObject.getGameObjectWithName('child-object');
         expect(gameObject).toBe(childObject)
     });
 
     it('returns null if no GameObject with the specified name exists', () => {
         const scene = new Scene();
         const parentObject = new GameObject(scene);
-        const gameObject = parentObject.findByName('game-object-2');
+        const gameObject = parentObject.getGameObjectWithName('game-object-2');
         expect(gameObject).toBe(null);
     });
 });
 
-describe('findAllByTag', () => {
+describe('getGameObjectsWithTag', () => {
     it('returns the GameObjects that have the given tag', () => {
         const scene = new Scene();
         const parentObject = new GameObject(scene);
         const childWithTag = new GameObject(parentObject, { tags: ['enemy'] })
         new GameObject(parentObject)
-        const gameObjects = parentObject.findAllByTag('enemy');
+        const gameObjects = parentObject.getGameObjectsWithTag('enemy');
         expect(gameObjects.length).toBe(1);
         expect(gameObjects[0]).toBe(childWithTag);
     });

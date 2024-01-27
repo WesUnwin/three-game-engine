@@ -153,13 +153,13 @@ class Scene {
         }
     }
 
-    find(fn) {
+    getGameObject(fn) {
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
             if (fn(obj)) {
                 return obj;
             }
-            const child = obj.find(fn);
+            const child = obj.getGameObject(fn);
             if (child) {
                 return child;
             }
@@ -167,29 +167,29 @@ class Scene {
         return null;
     }
 
-    findAll(fn) {
+    getGameObjects(fn) {
         let results = [];
         for (let i = 0; i<this.gameObjects.length; i++) {
             const obj = this.gameObjects[i];
             if (fn(obj)) {
                 results.push(obj);
             }
-            const childResults = obj.findAll(fn);
+            const childResults = obj.getGameObjects(fn);
             results = results.concat(childResults);
         }
         return results;
     }
 
-    findByName(name) {
-        return this.find(g => g.name === name);
+    getGameObjectWithName(name) {
+        return this.getGameObject(g => g.name === name);
     }
 
-    findAllByTag(tag) {
-        return this.findAll(g => g.hasTag(tag));
+    getGameObjectsWithTag(tag) {
+        return this.getGameObjects(g => g.hasTag(tag));
     }
 
-    getGameObjectByID(id) {
-        return this.find(g => g.id === id);
+    getGameObjectWithID(id) {
+        return this.getGameObject(g => g.id === id);
     }
 
     getGameObjectIndices(gameObject: GameObject) {
@@ -230,16 +230,16 @@ class Scene {
         }
     }
 
-    getGameObjectByThreeJSObject(object3D) {
+    getGameObjectWithThreeJSObject(object3D) {
         if (object3D instanceof THREE.Group) {
             const { gameObjectID } = object3D.userData;
             if (gameObjectID) {
-                return this.getGameObjectByID(gameObjectID);
+                return this.getGameObjectWithID(gameObjectID);
             } else {
-                return this.getGameObjectByThreeJSObject(object3D.parent);
+                return this.getGameObjectWithThreeJSObject(object3D.parent);
             }
         } else if (object3D.parent) {
-            return this.getGameObjectByThreeJSObject(object3D.parent);
+            return this.getGameObjectWithThreeJSObject(object3D.parent);
         } else {
             return null;
         }
