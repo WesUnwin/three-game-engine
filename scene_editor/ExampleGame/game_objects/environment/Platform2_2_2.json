@@ -1,25 +1,12 @@
 {
     "models": [
-        {
-            "assetPath": "models/platform_2_2_2.glb"
-        }
+        { "assetPath": "models/platform_2_2_2.glb" }
     ],
     "rigidBody": {
         "type": "fixed",
         "colliders": [
-            {
-                "type": "cuboid",
-                "hx": 1,
-                "hy": 1,
-                "hz": 1
-            }
+            { "type": "cuboid", "hx": 1, "hy": 1, "hz": 1 }
         ]
-    },
-    "lights": [
-        {
-            "type": "AmbientLight",
-            "intensity": 0.2,
-            "color": 12717068
-        }
-    ]
+    }
 }
+  
