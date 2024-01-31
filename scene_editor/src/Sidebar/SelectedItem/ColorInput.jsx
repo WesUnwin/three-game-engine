@@ -5,7 +5,11 @@ import { ChromePicker } from 'react-color'
 const ColorInput = ({ value, onChange }) => {
     const [showColorPicker, setShowColorPicker] = useState(false);
 
-    const colorAsHexString = `#${(value).toString(16)}`;
+    const rgbObject = {
+        r: (value >> 16) & 0xff,
+        g: (value >> 8) & 0xff,
+        b: value & 0xff
+    };
 
     const onColorPickerChange = ({ hex }) => {
         const newNumericValue = Number(hex.replace('#', '0x'));
@@ -29,7 +33,7 @@ const ColorInput = ({ value, onChange }) => {
             <div
                 className="color-input-sample"
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                style={{ backgroundColor: colorAsHexString }}
+                style={{ backgroundColor: `rgb(${rgbObject.r}, ${rgbObject.g}, ${rgbObject.b})` }}
             />
             &nbsp;
             <button onClick={() => setShowColorPicker(!showColorPicker)}>
@@ -39,7 +43,7 @@ const ColorInput = ({ value, onChange }) => {
                 <div style={popover}>
                     <div style={cover} onClick={() => setShowColorPicker(false)} />
                     <ChromePicker
-                        color={colorAsHexString}
+                        color={rgbObject}
                         onChange={onColorPickerChange}
                     />
                 </div>

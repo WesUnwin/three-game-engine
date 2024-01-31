@@ -4,7 +4,7 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { GameObjectJSON } from './types';
+import { FogJSON, GameObjectJSON } from './types';
 import JSONAsset from './assets/JSONAsset';
 
 class Scene {
@@ -45,6 +45,8 @@ class Scene {
         this.threeJSScene.name = this.name;
         this.threeJSScene.background = this.sceneJSONAsset?.data?.background || new THREE.Color('lightblue');
 
+        this.setFog(this.sceneJSONAsset?.data?.fog || null);
+    
         await PhysicsHelpers.initRAPIER();
 
         this.initialGravity = {
@@ -60,6 +62,28 @@ class Scene {
         for(let i = 0; i<this.gameObjects.length; i++) {
             const gameObject = this.gameObjects[i];
             await gameObject.load()
+        }
+    }
+
+    setFog(fog: FogJSON | THREE.Fog) {
+        if (!this.threeJSScene) {
+            throw new Error('Cant set/change fog, this scene has not finished loading, thus no .threeJSScene exists yet');
+        }
+
+        if (fog instanceof THREE.Fog) {
+            this.threeJSScene.fog = fog;
+        } else if (typeof fog === 'object') {
+            const fogDefaults = {
+                color: '#00000',
+                near: 1.0,
+                far: 1000.0
+            };
+            const fogSettings = Object.assign({}, fogDefaults, fog);
+            this.threeJSScene.fog = new THREE.Fog(fogSettings.color, fogSettings.near, fogSettings.far);
+        } else if (fog === null) {
+            this.threeJSScene.fog = null;
+        } else {
+            throw new Error(`scene.setFog(): invalid value ${fog}`);
         }
     }
 

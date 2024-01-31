@@ -11,8 +11,15 @@ interface GameJSON {
 
 interface SceneJSON {
     background?: null;
+    fog?: null | FogJSON;
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
+}
+
+interface FogJSON {
+    color: string;
+    near: number;
+    far: number;
 }
 
 interface GameObjectJSON extends GameObjectOptions {

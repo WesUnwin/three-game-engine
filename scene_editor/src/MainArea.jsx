@@ -276,14 +276,19 @@ const MainArea = ({ dirHandle }) => {
         }
     };
 
-
+    const modifyFogMainArea = ({ scenePath, fog }) => {
+        if (game?.scene?.jsonAssetPath === scenePath && game.scene.threeJSScene) {
+            game.scene.setFog(fog);
+        }
+    };
 
     const onMessage = event => {
         const gameDataEvents = {
             addGameObjectToMainArea,
             modifyGameObjectInMainArea,
             deleteGameObjectInMainArea,
-            modifyGameObjectTypeInMainArea
+            modifyGameObjectTypeInMainArea,
+            modifyFogMainArea
         };
         const eventHandler = gameDataEvents[event.data.eventName];
         if (eventHandler) {
