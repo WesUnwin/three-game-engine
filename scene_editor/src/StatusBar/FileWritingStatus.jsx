@@ -8,7 +8,7 @@ const FileWritingStatus = () => {
     const filesToBeDeletedCount = useSelector(getFilesToBeDeletedCount());
 
     return (
-        <div className="save-status">
+        <div className="status-bar-item">
             {currentFileOperation ? (
                 currentFileOperation
             ) : (modifiedFileCount === 0 && filesToBeDeletedCount == 0) ? (

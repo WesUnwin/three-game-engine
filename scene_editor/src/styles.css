@@ -71,6 +71,13 @@ body {
 
     display: flex;
     flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.status-bar-item {
+    margin: 0 10px;
+    display: flex;
     align-items: center;
 }
 

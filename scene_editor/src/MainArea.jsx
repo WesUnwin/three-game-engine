@@ -11,6 +11,7 @@ import fileDataSlice from "./Redux/FileDataSlice.js";
 import selectedItemSlice from "./Redux/SelectedItemSlice.js";
 import GameObject from "../../dist/GameObject.js";
 import { debounce } from "./util/debounce.js";
+import settingsSlice, { getSettings } from "./Redux/SettingsSlice.js";
 
 const modifyGameObjectTypeInMainArea = debounce(({ gameObjectType }) => {
     const gameJSONFile = store.getState().fileData.files.find(f => f.path === 'game.json');
@@ -33,6 +34,8 @@ const MainArea = ({ dirHandle }) => {
     const transformControlsRef = useRef();
 
     const selectedItem = useSelector(getSelectedItem());
+
+    const settings = useSelector(getSettings());
 
     const [error, setError] = useState(null);
 
@@ -304,6 +307,12 @@ const MainArea = ({ dirHandle }) => {
             window.removeEventListener('message', onMessage);
         };
     }, []);
+
+    useEffect(() => {
+        if (window.game?.scene) {
+            settings.showColliders ? window.game.scene.showPhysics() : window.game.scene.hidePhysics();
+        }
+    }, [settings.showColliders]);
 
     return (
         <div className="main-area">
