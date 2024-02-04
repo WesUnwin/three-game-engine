@@ -13,7 +13,7 @@ const lightTypes = [
   'SpotLight'
 ];
 
-const AddLightModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
+const AddLightModal = ({ gameObjectType, scenePath, gameObjectIndices, existingLights }) => {
     const dispatch = useDispatch();
 
     const [type, setType] = useState('AmbientLight');
@@ -28,13 +28,14 @@ const AddLightModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
 
     const onSubmit = () => {
         const newLight = { type };
-        const updateLights = (gameObjectTypeFile.data.lights || []).concat([newLight]);
 
         if (gameObjectType) {
+          const updatedLights = (gameObjectTypeFile.data.lights || []).concat([newLight]);
+
           dispatch(fileDataSlice.actions.modifyFileData({
               path: gameObjectTypeFilePath,
               field: ['lights'],
-              value: updateLights
+              value: updatedLights
           }));
 
           window.postMessage({
@@ -42,7 +43,22 @@ const AddLightModal = ({ gameObjectType, sceneName, gameObjectIndices }) => {
             gameObjectType
           });
         } else {
-          // TODO: support adding/editing lights directly assigned to individual GameObjects
+          const updatedLights = existingLights.concat([newLight]);
+
+          dispatch(fileDataSlice.actions.modifyGameObject({
+            scenefilePath: scenePath,
+            gameObjectIndices,
+            field: ['lights'],
+            value: updatedLights
+          }));
+    
+          window.postMessage({
+            eventName: 'modifyGameObjectInMainArea',
+            scenePath,
+            indices: gameObjectIndices,
+            field: ['lights'],
+            value: updatedLights
+          });
         }
 
         closeModal();

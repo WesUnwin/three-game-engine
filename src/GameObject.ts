@@ -10,6 +10,55 @@ import { GameObjectJSON, GameObjectOptions, LightData, ModelData, RigidBodyData 
 import { UserInterfaceJSON } from './ui/UIHelpers';
 import Util from './Util';
 
+const setObject3DProps = (object3D, props) => {
+    for (const prop in props) {
+        const value = props[prop];
+        switch (prop) {
+            case 'position':
+                // Allow specifying the .position of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
+                if (value instanceof THREE.Vector3) {
+                    object3D.position = value;
+                } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                    object3D.position.set(value.x || 0, value.y || 0, value.z || 0);
+                } else {
+                    throw new Error('GameObject: object3D position must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
+                }
+                break;
+            case 'rotation':
+                // Allow specifying the .rotation of things like models/lights/etc. by THREE.Euler or an object like: { x: _, y: _, z: _ }
+                if (value instanceof THREE.Euler) {
+                    object3D.rotation = value;
+                } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                    object3D.rotation.set(value.x || 0, value.y || 0, value.z || 0, value.order);
+                } else {
+                    throw new Error('GameObject: object3D rotation must be either a THREE.Euler or an object with properties: x/y/z/order');
+                }
+                break;
+            case 'scale':
+                // Allow specifying the .scale of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
+                if (value instanceof THREE.Vector3) {
+                    object3D.scale = value;
+                } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
+                    object3D.scale.set(value.x || 0, value.y || 0, value.z || 0);
+                } else {
+                    throw new Error('GameObject: object3D scale must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
+                }
+                break;
+            case 'color':
+                if (value instanceof THREE.Color) {
+                    object3D.color = value;
+                } else if (['number', 'string'].some(t => typeof value === t)) {
+                    object3D.color = new THREE.Color(value);
+                } else {
+                    throw new Error('GameObject: object3D color must be set to either a THREE.Color instance or a string (which will be passed to the THREE.Color() constructor)');
+                }
+                break;
+            default:
+                object3D[prop] = value; 
+        }
+    }
+};
+
 class GameObject {
     id: string;
     type: string | null;
@@ -129,6 +178,26 @@ class GameObject {
         this.parent.addGameObject(this);
     }
 
+    async updateLights(updatedLights: LightData[]) {
+        this.lights = updatedLights;
+        await this.loadLights();
+    }
+
+    async updateUserInterfaces(updatedUserInterfances: UserInterfaceJSON[]) {
+        this.userInterfacesData = updatedUserInterfances;
+        await this.loadUserInterfaces();
+    }
+
+    async updateRigidBody(rigidBodyData: RigidBodyData | null) {
+        this.rigidBodyData = rigidBodyData;
+        await this.loadRigidBody();
+    }
+
+    async updateModels(updatedModels: ModelData[]) {
+        this.models = updatedModels;
+        await this.loadModels();
+    }
+
     // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
@@ -146,75 +215,22 @@ class GameObject {
             throw new Error('GameObject: load(): the scene containing this GameObject must be loaded into a game object first');
         }
 
-        this.threeJSGroup.clear() // Remove any existing child objects.
+        await this.loadLights();
+        await this.loadUserInterfaces();
+        await this.loadRigidBody();
+        await this.loadModels();
 
-        const setObject3DProps = (object3D, props) => {
-            for (const prop in props) {
-                const value = props[prop];
-                switch (prop) {
-                    case 'position':
-                        // Allow specifying the .position of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
-                        if (value instanceof THREE.Vector3) {
-                            object3D.position = value;
-                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
-                            object3D.position.set(value.x || 0, value.y || 0, value.z || 0);
-                        } else {
-                            throw new Error('GameObject: object3D position must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
-                        }
-                        break;
-                    case 'rotation':
-                        // Allow specifying the .rotation of things like models/lights/etc. by THREE.Euler or an object like: { x: _, y: _, z: _ }
-                        if (value instanceof THREE.Euler) {
-                            object3D.rotation = value;
-                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
-                            object3D.rotation.set(value.x || 0, value.y || 0, value.z || 0, value.order);
-                        } else {
-                            throw new Error('GameObject: object3D rotation must be either a THREE.Euler or an object with properties: x/y/z/order');
-                        }
-                        break;
-                    case 'scale':
-                        // Allow specifying the .scale of things like models/lights/etc. by THREE.Vector3 or an object like: { x: _, y: _, z: _ }
-                        if (value instanceof THREE.Vector3) {
-                            object3D.scale = value;
-                        } else if (['x', 'y', 'z'].some(subprop => typeof value[subprop] === 'number')) {
-                            object3D.scale.set(value.x || 0, value.y || 0, value.z || 0);
-                        } else {
-                            throw new Error('GameObject: object3D scale must be either a THREE.Vector3 or an object with x/y/z properties as numbers');
-                        }
-                        break;
-                    case 'color':
-                        if (value instanceof THREE.Color) {
-                            object3D.color = value;
-                        } else if (['number', 'string'].some(t => typeof value === t)) {
-                            object3D.color = new THREE.Color(value);
-                        } else {
-                            throw new Error('GameObject: object3D color must be set to either a THREE.Color instance or a string (which will be passed to the THREE.Color() constructor)');
-                        }
-                        break;
-                    default:
-                        object3D[prop] = value; 
-                }
-            }
-        };
-
-        for (let i = 0; i<this.models.length; i++) {
-            const modelData = this.models[i];
-            const asset = await scene.game.loadAsset(modelData.assetPath);
-            if (!(asset instanceof GLTFAsset)) {
-                throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
-            }
-            const clonedModel = clone(asset.data.scene);
-            clonedModel.children.forEach(object3D => {
-                const objectProps = { ...modelData };
-                delete objectProps.assetPath;
-                setObject3DProps(object3D, objectProps);
-                this.threeJSGroup.add(object3D);
-            });
+        for(let i = 0; i<this.gameObjects.length; i++) {
+            const childGameObject = this.gameObjects[i];
+            await childGameObject.load();
         }
 
-        for (let uiData of this.userInterfacesData) {
-            await UIHelpers.createUIComponent(uiData, this.threeJSGroup, scene.game.assetStore);
-        }
+        this.loaded = true;
+    }
+
+    async loadLights() {
+        const existingLights = this.threeJSGroup.children.filter(child => child instanceof THREE.Light);
+        existingLights.forEach(existingLight => this.threeJSGroup.remove(existingLight));
 
         this.lights.forEach(lightData => {
             let light = null;
@@ -238,19 +254,49 @@ class GameObject {
             delete objectProps.type;
             setObject3DProps(light, objectProps);
 
+            console.log('adding light: ', light.uuid);
             this.threeJSGroup.add(light);
         });
+    }
 
-        if (this.rigidBodyData) {
-            PhysicsHelpers.setupGameObjectPhysics(this);
+    async loadUserInterfaces() {
+        const existingUI = this.threeJSGroup.children.filter(child => {
+            console.log('==> child: ', child)
+
+        });
+        existingUI.forEach(ui => ui.remove());
+
+        const scene = this.getScene();
+        for (let uiData of this.userInterfacesData) {
+            await UIHelpers.createUIComponent(uiData, this.threeJSGroup, scene.game.assetStore);
         }
+    }
 
-        for(let i = 0; i<this.gameObjects.length; i++) {
-            const childGameObject = this.gameObjects[i];
-            await childGameObject.load()
+    async loadRigidBody() {
+        PhysicsHelpers.setupGameObjectPhysics(this);
+    }
+
+    async loadModels() {
+        // Remove existing model related objects (objects with userData.model = true)
+        const modelRelatedObjects = this.threeJSGroup.children.filter(child => child.userData.model);
+        modelRelatedObjects.forEach(m => this.threeJSGroup.remove(m));
+
+        const scene = this.getScene();
+        for (let i = 0; i<this.models.length; i++) {
+            const modelData = this.models[i];
+            const asset = await scene.game.loadAsset(modelData.assetPath);
+            if (!(asset instanceof GLTFAsset)) {
+                throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
+            }
+            const clonedModel = clone(asset.data.scene);
+            clonedModel.children.forEach(object3D => {
+                const objectProps = { ...modelData };
+                delete objectProps.assetPath;
+                setObject3DProps(object3D, objectProps);
+                object3D.userData.model = true;
+                this.threeJSGroup.add(object3D);
+            });
         }
-
-        this.loaded = true;
     }
 
     isLoaded(): boolean {

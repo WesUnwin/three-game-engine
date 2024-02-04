@@ -263,11 +263,22 @@ const MainArea = ({ dirHandle }) => {
         const scene = window.game?.scene
         if (scene?.jsonAssetPath === scenePath) {
             let gameObject = scene.getGameObjectByIndices(indices);
-            let obj = gameObject.threeJSGroup;
-            for (let i = 0; i < field.length - 1; i++ ) {
-                obj = obj[field[i]];
+            if (['position', 'scale', 'rotation'].includes(field[0])) {
+                // These fields are direct properties of the threeJSGroup
+                let obj = gameObject.threeJSGroup;
+                for (let i = 0; i < field.length - 1; i++ ) {
+                    obj = obj[field[i]];
+                }
+                obj[field[field.length - 1]] = value;
+            } else if (field.length == 1 && field[0] === 'lights') {
+                gameObject.updateLights(value);
+            } else if (field.length == 1 && field[0] === 'rigidBody') {
+                gameObject.updateRigidBody(value);
+            } else if (field.length == 1 && field[0] === 'models') {
+                gameObject.updateModels(value);
+            } else {
+                throw new Error(`No logic defined to update game object property: ${field}`);
             }
-            obj[field[field.length - 1]] = value;
         }
     };
 

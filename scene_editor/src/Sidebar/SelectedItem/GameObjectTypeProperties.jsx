@@ -33,6 +33,31 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
         });
     };
 
+    const onChangePhysics = rigidBodyData => {
+        changeProperty(['rigidBody'], rigidBodyData);
+    };
+
+    const addModel = () => {
+        dispatch(currentModalSlice.actions.openModal({
+            type: 'AddModelModal',
+            params: {
+                gameObjectType: type
+            }
+        }));
+    };
+
+    const removeModel = modelIndex => {
+        dispatch(fileDataSlice.actions.removeModelFromGameObjectType({
+            gameObjectType: type,
+            modelIndex
+        }));
+
+        window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType: type
+        });
+    };
+
     const onAddLight = () => {
         const params = {
             gameObjectType: type
@@ -54,9 +79,9 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
     return (
         <PropertyList>    
             <Models
-                gameObjectType={type}
                 models={gameObjectTypeFile.data.models || []}
-                changeProperty={changeProperty}
+                addModel={addModel}
+                removeModel={removeModel}
             />
             <Lights
                 lights={gameObjectTypeFile.data.lights || []}
@@ -65,7 +90,7 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
             />
             <Physics
                 rigidBody={gameObjectTypeFile.data.rigidBody}
-                changeProperty={changeProperty}
+                onChange={onChangePhysics}
                 addCollider={addCollider}
             />
         </PropertyList>

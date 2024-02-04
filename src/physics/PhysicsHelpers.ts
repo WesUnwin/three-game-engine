@@ -25,20 +25,23 @@ export const createRapierWorld = (gravity: { x: number, y: number, z: number }) 
     return new RAPIER.World(gravity);
 };
 
-// Creates the RigidBody and its colliders for a GameObject, and attaches it: gameObject.rigidBody
+// Creates (or removes) the RigidBody and its colliders for a GameObject, and attaches it: gameObject.rigidBody
+// based on the gameObject's rigidBodyData JSON.
 export const setupGameObjectPhysics = (gameObject: GameObject) => {
-    if (!gameObject.rigidBodyData) {
-        throw new Error('setupPhysicsForGameObject: GameObject must have .rigidBodyData');
-    }
     const rigidBodyData: RigidBodyData = gameObject.rigidBodyData;
 
-    // Physics:  Create RigidBody and its Colliders for this GameObject
-    if (rigidBodyData) {
-        const scene = gameObject.getScene();
-        if (!scene) {
-            throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
-        }
+    const scene = gameObject.getScene();
+    if (!scene) {
+        throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
+    }
 
+    if (gameObject.rapierRigidBody) {
+        const scene = gameObject.getScene();
+        scene.rapierWorld.removeRigidBody(gameObject.rapierRigidBody);
+    }
+
+    if (rigidBodyData) {
+        // Physics:  Create RigidBody and its Colliders for this GameObject
         const rigidBodyDesc: RAPIER.RigidBodyDesc = createRigidBodyDesc(gameObject.rigidBodyData);
 
         gameObject.rapierRigidBody = scene.rapierWorld.createRigidBody(rigidBodyDesc);
@@ -56,12 +59,12 @@ export const setupGameObjectPhysics = (gameObject: GameObject) => {
         gameObject.rapierRigidBody.setRotation(worldRotation as RAPIER.Quaternion, true);
 
         if (rigidBodyData.enabledTranslations) {
-            const enabledTrans = rigidBodyData.enabledTranslations;
+            const enabledTrans = Object.assign({ x: true, y: true, z: true }, rigidBodyData.enabledTranslations);
             gameObject.rapierRigidBody.setEnabledTranslations(enabledTrans.x, enabledTrans.y, enabledTrans.z, true);
         }
 
         if (rigidBodyData.enabledRotations) {
-            const enabledRots = rigidBodyData.enabledRotations;
+            const enabledRots = Object.assign({ x: true, y: true, z: true }, rigidBodyData.enabledRotations);
             gameObject.rapierRigidBody.setEnabledRotations(enabledRots.x, enabledRots.y, enabledRots.z, true);
         }
 

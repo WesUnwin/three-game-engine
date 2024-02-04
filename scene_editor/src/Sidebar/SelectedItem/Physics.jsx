@@ -11,33 +11,51 @@ const rigidBodyTypes = [
     'kinematicVelocityBased'
 ];
 
-const Physics = ({ rigidBody, changeProperty, addCollider }) => {
+const Physics = ({ rigidBody, onChange, addCollider }) => {
     const colliders = rigidBody?.colliders || [];
 
+    const changeProperty = (field, value) => {
+        const rigidBodyData = JSON.parse(JSON.stringify(rigidBody));
+
+        let subObject = rigidBodyData;
+        for (let i = 0; i<field.length; i++) {
+            if (i === field.length - 1) {
+                subObject[field[i]] = value;
+            } else {
+                if (!(field[i] in subObject)) {
+                    subObject[field[i]] = {};
+                }
+                subObject = subObject[field[i]];
+            }
+        }
+
+        onChange(rigidBodyData);
+    };
+
     const addRigidBody = () => {
-        changeProperty(['rigidBody'], {
+        onChange({
             type: 'fixed'
         });
     };
 
     const removeRigidBody = () => {
-        changeProperty(['rigidBody'], null);
+        onChange(null);
     };
 
     const onRigidBodyTypeChange = event => {
-        changeProperty(['rigidBody', 'type'], event.target.value);
+        changeProperty(['type'], event.target.value);
     };
 
     const onChangeCollider = (colliderIndex, updatedCollider) => {
         const updatedColliders = [...colliders];
         updatedColliders[colliderIndex] = updatedCollider;
-        changeProperty(['rigidBody', 'colliders'], updatedColliders);
+        changeProperty(['colliders'], updatedColliders);
     };
 
     const deleteCollider = colliderIndex => {
         const updatedColliders = [...colliders];
         updatedColliders.splice(colliderIndex, 1);
-        changeProperty(['rigidBody', 'colliders'], updatedColliders);
+        changeProperty(['colliders'], updatedColliders);
     };
 
     return (
@@ -73,7 +91,7 @@ const Physics = ({ rigidBody, changeProperty, addCollider }) => {
                                             <input
                                                 type="checkbox"
                                                 checked={isChecked}
-                                                onChange={() => changeProperty(['rigidBody', 'enabledTranslations', axis], !isChecked)}
+                                                onChange={() => changeProperty(['enabledTranslations', axis], !isChecked)}
                                             />
                                             {axis} &nbsp;
                                         </span>
@@ -91,7 +109,7 @@ const Physics = ({ rigidBody, changeProperty, addCollider }) => {
                                             <input
                                                 type="checkbox"
                                                 checked={isChecked}
-                                                onChange={() => changeProperty(['rigidBody', 'enabledRotations', axis], !isChecked)}
+                                                onChange={() => changeProperty(['enabledRotations', axis], !isChecked)}
                                             />
                                             {axis} &nbsp;
                                         </span>

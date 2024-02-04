@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import currentModalSlice from '../Redux/CurrentModalSlice.js';
 import fileDataSlice from '../Redux/FileDataSlice.js';
 
-const AddModelModal = ({ gameObjectType, dirHandle }) => {
+const AddModelModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingModels }) => {
   const dispatch = useDispatch();
 
   const [modelFilePath, setModelFilePath] = useState(null);
@@ -39,17 +39,39 @@ const AddModelModal = ({ gameObjectType, dirHandle }) => {
   };
 
   const onSubmit = async () => {
-    dispatch(fileDataSlice.actions.addModelToGameObjectType({
-      gameObjectType,
-      model: {
-        assetPath: modelFilePath
-      }
-    }));
+    const newModel = {
+      assetPath: modelFilePath
+    };
 
-    window.postMessage({
-      eventName: 'modifyGameObjectTypeInMainArea',
-      gameObjectType
-    });
+    if (gameObjectType) {
+      dispatch(fileDataSlice.actions.addModelToGameObjectType({
+        gameObjectType,
+        model: newModel
+      }));
+  
+      window.postMessage({
+        eventName: 'modifyGameObjectTypeInMainArea',
+        gameObjectType
+      });
+    } else {
+      const updatedModels = existingModels.concat([newModel]);
+
+      dispatch(fileDataSlice.actions.modifyGameObject({
+        scenefilePath: scenePath,
+        gameObjectIndices,
+        field: ['models'],
+        value: updatedModels
+      }));
+
+      window.postMessage({
+        eventName: 'modifyGameObjectInMainArea',
+        scenePath,
+        indices: gameObjectIndices,
+        field: ['models'],
+        value: updatedModels
+      });
+    }
+
     closeModal();
   };
 
