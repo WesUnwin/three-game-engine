@@ -79,7 +79,9 @@ const MainArea = ({ dirHandle }) => {
             setError(error);
         });
 
-        game.scene?.showGrid();
+        if (settings.showGrid) {
+            game.scene?.showGrid();
+        }
 
         const defaultCamera = game.renderer.getCamera();
         const orbitControls = new OrbitControls(defaultCamera, canvas);
@@ -318,6 +320,12 @@ const MainArea = ({ dirHandle }) => {
             window.removeEventListener('message', onMessage);
         };
     }, []);
+
+    useEffect(() => {
+        if (window.game?.scene) {
+            settings.showGrid ? window.game.scene.showGrid() : window.game.scene.hideGrid();
+        }
+    }, [settings.showGrid]);
 
     useEffect(() => {
         if (window.game?.scene) {

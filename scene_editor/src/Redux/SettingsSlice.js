@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const settingsSlice = createSlice({
     name: 'settings',
     initialState: {
+        showGrid: false,
         showColliders: false
     },
     reducers: {
