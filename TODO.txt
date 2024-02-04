@@ -1,0 +1,34 @@
+
+
+Scene Editor:
+- Preview a file, by selecting it in Project Files
+   - JSON Files
+   - GLTF/GLB Files
+   - Audio Files
+- Change game object type
+- AutoSave vs Manual Save
+- Scene Editing:
+   - background
+   - camera settings
+   - cameras attached to game objects + game object types
+   - sounds attached to game objects + game object types
+
+- finish light Editing
+   - Directional light (defining direction)
+- (critical) Main area: switching between scenes as different gameobjects/scenes are selected in sidebar
+
+README:
+- Mention scene editor
+- Mention examples
+
+github.io website:
+ - host scene editor
+ - live demo
+
+- rename game engine?
+  Possible names:
+  - Blitz
+  - PolyWhirl
+  - Reality3
+  - Basys
+  - Foundation
