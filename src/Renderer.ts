@@ -147,7 +147,9 @@ class Renderer {
 
         if (this.game.scene) {
             const threeJSScene = this.game.scene.threeJSScene
-            this.threeJSRenderer.render(threeJSScene, this.threeJSCamera);
+            if (threeJSScene) {
+                this.threeJSRenderer.render(threeJSScene, this.threeJSCamera);
+            }
         }
     }
 
@@ -214,11 +216,13 @@ class Renderer {
                 scene.advancePhysics();
             }
 
-            scene.updatePhysicsGraphics();
+            if (scene.threeJSScene) {
+                scene.updatePhysicsGraphics();
 
-            this._beforeRender(beforeRenderArgs);
-
-            this.threeJSRenderer.render(scene.threeJSScene, this.threeJSCamera);
+                this._beforeRender(beforeRenderArgs);
+    
+                this.threeJSRenderer.render(scene.threeJSScene, this.threeJSCamera);
+            }
         }
     }
 
