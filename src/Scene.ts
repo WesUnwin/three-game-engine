@@ -326,7 +326,7 @@ class Scene {
     }
 
     updatePhysicsGraphics() {
-        const physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
+        const physicsRenderingLines = this.threeJSScene?.getObjectByName('PhysicsRenderingLines');
         if (physicsRenderingLines) {
             const buffers = this.rapierWorld.debugRender();
             physicsRenderingLines.geometry.setAttribute('position', new THREE.BufferAttribute(buffers.vertices, 3));
