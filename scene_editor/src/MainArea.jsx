@@ -240,8 +240,22 @@ const MainArea = ({ dirHandle }) => {
             return null;
         }
     };
-    
-    useEffect(() => {
+
+    const onSelectItemChange = async () => {
+        const game = window.game;
+        const { type, filePath } = selectedItem;
+        if (['sceneJSON', 'gameObject'].includes(type)) {
+            if (game?.scene?.jsonAssetPath !== filePath) {
+                // We need to switch scenes
+                const gameJSONFile = store.getState().fileData.files.find(f => f.path === 'game.json');
+                const sceneName = Object.keys(gameJSONFile.data.scenes || {}).find(sceneName => gameJSONFile.data.scenes[sceneName] === filePath);
+                if (sceneName) {
+                    console.log(`MainArea: switching to scene: ${sceneName}`);
+                    await game.loadScene(sceneName);
+                }
+            }
+        }
+
         const transformControls = transformControlsRef.current;
         if (transformControls) {
             const selectedGameObject = getSelectedGameObject();
@@ -252,7 +266,13 @@ const MainArea = ({ dirHandle }) => {
                 transformControls.detach();
             }
         }
-    }, [selectedItem?.type, selectedItem?.params]);
+    };
+
+    useEffect(() => {
+        if (window.game && selectedItem.type) {
+            onSelectItemChange();
+        }
+    }, [selectedItem?.type, JSON.stringify(selectedItem?.params || {})]);
 
     const addGameObjectToMainArea = ({ scenePath, gameObject }) => {
         if (game?.scene?.jsonAssetPath === scenePath) {
