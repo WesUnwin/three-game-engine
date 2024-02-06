@@ -39,7 +39,9 @@ const CurrentModal = ({ dirHandle, setDirHandle }) => {
     }
 
     return (
-        <ModalClass {...currentModal.params} dirHandle={dirHandle} setDirHandle={setDirHandle} />
+        <div className="overlay">
+            <ModalClass {...currentModal.params} dirHandle={dirHandle} setDirHandle={setDirHandle} />
+        </div>
     );
 };
 
