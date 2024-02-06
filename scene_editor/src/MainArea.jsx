@@ -12,6 +12,7 @@ import selectedItemSlice from "./Redux/SelectedItemSlice.js";
 import GameObject from "../../dist/GameObject.js";
 import { debounce } from "./util/debounce.js";
 import settingsSlice, { getSettings } from "./Redux/SettingsSlice.js";
+import currentModalSlice from "./Redux/CurrentModalSlice.js";
 
 const modifyGameObjectTypeInMainArea = debounce(({ gameObjectType }) => {
     const gameJSONFile = store.getState().fileData.files.find(f => f.path === 'game.json');
@@ -251,7 +252,14 @@ const MainArea = ({ dirHandle }) => {
                 const sceneName = Object.keys(gameJSONFile.data.scenes || {}).find(sceneName => gameJSONFile.data.scenes[sceneName] === filePath);
                 if (sceneName) {
                     console.log(`MainArea: switching to scene: ${sceneName}`);
-                    await game.loadScene(sceneName);
+                    dispatch(currentModalSlice.actions.openModal({ type: 'LoadingModal', params: { text: `Loading scene: ${sceneName}...` }}));
+                    try {
+                        await game.loadScene(sceneName);
+                    } catch(error) {
+                        console.error('Error loading scene: ', error);
+                        setError(error);
+                    }
+                    dispatch(currentModalSlice.actions.closeModal());
                 }
             }
         }
