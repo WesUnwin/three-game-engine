@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 
 import Scene from './Scene';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import GLTFAsset from './assets/GLTFAsset';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
 import * as UIHelpers from './ui/UIHelpers';
-import { GameObjectJSON, GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
+import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
 import { UserInterfaceJSON } from './ui/UIHelpers';
 import Util from './Util';
 
@@ -87,7 +87,7 @@ class GameObject {
         this.reset();
     }
 
-    getScene() {
+    getScene(): Scene {
         let currentParent = this.parent;
         // go up the hierachy untill you hit something that is not a GameObject
         while(currentParent && currentParent instanceof GameObject) {
@@ -96,22 +96,18 @@ class GameObject {
         if (currentParent instanceof Scene) {
             return currentParent
         } else  {
-            return null;
+            throw new Error(`getScene(): unable to locate scene for game object`);
         }
     }
 
     getRapierWorld() {
         const scene = this.getScene();
-        return scene?.rapierWorld;
+        return scene.rapierWorld;
     }
 
     onGameObjectTypeChange = () => {
         this.reset();
-
-        const scene = this.getScene();
-        if (scene) {
-            this.load(); // asynchonous
-        }
+        this.load(); // asnychronous
     };
 
     // Resets/sets the state of this gameObject to the GameObjectOptions and it's type's options
@@ -208,12 +204,6 @@ class GameObject {
 
     async _load() {
         const scene = this.getScene();
-        if (!scene) {
-            throw new Error('GameObject: load() this GameObject must be attached to a scene (directly or through its ancestor GameObjects) to be loaded');
-        }
-        if (!scene?.game) {
-            throw new Error('GameObject: load(): the scene containing this GameObject must be loaded into a game object first');
-        }
 
         await this.loadLights();
         await this.loadUserInterfaces();
@@ -314,7 +304,7 @@ class GameObject {
             this.threeJSGroup.add(gameObject.threeJSGroup);
 
             const scene = this.getScene();
-            if (scene?.isActive()) {
+            if (scene.isActive()) {
                 gameObject.load(); // asynchronous
             }
         }
@@ -376,18 +366,19 @@ class GameObject {
     }
 
     destroy() {
-        if (this.parent) {
-            this.parent.removeGameObject(this);
-            this.parent = null;
-        }
+        this.parent.removeGameObject(this);
+        this.parent = null;
     }
 
-    afterPhysicsUpdate() {
+    syncWithRigidBody() {
         if (this.rapierRigidBody) {
             // TODO: set world position of threeJSGroup, not local
             this.threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
             this.threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
         }
+    }
+
+    afterPhysicsUpdate() {
         // Optional: override and handle this event
     }
 

@@ -11,15 +11,17 @@ class Scene {
     name: string;
     threeJSScene: THREE.Scene;
     gameObjects: GameObject[];
-    game: Game | null;
+    game: Game;
     active: boolean;
     jsonAssetPath: string; // (optional) assetPath to the a .json file containing scene json
     sceneJSONAsset: null | JSONAsset;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
 
-    constructor(jsonAssetPath?: string) {
+    constructor(game, jsonAssetPath?: string) {
+        this.game = game;
         this.jsonAssetPath = jsonAssetPath;
+
         this.sceneJSONAsset = null;
 
         this.name = 'unnamed-scene';
@@ -34,9 +36,7 @@ class Scene {
         return this.game.getGameObjectClass(type);
     }
 
-    async load(game) {
-        this.game = game;
-
+    async load() {
         if (this.jsonAssetPath) {
             this.sceneJSONAsset = await this.game.loadAsset(this.jsonAssetPath);
         }
@@ -97,7 +97,6 @@ class Scene {
 
         let gameObject = null;
 
-        let GameObjectClass = GameObject;
         if (gameObjectJSON.type) {
             const type = gameObjectJSON.type;
 
@@ -131,18 +130,16 @@ class Scene {
     advancePhysics() {
         this.rapierWorld.step();
         this.forEachGameObject(gameObject => {
+            gameObject.syncWithRigidBody();
             gameObject.afterPhysicsUpdate();
         });
     }
 
     isActive(): boolean {
-        return Boolean(this.game) && this.active;
+        return this.active;
     }
 
     addGameObject(gameObject) {
-        if (!this.game) {
-            throw new Error('Scene: cannot add additional GameObjects until scene is loaded, initial game objects should be created by passing sceneJSON into the Scene constructor.');
-        }
         if (!this.gameObjects.some(g => g === gameObject)) {
             gameObject.parent = this;
             this.gameObjects.push(gameObject);
@@ -298,10 +295,6 @@ class Scene {
     }
 
     showPhysics() {
-        if (!this.game) {
-            throw new Error('showPhysics() must be called after the scene is loaded');
-        }
-
         let physicsRenderingLines = this.threeJSScene.getObjectByName('PhysicsRenderingLines');
         if (!physicsRenderingLines) {
             let material = new THREE.LineBasicMaterial({

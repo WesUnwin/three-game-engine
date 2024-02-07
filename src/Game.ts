@@ -114,7 +114,6 @@ class Game {
             this.scene.forEachGameObject(gameObject => {
                 gameObject.beforeUnloaded();
             });
-            this.scene.game = null;
             this.scene.active = false;
             this.scene = null;
         }
@@ -124,9 +123,9 @@ class Game {
             throw new Error(`Game: no scene with name ${sceneName} defined in game.json`);
         }
 
-        const scene = new Scene(sceneJSONassetPath)
+        const scene = new Scene(this, sceneJSONassetPath);
         this.scene = scene;
-        await this.scene.load(this);
+        await this.scene.load();
 
         this.loadingScene = false;
 
