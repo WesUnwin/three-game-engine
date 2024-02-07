@@ -277,7 +277,7 @@ const MainArea = ({ dirHandle }) => {
     };
 
     useEffect(() => {
-        if (window.game && selectedItem.type) {
+        if (window.game && selectedItem?.type) {
             onSelectItemChange();
         }
     }, [selectedItem?.type, JSON.stringify(selectedItem?.params || {})]);
