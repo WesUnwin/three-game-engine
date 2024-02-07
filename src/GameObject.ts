@@ -251,8 +251,7 @@ class GameObject {
 
     async loadUserInterfaces() {
         const existingUI = this.threeJSGroup.children.filter(child => {
-            console.log('==> child: ', child)
-
+            // TODO fill in logic here to detect children that are UI related
         });
         existingUI.forEach(ui => ui.remove());
 
