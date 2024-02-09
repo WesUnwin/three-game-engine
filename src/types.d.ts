@@ -12,6 +12,7 @@ interface GameJSON {
 interface SceneJSON {
     background?: null;
     fog?: null | FogJSON;
+    lights?: LightData[];
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
 }

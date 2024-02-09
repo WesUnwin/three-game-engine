@@ -4,8 +4,9 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { FogJSON, GameObjectJSON } from './types';
+import { FogJSON, GameObjectJSON, LightData } from './types';
 import JSONAsset from './assets/JSONAsset';
+import { createLight } from './util/ThreeJSHelpers';
 
 class Scene {
     name: string;
@@ -17,6 +18,7 @@ class Scene {
     sceneJSONAsset: null | JSONAsset;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
+    lights: LightData[];
 
     constructor(game, jsonAssetPath?: string) {
         this.game = game;
@@ -26,6 +28,7 @@ class Scene {
 
         this.name = 'unnamed-scene';
 
+        this.lights = [];
         this.gameObjects = [];
         this.threeJSScene = null;
 
@@ -46,7 +49,9 @@ class Scene {
         this.threeJSScene.background = this.sceneJSONAsset?.data?.background || new THREE.Color('lightblue');
 
         this.setFog(this.sceneJSONAsset?.data?.fog || null);
-    
+
+        this.setLights(this.sceneJSONAsset?.data?.lights || []);
+
         await PhysicsHelpers.initRAPIER();
 
         this.initialGravity = {
@@ -85,6 +90,16 @@ class Scene {
         } else {
             throw new Error(`scene.setFog(): invalid value ${fog}`);
         }
+    }
+
+    setLights(lights: LightData[]) {
+        const existingLights = this.threeJSScene.children.filter(child => child instanceof THREE.Light);
+        existingLights.forEach(existingLight => this.threeJSScene.remove(existingLight));
+
+        lights.forEach((lightData: LightData) => {
+            const light = createLight(lightData);
+            this.threeJSScene.add(light);
+        });
     }
 
     _createGameObject(parent: Scene | GameObject, gameObjectJSON: GameObjectJSON, indices: number[]) {
