@@ -6,6 +6,8 @@ import PropertyList from './PropertyList.jsx';
 import Property from './Property.jsx';
 import ColorInput from './ColorInput.jsx';
 import NumberInput from './NumberInput.jsx';
+import Lights from './Lights.jsx';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 
 const fogDefaults = {
     color: 0x000000,
@@ -38,6 +40,30 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
     };
 
     const fog = sceneJSON.fog ? Object.assign({}, fogDefaults, sceneJSON.fog) : null;
+    const lights = sceneJSON.lights || [];
+
+    const onChangeLights = updatedLights => {
+        dispatch(fileDataSlice.actions.modifyFileData({
+            path: filePath,
+            field: ['lights'],
+            value: updatedLights
+        }));
+
+        window.postMessage({
+            eventName: 'updateSceneLightsInMainArea',
+            scenePath: filePath,
+            updatedLights
+        });
+    };
+
+    const onAddLight = () => {
+        const params = {
+            sceneName,
+            scenePath: filePath,
+            existingLights: lights
+        };
+        dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
+    };
 
     return (
         <PropertyList>
@@ -87,6 +113,12 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
                     ) : null}
                 </PropertyList>
             </Property>
+
+            <Lights
+                lights={lights}
+                onChange={onChangeLights}
+                onAdd={onAddLight}
+            />
         </PropertyList>
     );
 };

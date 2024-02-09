@@ -13,7 +13,7 @@ const lightTypes = [
   'SpotLight'
 ];
 
-const AddLightModal = ({ gameObjectType, scenePath, gameObjectIndices, existingLights }) => {
+const AddLightModal = ({ gameObjectType, sceneName, scenePath, gameObjectIndices, existingLights }) => {
     const dispatch = useDispatch();
 
     const [type, setType] = useState('AmbientLight');
@@ -30,6 +30,7 @@ const AddLightModal = ({ gameObjectType, scenePath, gameObjectIndices, existingL
         const newLight = { type };
 
         if (gameObjectType) {
+          // Add light to a game object type
           const updatedLights = (gameObjectTypeFile.data.lights || []).concat([newLight]);
 
           dispatch(fileDataSlice.actions.modifyFileData({
@@ -42,7 +43,8 @@ const AddLightModal = ({ gameObjectType, scenePath, gameObjectIndices, existingL
             eventName: 'modifyGameObjectTypeInMainArea',
             gameObjectType
           });
-        } else {
+        } else if (scenePath && gameObjectIndices) {
+          // Add light to a game object
           const updatedLights = existingLights.concat([newLight]);
 
           dispatch(fileDataSlice.actions.modifyGameObject({
@@ -59,10 +61,34 @@ const AddLightModal = ({ gameObjectType, scenePath, gameObjectIndices, existingL
             field: ['lights'],
             value: updatedLights
           });
+        } else if (scenePath) {
+          // Add light to scene
+          const updatedLights = existingLights.concat([newLight]);
+
+          dispatch(fileDataSlice.actions.modifyFileData({
+            path: scenePath,
+            field: ['lights'],
+            value: updatedLights
+          }));
+
+          window.postMessage({
+            eventName: 'updateSceneLightsInMainArea',
+            scenePath,
+            updatedLights
+          });
         }
 
         closeModal();
     };
+  
+    let title = 'Add Light';
+    if (gameObjectType) {
+      title = `Add light to GameObject Type: ${gameObjectType}`;
+    } else if (gameObjectIndices) {
+      title = `Add light to GameObject`;
+    } else if (scenePath) {
+      title = `Add Light to Scene: ${sceneName}`;
+    }
   
     return (
         <Modal

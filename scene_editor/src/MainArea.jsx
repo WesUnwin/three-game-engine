@@ -326,13 +326,20 @@ const MainArea = ({ dirHandle }) => {
         }
     };
 
+    const updateSceneLightsInMainArea = ({ scenePath, updatedLights }) => {
+        if (game?.scene?.jsonAssetPath === scenePath && game.scene.threeJSScene) {
+            game.scene.setLights(updatedLights);
+        }
+    };
+
     const onMessage = event => {
         const gameDataEvents = {
             addGameObjectToMainArea,
             modifyGameObjectInMainArea,
             deleteGameObjectInMainArea,
             modifyGameObjectTypeInMainArea,
-            modifyFogMainArea
+            modifyFogMainArea,
+            updateSceneLightsInMainArea
         };
         const eventHandler = gameDataEvents[event.data.eventName];
         if (eventHandler) {
