@@ -306,6 +306,8 @@ const MainArea = ({ dirHandle }) => {
                 gameObject.updateRigidBody(value);
             } else if (field.length == 1 && field[0] === 'models') {
                 gameObject.updateModels(value);
+            } else if (field.length == 1 && field[0] === 'sounds') {
+                gameObject.updateSounds(value);
             } else {
                 throw new Error(`No logic defined to update game object property: ${field}`);
             }

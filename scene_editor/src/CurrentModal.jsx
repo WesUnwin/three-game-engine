@@ -12,6 +12,7 @@ import AddColliderModal from './Modals/AddColliderModal.jsx';
 import DeleteGameObjectTypeModal from './Modals/DeleteGameObjectTypeModal.jsx';
 import SettingsModal from './Modals/SettingsModal/SettingsModal.jsx';
 import LoadingModal from './Modals/LoadingModal.jsx';
+import AddSoundModal from './Modals/AddSoundModal.jsx';
 
 const modalClasses = {
     CreateProjectModal,
@@ -24,7 +25,8 @@ const modalClasses = {
     AddColliderModal,
     DeleteGameObjectTypeModal,
     SettingsModal,
-    LoadingModal
+    LoadingModal,
+    AddSoundModal
 };
 
 const CurrentModal = ({ dirHandle, setDirHandle }) => {

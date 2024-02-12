@@ -13,6 +13,7 @@ import Lights from './Lights.jsx';
 import Physics from './Physics.jsx';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
+import Sounds from './GameObjectSounds.jsx';
 
 const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
     const dispatch = useDispatch();
@@ -97,6 +98,38 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
             rigidBody: gameObjectJSON.rigidBody
         };
         dispatch(currentModalSlice.actions.openModal({ type: 'AddColliderModal', params }));
+    };
+
+    const addSound = () => {
+        const params = {
+            scenePath: filePath,
+            gameObjectIndices: indices,
+            existingSounds: gameObjectJSON.sounds || []
+        };
+        dispatch(currentModalSlice.actions.openModal({
+            type: 'AddSoundModal',
+            params
+        }));
+    };
+
+    const removeSound = soundIndex => {
+        const updatedSounds = [...(gameObjectJSON.sounds || [])];
+        updatedSounds.splice(soundIndex, 1);
+
+        dispatch(fileDataSlice.actions.modifyGameObject({
+            scenefilePath: filePath,
+            gameObjectIndices: indices,
+            field: ['sounds'],
+            value: updatedSounds
+        }));
+
+        window.postMessage({
+            eventName: 'modifyGameObjectInMainArea',
+            scenePath: filePath,
+            indices,
+            field: ['sounds'],
+            value: updatedSounds
+        });
     };
 
     return (
@@ -204,6 +237,11 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
                         rigidBody={gameObjectJSON.rigidBody}
                         onChange={onChangePhysics}
                         addCollider={addCollider}
+                    />
+                    <Sounds
+                        sounds={gameObjectJSON.sounds || []}
+                        onChange={sounds => changeProperty(['sounds'], sounds)}
+                        onAdd={addSound}
                     />
                 </>
             )}
