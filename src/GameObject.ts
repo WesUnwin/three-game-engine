@@ -6,10 +6,11 @@ import Scene from './Scene';
 import GLTFAsset from './assets/GLTFAsset';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
 import * as UIHelpers from './ui/UIHelpers';
-import { GameObjectOptions, LightData, ModelData, RigidBodyData } from './types';
+import { GameObjectOptions, LightData, ModelData, RigidBodyData, GameObjectSoundData } from './types';
 import { UserInterfaceJSON } from './ui/UIHelpers';
 import Util from './Util';
-import { createLight, setObject3DProps } from './util/ThreeJSHelpers';
+import { createLight, createPositionalAudio, setObject3DProps } from './util/ThreeJSHelpers';
+import SoundAsset from './assets/SoundAsset';
 
 class GameObject {
     id: string;
@@ -21,6 +22,7 @@ class GameObject {
     gameObjects: GameObject[];
     models: ModelData[];
     lights: LightData[];
+    sounds: GameObjectSoundData[];
     loaded: boolean;
     loadPromise: Promise<void>;
     rigidBodyData: RigidBodyData | null;
@@ -90,6 +92,8 @@ class GameObject {
         this.models = allOptions.models || [];
         this.lights = allOptions.lights || [];
 
+        this.sounds = allOptions.sounds || [];
+
         this.loaded = false;
 
         if (!this.threeJSGroup) {
@@ -146,6 +150,11 @@ class GameObject {
         await this.loadModels();
     }
 
+    async updateSounds(updatedSounds: GameObjectSoundData[]) {
+        this.sounds = updatedSounds;
+        await this.loadSounds();
+    }
+
     // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
@@ -155,12 +164,11 @@ class GameObject {
     }
 
     async _load() {
-        const scene = this.getScene();
-
         await this.loadLights();
         await this.loadUserInterfaces();
         await this.loadRigidBody();
         await this.loadModels();
+        await this.loadSounds();
 
         for(let i = 0; i<this.gameObjects.length; i++) {
             const childGameObject = this.gameObjects[i];
@@ -216,6 +224,28 @@ class GameObject {
                 object3D.userData.model = true;
                 this.threeJSGroup.add(object3D);
             });
+        }
+    }
+
+    async loadSounds() {
+        // Remove existing sound related objects
+        const soundObjects = this.threeJSGroup.children.filter(child => {
+            return child instanceof THREE.PositionalAudio
+        });
+        soundObjects.forEach(m => this.threeJSGroup.remove(m));
+
+        const scene = this.getScene();
+        for (let i = 0; i<this.sounds.length; i++) {
+            const soundData = this.sounds[i];
+            const asset = await scene.game.loadAsset(soundData.assetPath);
+            if (!(asset instanceof SoundAsset)) {
+                throw new Error(`GameObject: asset found at ${soundData.assetPath} in AssetStore should be a SoundAsset`);
+            }
+            const audioBuffer = asset.getData() as AudioBuffer;
+            const audioListener = scene.game.renderer.getCameraAudioListener();
+            const name = soundData.name || `sound_${i}`
+            const positionalAudio = createPositionalAudio(soundData, audioBuffer, audioListener, name);
+            this.threeJSGroup.add(positionalAudio);
         }
     }
 
@@ -460,6 +490,15 @@ class GameObject {
 
     enableCcd(enabled: boolean) {
         this.rapierRigidBody.enableCcd(enabled);
+    }
+
+    playSound(name: string, delay: number = 0) {
+        const positionalAudio = this.threeJSGroup.children.find(c => c.name === name && c instanceof THREE.PositionalAudio);
+        if (positionalAudio) {
+            positionalAudio.play(delay);
+        } else {
+            throw new Error(`gameObject.playSound(): game object ${this.name || this.id} has no sound with name: ${name}`);
+        }
     }
 }
 

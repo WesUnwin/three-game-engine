@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { LightData } from "../types";
+import { GameObjectSoundData, LightData } from "../types";
 
 export const setObject3DProps = (object3D, props) => {
     for (const prop in props) {
@@ -73,4 +73,45 @@ export const createLight = (lightData: LightData) => {
     setObject3DProps(light, objectProps);
 
     return light;
+}
+
+export const createPositionalAudio = (soundData: GameObjectSoundData, audioBuffer: AudioBuffer, audioListener: THREE.AudioListener, name: string) => {
+    const positionalAudio = new THREE.PositionalAudio(audioListener);
+    positionalAudio.name = name;
+    positionalAudio.setBuffer(audioBuffer);
+
+    if (typeof soundData.loop === 'boolean') {
+        positionalAudio.setLoop(soundData.loop);
+    }
+    if (typeof soundData.autoplay === 'boolean') {
+        positionalAudio.autoplay = soundData.autoplay;
+    }
+    if (typeof soundData.playbackRate === 'number') {
+        positionalAudio.setPlaybackRate(soundData.playbackRate);
+    }
+    if (typeof soundData.detune === 'number') {
+        positionalAudio.setDetune(soundData.detune);
+    }
+
+    if (typeof soundData.refDistance === 'number') {
+        positionalAudio.setRefDistance(soundData.refDistance);
+    }
+    if (typeof soundData.rolloffFactor === 'number') {
+        positionalAudio.setRefDistance(soundData.rolloffFactor);
+    }
+    if (typeof soundData.distanceModel === 'string') {
+        positionalAudio.setRefDistance(soundData.distanceModel);
+    }
+    if (typeof soundData.maxDistance === 'number') {
+        positionalAudio.setRefDistance(soundData.maxDistance);
+    }
+    if (typeof soundData.directionalCone === 'object') {
+        positionalAudio.setDirectionalCone(
+            soundData.directionalCone.coneInnerAngle,
+            soundData.directionalCone.coneOuterAngle,
+            soundData.directionalCone.coneOuterGain
+        );
+    }
+
+    return positionalAudio;
 }

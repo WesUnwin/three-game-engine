@@ -181,6 +181,10 @@ class Renderer {
         }
     }
 
+    getCameraAudioListener() {
+        return this.threeJSCameraAudioListener;
+    }
+
     play() {
         // Must use setAnimationLoop() (and not window.requestAnimationFrame()) for VR projects
         this.threeJSRenderer.setAnimationLoop(this._render.bind(this));

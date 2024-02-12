@@ -75,6 +75,7 @@ interface GameObjectOptions {
     userData?: Object;
     models?: ModelData[];
     lights?: LightData[];
+    sounds?: GameObjectSoundData[];
     position?: Vector3Data;
     scale?: Vector3Data;
     rotation?: EulerValues;
@@ -85,6 +86,27 @@ interface GameObjectOptions {
 interface ModelData {
     assetPath: string;
     position?: Vector3Data;
+}
+
+// Sounds associated with GameObjects & GameObject Types
+// which ultimately leverage THREE.PositionalAudio
+interface GameObjectSoundData {
+    assetPath: string;
+    name: string;
+    loop?: boolean;
+    autoplay?: boolean;
+    volume?: number;
+    playbackRate?: number;
+    detune?: number;
+    refDistance?: number;
+    rolloffFactor?: number;
+    distanceModel?: string;
+    maxDistance?: number;
+    directionalCone?: {
+        coneInnerAngle: number;
+        coneOuterAngle: number;
+        coneOuterGain: number;
+    };
 }
 
 interface RigidBodyData {
