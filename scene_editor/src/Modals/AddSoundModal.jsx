@@ -71,7 +71,7 @@ const AddSoundModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle
             eventName: 'modifyGameObjectTypeInMainArea',
             gameObjectType
         });
-    } else {
+    } else if (gameObjectIndices) {
       dispatch(fileDataSlice.actions.modifyGameObject({
         scenefilePath: scenePath,
         gameObjectIndices,
@@ -86,6 +86,20 @@ const AddSoundModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle
         field: ['sounds'],
         value: updatedSounds
       });
+    } else if (scenePath) {
+      dispatch(fileDataSlice.actions.modifyFileData({
+        path: scenePath,
+        field: ['sounds'],
+        value: updatedSounds
+      }));
+
+      window.postMessage({
+        eventName: 'updateSceneSoundsInMainArea',
+        scenePath,
+        updatedSounds
+      });
+    } else {
+      throw new Error('AddSoundModal invalid args');
     }
 
     closeModal();

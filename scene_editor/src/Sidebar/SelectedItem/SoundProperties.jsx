@@ -11,8 +11,7 @@ const commonProperties = [
   { name: 'loop', type: 'boolean', default: false },
   { name: 'autoplay', type: 'boolean', default: false },
   { name: 'volume', type: 'number', default: 1.0 },
-  { name: 'playbackRate', type: 'number', default: 1 },
-  { name: 'detune', type: 'number', default: 0 }
+  { name: 'playbackRate', type: 'number', default: 1 }
 ];
 
 const positionalAudioProperties = [
@@ -22,10 +21,21 @@ const positionalAudioProperties = [
   { name: 'maxDistance', type: 'number', default: 10000 }
 ];
 
-const GameObjectSoundProperties = ({ sound, onChange, onDelete }) => {
+const GameObjectSoundProperties = ({ audioType, sound, onChange, onDelete }) => {
   const onChangeProperty = (field, value) => {
     onChange({ ...sound, [field]: value });
   };
+
+  const audioTypeProperties = {
+    Audio: commonProperties,
+    PositionalAudio: commonProperties.concat(positionalAudioProperties)
+  }
+
+  const properties = audioTypeProperties[audioType];
+
+  if (!properties) {
+    throw new Error(`SoundProperties: invalid audioType: ${audioType}`);
+  }
 
   return (
     <TreeView
@@ -36,7 +46,7 @@ const GameObjectSoundProperties = ({ sound, onChange, onDelete }) => {
       ]}
     >
         <PropertyList>
-            {commonProperties.concat(positionalAudioProperties).map(prop => {
+            {properties.map(prop => {
                 const value = prop.name in sound ? sound[prop.name] : prop.default
 
                 return (

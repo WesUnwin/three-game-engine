@@ -8,6 +8,7 @@ import ColorInput from './ColorInput.jsx';
 import NumberInput from './NumberInput.jsx';
 import Lights from './Lights.jsx';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
+import SceneSounds from './SceneSounds.jsx';
 
 const fogDefaults = {
     color: 0x000000,
@@ -65,6 +66,31 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
         dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
     };
 
+    const onChangeSounds = updatedSounds => {
+        dispatch(fileDataSlice.actions.modifyFileData({
+            path: filePath,
+            field: ['sounds'],
+            value: updatedSounds
+        }));
+
+        window.postMessage({
+            eventName: 'updateSceneSoundsInMainArea',
+            scenePath: filePath,
+            updatedSounds
+        });
+    };
+
+    const addSound = () => {
+        const params = {
+            scenePath: filePath,
+            existingSounds: sceneJSON.sounds || []
+        };
+        dispatch(currentModalSlice.actions.openModal({
+            type: 'AddSoundModal',
+            params
+        }));
+    };
+
     return (
         <PropertyList>
             <PropertyGroup label="Name:">
@@ -118,6 +144,12 @@ const SceneProperties = ({ sceneName, filePath, sceneJSON }) => {
                 lights={lights}
                 onChange={onChangeLights}
                 onAdd={onAddLight}
+            />
+
+            <SceneSounds
+                sounds={sceneJSON.sounds || []}
+                onChange={onChangeSounds}
+                onAdd={addSound}
             />
         </PropertyList>
     );

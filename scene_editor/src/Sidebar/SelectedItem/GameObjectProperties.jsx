@@ -112,26 +112,6 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
         }));
     };
 
-    const removeSound = soundIndex => {
-        const updatedSounds = [...(gameObjectJSON.sounds || [])];
-        updatedSounds.splice(soundIndex, 1);
-
-        dispatch(fileDataSlice.actions.modifyGameObject({
-            scenefilePath: filePath,
-            gameObjectIndices: indices,
-            field: ['sounds'],
-            value: updatedSounds
-        }));
-
-        window.postMessage({
-            eventName: 'modifyGameObjectInMainArea',
-            scenePath: filePath,
-            indices,
-            field: ['sounds'],
-            value: updatedSounds
-        });
-    };
-
     return (
         <>
             <PropertyList>

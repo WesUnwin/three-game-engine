@@ -3,7 +3,7 @@ import TreeView from '../Hierarchy/TreeView.jsx';
 import { FaPlus } from 'react-icons/fa';
 import SoundProperties from './SoundProperties.jsx';
 
-const GameObjectSounds = ({ sounds, onChange, onAdd }) => {
+const SceneSounds = ({ sounds, onChange, onAdd }) => {
     const onChangeSound = (soundIndex, updatedLight) => {
         const updatedSounds = [...sounds];
         updatedSounds[soundIndex] = updatedLight;
@@ -28,7 +28,7 @@ const GameObjectSounds = ({ sounds, onChange, onAdd }) => {
             {sounds.map((sound, index) => (
                 <SoundProperties
                     key={index}
-                    audioType="PositionalAudio"
+                    audioType="Audio"
                     sound={sound}
                     onChange={updatedSound => onChangeSound(index, updatedSound)}
                     onDelete={() => removeSound(index)}
@@ -41,4 +41,4 @@ const GameObjectSounds = ({ sounds, onChange, onAdd }) => {
     );
 };
 
-export default GameObjectSounds;
+export default SceneSounds;

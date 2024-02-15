@@ -334,6 +334,12 @@ const MainArea = ({ dirHandle }) => {
         }
     };
 
+    const updateSceneSoundsInMainArea = ({ scenePath, updatedSounds }) => {
+        if (game?.scene?.jsonAssetPath === scenePath && game.scene.threeJSScene) {
+            game.scene.loadSounds(updatedSounds); // asynchronous
+        }
+    };
+
     const onMessage = event => {
         const gameDataEvents = {
             addGameObjectToMainArea,
@@ -341,7 +347,8 @@ const MainArea = ({ dirHandle }) => {
             deleteGameObjectInMainArea,
             modifyGameObjectTypeInMainArea,
             modifyFogMainArea,
-            updateSceneLightsInMainArea
+            updateSceneLightsInMainArea,
+            updateSceneSoundsInMainArea
         };
         const eventHandler = gameDataEvents[event.data.eventName];
         if (eventHandler) {
