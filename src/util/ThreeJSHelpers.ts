@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GameObjectSoundData, LightData } from "../types";
+import { GameObjectSoundData, LightData, SceneSoundJSON } from "../types";
 
 export const setObject3DProps = (object3D, props) => {
     for (const prop in props) {
@@ -75,6 +75,30 @@ export const createLight = (lightData: LightData) => {
     return light;
 }
 
+export const createAudio = (soundData: SceneSoundJSON, audioBuffer: AudioBuffer, audioListener: THREE.AudioListener, name: string) => {
+    const audio = new THREE.Audio(audioListener);
+    audio.name = name;
+    audio.setBuffer(audioBuffer);
+
+    if (typeof soundData.loop === 'boolean') {
+        audio.setLoop(soundData.loop);
+    }
+    if (typeof soundData.autoplay === 'boolean') {
+        audio.autoplay = soundData.autoplay;
+    }
+    if (typeof soundData.volume === 'number') {
+        audio.setVolume(soundData.volume);
+    }
+    if (typeof soundData.playbackRate === 'number') {
+        audio.setPlaybackRate(soundData.playbackRate);
+    }
+
+    // NOTE: detune can not be set until until the sound is played as that
+    // is when positionalAudio.source is established (not during setBuffer)
+
+    return audio;
+}
+
 export const createPositionalAudio = (soundData: GameObjectSoundData, audioBuffer: AudioBuffer, audioListener: THREE.AudioListener, name: string) => {
     const positionalAudio = new THREE.PositionalAudio(audioListener);
     positionalAudio.name = name;
@@ -86,24 +110,27 @@ export const createPositionalAudio = (soundData: GameObjectSoundData, audioBuffe
     if (typeof soundData.autoplay === 'boolean') {
         positionalAudio.autoplay = soundData.autoplay;
     }
+    if (typeof soundData.volume === 'number') {
+        positionalAudio.setVolume(soundData.volume);
+    }
     if (typeof soundData.playbackRate === 'number') {
         positionalAudio.setPlaybackRate(soundData.playbackRate);
     }
-    if (typeof soundData.detune === 'number') {
-        positionalAudio.setDetune(soundData.detune);
-    }
+
+    // NOTE: detune can not be set until until the sound is played as that
+    // is when positionalAudio.source is established (not during setBuffer)
 
     if (typeof soundData.refDistance === 'number') {
         positionalAudio.setRefDistance(soundData.refDistance);
     }
     if (typeof soundData.rolloffFactor === 'number') {
-        positionalAudio.setRefDistance(soundData.rolloffFactor);
+        positionalAudio.setRolloffFactor(soundData.rolloffFactor);
     }
     if (typeof soundData.distanceModel === 'string') {
-        positionalAudio.setRefDistance(soundData.distanceModel);
+        positionalAudio.setDistanceModel(soundData.distanceModel);
     }
     if (typeof soundData.maxDistance === 'number') {
-        positionalAudio.setRefDistance(soundData.maxDistance);
+        positionalAudio.setMaxDistance (soundData.maxDistance);
     }
     if (typeof soundData.directionalCone === 'object') {
         positionalAudio.setDirectionalCone(

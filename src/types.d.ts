@@ -13,6 +13,7 @@ interface SceneJSON {
     background?: null;
     fog?: null | FogJSON;
     lights?: LightData[];
+    sounds?: SceneSoundJSON[];
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
 }
@@ -21,6 +22,15 @@ interface FogJSON {
     color: string;
     near: number;
     far: number;
+}
+
+interface SceneSoundJSON {
+    assetPath: string;
+    name: string;
+    loop?: boolean;
+    autoplay?: boolean;
+    volume?: number;
+    playbackRate?: number;
 }
 
 interface GameObjectJSON extends GameObjectOptions {
@@ -97,7 +107,6 @@ interface GameObjectSoundData {
     autoplay?: boolean;
     volume?: number;
     playbackRate?: number;
-    detune?: number;
     refDistance?: number;
     rolloffFactor?: number;
     distanceModel?: string;

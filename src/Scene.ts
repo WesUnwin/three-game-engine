@@ -4,9 +4,10 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { FogJSON, GameObjectJSON, LightData } from './types';
+import { FogJSON, GameObjectJSON, LightData, SceneSoundJSON } from './types';
 import JSONAsset from './assets/JSONAsset';
-import { createLight } from './util/ThreeJSHelpers';
+import { createAudio, createLight } from './util/ThreeJSHelpers';
+import SoundAsset from './assets/SoundAsset';
 
 class Scene {
     name: string;
@@ -51,6 +52,8 @@ class Scene {
         this.setFog(this.sceneJSONAsset?.data?.fog || null);
 
         this.setLights(this.sceneJSONAsset?.data?.lights || []);
+
+        await this.loadSounds(this.sceneJSONAsset?.data?.sounds || []);
 
         await PhysicsHelpers.initRAPIER();
 
@@ -100,6 +103,39 @@ class Scene {
             const light = createLight(lightData);
             this.threeJSScene.add(light);
         });
+    }
+
+    async loadSounds(sounds: SceneSoundJSON[]) {
+        const existingSounds = this.threeJSScene.children.filter(child => child instanceof THREE.Audio);
+        existingSounds.forEach(sound => this.threeJSScene.remove(sound));
+
+        for (let i = 0; i < sounds.length; i++) {
+            const soundData = sounds[i];
+            const asset = await this.game.loadAsset(soundData.assetPath);
+            if (!(asset instanceof SoundAsset)) {
+                throw new Error(`Scene: asset found at ${soundData.assetPath} in AssetStore should be a SoundAsset`);
+            }
+            const audioBuffer = asset.getData() as AudioBuffer;
+            const audioListener = this.game.renderer.getCameraAudioListener();
+            const name = soundData.name || `sound_${i}`;
+            const audio = createAudio(soundData, audioBuffer, audioListener, name);
+            this.threeJSScene.add(audio);
+        }
+    }
+
+    playSound(soundName: string, delayInSec: number = 0, detune: number | null = null) {
+        const audio = this.threeJSScene.children.find(c => c.name === soundName && c instanceof THREE.Audio);
+        if (audio) {
+            if (audio.isPlaying) {
+                audio.pause(); // elsewise nothing will happen
+            }
+            audio.play(delayInSec);
+            if (detune !== null) {
+                audio.setDetune(detune); // set this here, rather than when creating the audio as setDetune can't be called till playback (where audio.source is set)
+            }
+        } else {
+            throw new Error(`scene.playSound(): scene: ${this.name} has no sound with name: ${soundName}`);
+        }
     }
 
     _createGameObject(parent: Scene | GameObject, gameObjectJSON: GameObjectJSON, indices: number[]) {

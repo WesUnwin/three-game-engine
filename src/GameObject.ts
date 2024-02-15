@@ -243,7 +243,7 @@ class GameObject {
             }
             const audioBuffer = asset.getData() as AudioBuffer;
             const audioListener = scene.game.renderer.getCameraAudioListener();
-            const name = soundData.name || `sound_${i}`
+            const name = soundData.name || `sound_${i}`;
             const positionalAudio = createPositionalAudio(soundData, audioBuffer, audioListener, name);
             this.threeJSGroup.add(positionalAudio);
         }
@@ -492,10 +492,16 @@ class GameObject {
         this.rapierRigidBody.enableCcd(enabled);
     }
 
-    playSound(name: string, delay: number = 0) {
+    playSound(name: string, delayInSec: number = 0, detune: number | null = null) {
         const positionalAudio = this.threeJSGroup.children.find(c => c.name === name && c instanceof THREE.PositionalAudio);
         if (positionalAudio) {
-            positionalAudio.play(delay);
+            if (positionalAudio.isPlaying) {
+                positionalAudio.pause(); // elsewise nothing will happen
+            }
+            positionalAudio.play(delayInSec);
+            if (detune !== null) {
+                positionalAudio.setDetune(detune); // set this here, rather than when creating the positionalAudio as setDetune can't be called till playback (where audio.source is set)
+            }
         } else {
             throw new Error(`gameObject.playSound(): game object ${this.name || this.id} has no sound with name: ${name}`);
         }
