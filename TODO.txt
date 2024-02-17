@@ -1,23 +1,25 @@
-
-
-Scene Editor:
-- Preview a file, by selecting it in Project Files
+SCENE EDITOR:
+- Preview a file, in Project Files
    - JSON Files
    - GLTF/GLB Files
    - Audio Files
-- Change game object type
-- AutoSave vs Manual Save
-- Scene Editing:
+
+- Manual Save (setting to disable auto saving, and click a button to save files)
+
+- Editing scenes:
    - background
    - camera settings
-   - cameras attached to game objects + game object types
-   - sounds attached to game objects + game object types
+   - Scene level components:
+      - cameras
 
-- finish light Editing
-   - Directional light (defining direction)
-- (critical) Main area: switching between scenes as different gameobjects/scenes are selected in sidebar
+- Editing GameObjects:
+   - add/edit cameras
+   - Change game object type
 
-README:
+- Editing GameObjectTypes:
+   - add/edit cameras
+
+README: 
 - Mention scene editor
 - Mention examples
 
