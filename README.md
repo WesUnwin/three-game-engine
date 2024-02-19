@@ -1,7 +1,7 @@
 [![npm version](https://badge.fury.io/js/three-game-engine.svg)](https://badge.fury.io/js/three-game-engine)
 
 # UNDER CONSTRUCTION
-This library has just recently been started, but aims to provide a fully usable 1.0.0 release by sometime in January or February 2024.
+This library has just recently been started, but aims for a beta 0.9.0 release by sometime in January or February 2024.
 
 # three-game-engine
 Simple, lightweight game engine using:
