@@ -1,11 +1,17 @@
 import React from 'react';
+import PageLayout from './PageLayout.jsx';
+import AppRoutes from './AppRoutes.jsx';
+import { HashRouter } from 'react-router-dom';
+
 import './styles.css';
 
 const App = () => {
     return (
-        <div>
-            React based website
-        </div>
+        <HashRouter>
+            <PageLayout>
+                <AppRoutes />
+            </PageLayout>
+        </HashRouter>
     );
 };
 
