@@ -14,7 +14,9 @@
     "test": "jest",
     "prepublish": "npm run test && npm run build",
     "examples": "npm run build && node ./examples/examplesServer.js",
-    "scene_editor": "npm run build && node ./scene_editor/sceneEditorServer.js"
+    "scene_editor": "npm run build && node ./scene_editor/sceneEditorServer.js",
+    "web_site": "node ./web_site/devServer.js",
+    "build_web_site": "npx webpack --config ./web_site/prodWebpackConfig.js"
   },
   "repository": {
     "type": "git",
@@ -67,6 +69,7 @@
     "style-loader": "^3.3.3",
     "typescript": "^5.2.2",
     "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1"
   }
 }
