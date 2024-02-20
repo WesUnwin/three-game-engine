@@ -4,7 +4,9 @@ SCENE EDITOR:
    - GLTF/GLB Files
    - Audio Files
 
-- Manual Save (setting to disable auto saving, and click a button to save files)
+- Editor Settings:
+  - Manual Save (setting to disable auto saving, and click a button to save files)
+  - Show/hide lighting
 
 - Editing scenes:
    - background
@@ -24,13 +26,18 @@ README:
 - Mention examples
 
 github.io website:
- - host scene editor
  - live demo
+ - docs
+ - host scene editor
 
 - rename game engine?
   Possible names:
-  - Blitz
+  - Blitz (package name blitz taken, but could use blitz-js or blitz-3d)
   - PolyWhirl
   - Reality3
   - Basys
   - Foundation
+  - Mortar
+  - Paragon
+  - Vortex
+  - Fusion Engine
