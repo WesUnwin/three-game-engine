@@ -8,25 +8,23 @@ const TableOfContents = ({ toc, selectedEntry, setSelectedEntry }) => {
     };
 
     return (
-      <li onClick={onClick}>
-        <span className={selectedEntry?.key === entry.key ? 'selected' : ''}>
+      <div className="toc-entry" onClick={onClick}>
+        <div className={`toc-entry-label ${selectedEntry?.key === entry.key ? 'selected' : ''}`}>
           {entry.label}
-        </span>
+        </div>
 
         {entry.children ? (
-          <ul>
+          <div className="toc-entry-children">
             {entry.children.map(childEntry => renderEntry(childEntry))}
-          </ul>
+          </div>
         ) : null}
-      </li>
+      </div>
     );
   };
 
   return (
-    <div className='table-of-contents'>
-      <ul>
-        {toc.map(entry => renderEntry(entry))}
-      </ul>
+    <div className='toc'>
+      {toc.map(entry => renderEntry(entry))}
     </div>
   );
 };

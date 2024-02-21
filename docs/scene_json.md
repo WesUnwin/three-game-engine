@@ -1,4 +1,4 @@
-# Scene JSON files
+## Scene JSON files
 Scenes are defined by a JSON file, that controls the layout of a hierarchy of game objects.
 
 ```

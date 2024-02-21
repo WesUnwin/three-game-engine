@@ -1,29 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import TableOfContents from './TableOfContents.jsx';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const docsFolder = `https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/`;
 
 const toc = [
   { label: 'Getting started', key: 'getting_started' },
-  { label: 'Assets', key: 'assets' },
-  { label: 'Input', key: 'input' },
-  { label: 'game.json', key: 'game_json', path: 'game_json.md' },
+  { label: 'The Scene Editor', key: 'scene_editor' },
+  { label: 'Project Files', key: 'project_files' },
+  { label: 'Input Manager', key: 'input', children: [
+      { label: 'Mouse Handler', key: 'mouse_handler' },
+      { label: 'Keyboard Handler', key: 'keyboard_handler' },
+      { label: 'Gamepad Handler', key: 'gamepad_handler' },
+    ]
+  },
+  { label: 'Game API', key: 'game_api' },
+  { label: 'game.json', key: 'game_json' },
   { label: 'Scenes', key: 'scenes', children: [
-      { label: 'About scenes', key: 'about_scenes' },
+      { label: 'Scene API', key: 'scene_api' },
       { label: 'Scene JSON files', key: 'scene_json' },
+      { label: 'Scene Fog', key: 'scene_fog' },
       { label: 'Scene sounds', key: 'scene_sounds' }
     ]
   },
   { label: 'GameObjects', key: 'game_objects', children: [
-      { label: 'About GameObjects', key: 'about_game_objects'},
+      { label: 'GameObject Scripts', key: 'game_object_scripts'},
+      { label: 'GameObject API', key: 'game_object_api'},
+      { label: 'GameObject Models', key: 'game_object_models'},
+      { label: 'GameObject Lights', key: 'game_object_lights'},
+      { label: 'GameObject Physics', key: 'game_object_physics'},
+      { label: 'GameObject Sounds', key: 'game_object_sounds'},
+      { label: 'GameObject User Interfaces', key: 'game_object_user_interfaces'},
       { label: 'GameObject JSON', key: 'game_object_json'},
       { label: 'GameObject Types', key: 'game_object_types', children: [
           { label: 'GameObject Type JSON Files', key: 'gameobject_type_json' }
         ]
       }
     ]
-  }  
+  },
+  { label: 'VR/AR Support', key: 'vr_ar_support' },
 ];
 
 const Docs = () => {
@@ -36,16 +52,17 @@ const Docs = () => {
     setError(null)
     if (!selectedEntry) {
       setFileData(null);
-    } else if (selectedEntry.path) {
+    } else if (selectedEntry.key) {
       setLoading(true);
       setFileData(null);
-      window.fetch(`${docsFolder}${selectedEntry.path}`)
+      const mdFileURL = `${docsFolder}${selectedEntry.key}.md`
+      window.fetch(mdFileURL)
             .then(response => response.text())
             .then(text => setFileData(text))
             .catch(error => setError(error))
             .then(() => setLoading(false));
     } else {
-      setError(new Error('No MD file for topic: ' + selectedEntry.key));
+      setError(new Error('No .md file for topic: ' + selectedEntry.key));
       setFileData(null);
     }
   }, [selectedEntry?.key]);
@@ -61,11 +78,15 @@ const Docs = () => {
       </div>
       <div className="main-area">
         {error ? (
-          <p>ERROR: {error.message}</p>
+          <p className="error-message">ERROR: {error.message}</p>
         ) : loading ? (
           <p>Loading...</p>
         ) : fileData ? (
-          <Markdown>{fileData}</Markdown>
+          <div className="markdown">
+            <Markdown remarkPlugins={[remarkGfm]}>
+              {fileData}
+            </Markdown>
+          </div>
         ) : null}
       </div>
     </div>

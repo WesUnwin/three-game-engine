@@ -28,18 +28,6 @@ This file controls game-level settings, and points to a series of scenes each de
 }
 ```
 
-## Project files
-A game consists of a folder, pointed to by a base URL (the first argument to the Game object contructor).
-All other URLs to various json files and other assets are assumed to be relative to the base URL.
-The base URL might be an HTTP, HTTPS or even a file:// URL (useful for building cordova and/or 
-electron apps which refer to application files storred locally).
-
-```
-  const game = new Game('http://localhost:8000/myprojectfolder');
-```
-
-- Based on the above base URL your game.json would be fetched from http://localhost:8000/myprojectfolder/game.json
-
 ### RendererOptions
 
 | Property                     | Description                                                                                       |
