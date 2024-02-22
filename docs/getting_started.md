@@ -2,7 +2,7 @@
 
 TThe best way to way to create a new project is by using the <a href="https://wesunwin.github.io/three-game-engine/#/editor">Scene Editor</a> and clicking "New Project" at the top of the right-hand sidebar. This will boilerplate a new project folder.
 
-See the documentation on running the [scene editor](https://wesunwin.github.io/three-game-engine/#/docs/editor`).
+See the documentation on running the [scene editor](https://wesunwin.github.io/three-game-engine/#/docs/editor).
 
 Its recommended to the use git or git with large file storage (if needed) to version control and backup your project.
 
