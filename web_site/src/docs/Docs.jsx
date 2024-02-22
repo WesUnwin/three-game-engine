@@ -62,7 +62,7 @@ const findEntry = (tocChildren, entryKey) => {
 const Docs = () => {
   const routeParams = useParams();
   const navigate = useNavigate();
-  console.log('==> routeParams: ', routeParams)
+
   const [selectedEntry, setSelectedEntry] = useState(routeParams.key ? findEntry(toc, routeParams.key) : toc[0]);
   const [loading, setLoading] = useState(false);
   const [fileData, setFileData] = useState(null);
@@ -74,6 +74,16 @@ const Docs = () => {
       navigate(`/docs/${selectedEntry.key}`)
     }
   }, [selectedEntry?.key])
+
+  // Handle routeParams.key changing
+  useEffect(() => {
+    if (routeParams?.key && (routeParams.key !== selectedEntry?.key)) {
+      const entry = findEntry(toc, routeParams.key)
+      if (entry) {
+        setSelectedEntry(entry)
+      }
+    }
+  }, [routeParams?.key])
 
   useEffect(() => {
     setError(null)
