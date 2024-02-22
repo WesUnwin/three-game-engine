@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import TableOfContents from './TableOfContents.jsx';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const docsFolder = `https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/`;
 
@@ -42,11 +43,37 @@ const toc = [
   { label: 'VR/AR Support', key: 'vr_ar_support' },
 ];
 
+const findEntry = (tocChildren, entryKey) => {
+  const entry = tocChildren.find(e => e.key === entryKey);
+  if (entry) {
+    return entry;
+  } else {
+    for (let c = 0; c < tocChildren.length; c++) {
+      const childEntry = tocChildren[c];
+      const target = findEntry(childEntry.children || [], entryKey);
+      if (target) {
+        return target;
+      }
+    }
+    return null;
+  }
+}
+
 const Docs = () => {
-  const [selectedEntry, setSelectedEntry] = useState(toc[0]);
+  const routeParams = useParams();
+  const navigate = useNavigate();
+  console.log('==> routeParams: ', routeParams)
+  const [selectedEntry, setSelectedEntry] = useState(routeParams.key ? findEntry(toc, routeParams.key) : toc[0]);
   const [loading, setLoading] = useState(false);
   const [fileData, setFileData] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (selectedEntry && (routeParams.key !== selectedEntry?.key)) {
+      // Update url to match selected entry
+      navigate(`/docs/${selectedEntry.key}`)
+    }
+  }, [selectedEntry?.key])
 
   useEffect(() => {
     setError(null)
