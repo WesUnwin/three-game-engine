@@ -94,7 +94,13 @@ const Docs = () => {
       setFileData(null);
       const mdFileURL = `${docsFolder}${selectedEntry.key}.md`
       window.fetch(mdFileURL)
-            .then(response => response.text())
+            .then(response => {
+              if (response.ok) {
+                return response.text()
+              } else {
+                throw new Error(`Error fetching doc: ${mdFileURL}, HTTP status: ${response.status} ${response.statusText}`)
+              }
+            })
             .then(text => setFileData(text))
             .catch(error => setError(error))
             .then(() => setLoading(false));
@@ -104,6 +110,8 @@ const Docs = () => {
     }
   }, [selectedEntry?.key]);
 
+  console.log('==> error: ', error?.message)
+  console.log('==> fileData: ', fileData);
   return (
     <div className="docs">
       <div className="sidebar">
@@ -115,9 +123,14 @@ const Docs = () => {
       </div>
       <div className="main-area">
         {error ? (
-          <p className="error-message">ERROR: {error.message}</p>
+          <div class="alert alert-danger" role="alert">
+            Error loading page: {error.message}
+          </div>
         ) : loading ? (
-          <p>Loading...</p>
+          <div class="text-center">
+            <div class="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
+            </div>
+          </div>
         ) : fileData ? (
           <div className="markdown">
             <Markdown remarkPlugins={[remarkGfm]}>
