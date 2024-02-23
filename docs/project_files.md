@@ -13,6 +13,12 @@ const game = new Game('file://your_project_folder/') // or use an http/https URL
 // the base URL should point to your project folder (containing your game.json and other files)
 ```
 
+### game.json File
+Your project folder must contain a game.json file located in the root directory.
+This file points to all your scene files, which in turn reference game object types, and other asset files.
+
+See docs on [game.json](https://wesunwin.github.io/three-game-engine/#/docs/game_json)
+
 ### Asset Paths
 GameObjects and Scenes can reference various asset files such as GLTFs (models and animation data), sound effects, etc. These files are automatically loaded into the game's asset store (game.assetStore)
 as needed when a scene is loaded (game.loadScene()).

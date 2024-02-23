@@ -1,2 +1,0 @@
-## Input Handling
-The game object has an InputManager (game.inputManager) that is responsible for using various input handling classes to aggregate input from the user's mouse, keyboard, and game pads.
