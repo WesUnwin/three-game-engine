@@ -22,8 +22,8 @@ class MouseHandler {
         }
 
         const onMouseMove = (event: MouseEvent) => {
-            // movementX the delta value of how much the point moved horizontally in pixels, negative is to the left, positive amounts are towards the right
-            // movementY the delta value of how much the point moved vertically in pixels, negative is upwards, positive is downwards.
+            // movementX the delta value of how much the pointer moved horizontally in pixels, negative is to the left, positive amounts are towards the right
+            // movementY the delta value of how much the pointer moved vertically in pixels, negative is upwards, positive is downwards.
             this.pointerX += event.movementX;
             this.pointerY += event.movementY;
         };
