@@ -9,7 +9,7 @@ Returns true if the given keyboard key is currently pressed.
 
   // Returns true if the given key is down.
   // Eg. game.inputManager.keyboardHandler.isKeyDown("ArrowUp")
-``
+```
 
 ### isShiftDown()
 Returns true if any shift key is currently down.

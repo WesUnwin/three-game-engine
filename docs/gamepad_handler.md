@@ -32,6 +32,8 @@ You can pass a button index (a number from 0 to 15), or instead you can pass a s
 
 ```
   isButtonPressed(button: number | string): boolean
+
+  // Eg. game.inputManager.gamepadHandler.isButtonPressed("A")
 ```
 
 ### readButtonValue()
@@ -41,6 +43,8 @@ You can pass a button index (a number from 0 to 15), or instead you can pass a s
 
 ```
   readButtonValue(button: number | string): number
+
+  // Eg. game.inputManager.gamepadHandler.readButtonValue("UpperLeftTrigger")
 ```
 
 ### readAxisValue()
