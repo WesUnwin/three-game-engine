@@ -20,7 +20,7 @@ class KeyboardHandler {
         return this.pressedKeys[key] || false;
     }
 
-    isShiftDown() {
+    isShiftDown(): boolean {
         return this.shiftIsDown;
     }
 }
