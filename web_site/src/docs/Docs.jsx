@@ -10,7 +10,7 @@ const toc = [
   { label: 'Getting started', key: 'getting_started' },
   { label: 'The Scene Editor', key: 'scene_editor' },
   { label: 'Project Files', key: 'project_files' },
-  { label: 'Input Manager', key: 'input', children: [
+  { label: 'Input Manager', key: 'input_manager', children: [
       { label: 'Mouse Handler', key: 'mouse_handler' },
       { label: 'Keyboard Handler', key: 'keyboard_handler' },
       { label: 'Gamepad Handler', key: 'gamepad_handler' },
