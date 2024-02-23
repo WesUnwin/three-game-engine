@@ -1,3 +1,6 @@
+
+const buttonNames = ['A','B','X','Y','UpperLeftTrigger','UpperRightTrigger','LowerLeftTrigger','LowerRightTrigger','Back','Start','LeftStick','RightStick','Up','Down','Left','Right'];
+
 class GamepadHandler {
     gamepads: (Gamepad | null)[]; // can be null if disconnected during the session
     apiSupported: boolean;
@@ -61,6 +64,65 @@ class GamepadHandler {
         }
     }
 
+    getButtonIndex(button: number | string): number {
+        let buttonIndex;
+        if (typeof button === 'number') {
+            if (button < 0 || button > 15) {
+                throw new Error('getButtonIndex() button index must be an integer between 0 and 15, received: ' + button);
+            }
+        } else if (typeof button === 'string') {
+            buttonIndex = buttonNames.indexOf(button);
+            if (buttonIndex === -1) {
+                throw new Error(`getButtonIndex() invalid button name: ${button}, valid button names are: ${buttonNames}`);
+            }
+        } else {
+            throw new Error(`getButtonIndex: argument must be a number or string, received: ${button}`);
+        }
+        return buttonIndex;
+    }
+
+    getButton(button: number | string): GamepadButton | null {
+        const buttonIndex = this.getButtonIndex(button);
+        this.gamepads.forEach(gamePad => {
+            if (gamePad) {
+                const button = gamePad.buttons[buttonIndex];
+                if (button) {
+                    return button.pressed;
+                }
+            }
+        });
+        return null;
+    }
+
+    isButtonPressed(button: number | string): boolean {
+        const b = this.getButton(button);
+        if (b) {
+            return b.pressed;
+        } else {
+            return false;
+        }
+    }
+
+    // Useful for trigger buttons that vary from 0 to 1.0 (fully pressed), and all values between.
+    readButtonValue(button: number | string): number {
+        const b = this.getButton(button);
+        if (b) {
+            return b.value;
+        } else {
+            return 0;
+        }
+    }
+
+    readAxisValue(axisIndex: number): number {
+        for (const gamepad of this.gamepads) {
+            if (gamepad) {
+                const axis = gamepad.axes[axisIndex];
+                return axis;
+            }
+        }
+        return 0;
+    }
+
     readVerticalAxis(): number {
         const amounts = [];
         for (const gamepad of this.gamepads) {
@@ -101,7 +163,7 @@ class GamepadHandler {
                 if (rightButton) {
                     amounts.push(rightButton.value);
                 }
-                
+
                 const horizontalAxes = [gamepad.axes[0]];
                 horizontalAxes.forEach(axis => {
                     if (typeof axis != 'undefined') {
@@ -114,7 +176,6 @@ class GamepadHandler {
         // Sum all values producing a net axis movement, ignore close to neutral values
         return amounts.filter(amt => Math.abs(amt) > 0.01).reduce((amt, sum) => amt + sum, 0.0);
     }
-
 
     print() {
         console.log(`Gamepad count: ${this.gamepads.length}`);
