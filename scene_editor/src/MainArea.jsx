@@ -308,6 +308,8 @@ const MainArea = ({ dirHandle }) => {
                 gameObject.updateModels(value);
             } else if (field.length == 1 && field[0] === 'sounds') {
                 gameObject.updateSounds(value);
+            } else if (field.length == 1 && field[0] === 'name') {
+                gameObject.setName(value);
             } else {
                 throw new Error(`No logic defined to update game object property: ${field}`);
             }

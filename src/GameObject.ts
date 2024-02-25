@@ -130,6 +130,10 @@ class GameObject {
         this.parent.addGameObject(this);
     }
 
+    setName(name: string) {
+        this.threeJSGroup.name = name;
+    }
+
     async updateLights(updatedLights: LightData[]) {
         this.lights = updatedLights;
         await this.loadLights();
