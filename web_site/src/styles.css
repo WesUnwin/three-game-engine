@@ -50,6 +50,37 @@ body {
     flex-grow: 1;
 }
 
+.custom-hero-banner {
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+
+    background-image: url(https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/hero_banner_background.png);
+    opacity: 90%;
+    object-fit: contain;
+}
+
+.custom-hero-banner-text {
+    position: relative;
+    z-index: 1;
+
+    max-width: 50%;
+    font-size: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: rgb(255, 255, 255);
+    text-shadow: rgb(0, 0, 0) 2px 2px 20px;
+}
+
+.feature-card-img {
+    margin: 5px;
+    height: 100px;
+    object-fit: contain;
+}
+
 .docs {
     display: flex;
     flex-direction: row;
