@@ -52,6 +52,9 @@ const AddColliderModal = ({ gameObjectType, scenePath, gameObjectIndices, rigidB
           });
         } else {
           const updatedRigidBody = JSON.parse(JSON.stringify(rigidBody));
+          if (!Array.isArray(updatedRigidBody.colliders)) {
+            updatedRigidBody.colliders = [];
+          }
           updatedRigidBody.colliders.push(newCollider);
 
           dispatch(fileDataSlice.actions.modifyGameObject({
