@@ -110,8 +110,6 @@ const Docs = () => {
     }
   }, [selectedEntry?.key]);
 
-  console.log('==> error: ', error?.message)
-  console.log('==> fileData: ', fileData);
   return (
     <div className="docs">
       <div className="sidebar">
