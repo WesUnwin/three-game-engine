@@ -17,6 +17,7 @@
     "scene_editor": "npm run build && node ./scene_editor/sceneEditorServer.js",
     "web_site": "node ./web_site/devServer.js",
     "build_web_site": "npx webpack --config ./web_site/prodWebpackConfig.js",
+    "build_examples": "npx webpack --config ./examples/prodWebpackConfig.js",
     "build_scene_editor": "npx webpack --config ./scene_editor/prodWebpackConfig.js"
   },
   "repository": {
