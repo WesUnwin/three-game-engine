@@ -46,7 +46,7 @@ body {
     text-align: center;
 }
 
-.editor-iframe {
+.examples-iframe, .editor-iframe {
     flex-grow: 1;
 }
 
