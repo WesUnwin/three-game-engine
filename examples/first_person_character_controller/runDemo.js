@@ -1,7 +1,9 @@
 import { Game, KinematicCharacterController } from "../../dist/index";
 
 const runDemo = async () => {
-    const game = new Game('http://localhost:8080/examples/first_person_character_controller', {
+    const baseURL = window.location.host === 'localhost' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/WesUnwin/three-game-engine/main'
+    
+    const game = new Game(`${baseURL}/examples/first_person_character_controller`, {
       rendererOptions: {
         setupFullScreenCanvas: true
       },

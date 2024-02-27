@@ -1,5 +1,7 @@
 import runFirstPersonCharacterController from "./first_person_character_controller/runDemo";
 
+document.body.innerHTML = '';
+
 const demos = [
     { name: 'First Person CharacterController', run: runFirstPersonCharacterController },
 ];
