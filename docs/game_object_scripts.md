@@ -1,5 +1,5 @@
 # GameObject Classes
-A GameObject type can also be (optionally) associated with a GameObject sub-class.
+A GameObject type can also be (optionally) associated with a javascript class (that extends the GameObject superclass).
 
 Use game.registerGameObjectClasses() to link your javascript GameObject class to a type of
 GameObject:
