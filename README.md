@@ -1,21 +1,22 @@
-[![npm version](https://badge.fury.io/js/three-game-engine.svg)](https://badge.fury.io/js/three-game-engine)
-
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
+![NPM Version](https://img.shields.io/npm/v/three-game-engine?style=for-the-badge)
 [![MIT License][license-shield]][license-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Forks][forks-shield]][forks-url]
+[![Contributors][contributors-shield]][contributors-url]
 
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/WesUnwin/three-game-engine.svg?style=for-the-badge
+[contributors-url]: https://github.com/WesUnwin/three-game-engine/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/WesUnwin/three-game-engine.svg?style=for-the-badge
+[forks-url]: https://github.com/WesUnwin/three-game-engine/network/members
+[stars-shield]: https://img.shields.io/github/stars/WesUnwin/three-game-engine.svg?style=for-the-badge
+[stars-url]: https://github.com/WesUnwin/three-game-engine/stargazers
+[license-shield]: https://img.shields.io/github/license/WesUnwin/three-game-engine.svg?style=for-the-badge
+[license-url]: https://github.com/WesUnwin/three-game-engine/blob/main/LICENSE.txt
 
 <br />
 <div align="center">
@@ -31,11 +32,23 @@
     <a href="https://wesunwin.github.io/three-game-engine/#/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://wesunwin.github.io/three-game-engine/#/examples">View Demo</a>
+    <a href="https://wesunwin.github.io/three-game-engine/">
+      Website
+    </a>
+    |
+    <a href="https://wesunwin.github.io/three-game-engine/#/docs">
+      Docs
+    </a>
+    |
+    <a href="https://wesunwin.github.io/three-game-engine/#/examples">Examples</a>
+    |
+    <a href="https://wesunwin.github.io/three-game-engine/#/editor">
+      Scene Editor
+    </a>
     |
     <a href="https://github.com/WesUnwin/three-game-engine/issues">Report Bug</a>
     |
-    <a href="https://github.com/WesUnwin/three-game-engine/issues">Request Feature</a>
+    <a href="https://github.com/WesUnwin/three-game-engine/issues">Request a Feature</a>
   </p>
 </div>
 
@@ -161,14 +174,3 @@ Project Link: [https://github.com/WesUnwin/three-game-engine](https://github.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/WesUnwin/three-game-engine.svg?style=for-the-badge
-[contributors-url]: https://github.com/WesUnwin/three-game-engine/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/WesUnwin/three-game-engine.svg?style=for-the-badge
-[forks-url]: https://github.com/WesUnwin/three-game-engine/network/members
-[stars-shield]: https://img.shields.io/github/stars/WesUnwin/three-game-engine.svg?style=for-the-badge
-[stars-url]: https://github.com/WesUnwin/three-game-engine/stargazers
-[license-shield]: https://img.shields.io/github/license/WesUnwin/three-game-engine.svg?style=for-the-badge
-[license-url]: https://github.com/WesUnwin/three-game-engine/blob/main/LICENSE.txt
