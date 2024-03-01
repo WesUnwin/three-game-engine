@@ -30,18 +30,14 @@
   <p align="center">
     The ThreeJS game engine, featuring the Rapier physics engine.
     <br />
-    <a href="https://wesunwin.github.io/three-game-engine/#/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://wesunwin.github.io/three-game-engine/"><strong>Website »</strong></a>
     <br />
     <br />
-    <a href="https://wesunwin.github.io/three-game-engine/">
-      Website
-    </a>
-    |
     <a href="https://wesunwin.github.io/three-game-engine/#/docs">
       Docs
     </a>
     |
-    <a href="https://wesunwin.github.io/three-game-engine/#/examples">Examples</a>
+    <a href="https://wesunwin.github.io/three-game-engine/#/examples">Demo</a>
     |
     <a href="https://wesunwin.github.io/three-game-engine/#/editor">
       Scene Editor
