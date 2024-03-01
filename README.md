@@ -6,6 +6,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Forks][forks-shield]][forks-url]
 [![Contributors][contributors-shield]][contributors-url]
+![NPM Downloads](https://img.shields.io/npm/dm/three-game-engine?style=for-the-badge)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
