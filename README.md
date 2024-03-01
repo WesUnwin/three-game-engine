@@ -56,11 +56,12 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#why-use-this-engine">Why use this engine?</a></li>
+        <li><a href="#the-vision">The Vision</a></li>
       </ul>
     </li>
-    <li><a href="#architecture">Architecture</a></li>
     <li><a href="#scene-editor">Scene Editor</a></li>
+    <li><a href="#architecture">Architecture</a></li>
     <li><a href="#documentation">Documentation</a></li>
     <li><a href="#desktop-and-mobile-apps">Desktop and Mobile Apps</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -72,18 +73,7 @@
 
 ## About The Project
 
-The vision:
-* To provide a web-first game engine, for developers that love javascript/typescript (but with support for building desktop and mobile apps)
-* to offer a 100% free engine that can be used by anyone to build personal or comercial apps/games.
-* maintain source code that is highly readable, and extendable
-* to offer VR support
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-### Built With
-
-This library simply ties together several well known, capable javascript libraries resulting in a powerful yet simple game engine. Dependencies are minimal and fully open-source.
+This library simply ties together several well known, very capable javascript libraries resulting in a powerful yet simple game engine. These dependencies are minimal and fully open-source.
 
 * [Three.js](https://github.com/mrdoob/three) - a 3D WebGL-based Graphics Engine
 * [Rapier](https://github.com/dimforge/rapier.js) - a 3D Physics Engine
@@ -91,14 +81,38 @@ This library simply ties together several well known, capable javascript librari
 
 ![Screenshot](docs/images/three-game-engine.png)
 
+Although a web-first game engine, you can very easily package and distribute apps/games using this as desktop apps or mobile using electron, cordova or other libraries (examples of how to do this are included in the examples/ folder).
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Architecture
-This game engine allows you to manage a Scene of GameObjects.
-Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
+### Why Use this Engine?
 
-![Screenshot](docs/images/three-game-engine-architecture.png)
+This engine is open source, light weight, very readable (seriously check out the source code :) ), it's totally free and allows you to use tools and techniques that web developers are familiar with like javascript/typescript/webpack/json files/etc. Furthermore its very actively maintained and gaining momentum. It's great for rapid prototyping, and developers familiar with three.js and web tools will transition quickly into this quickly.
+
+*Why not just use Three.js?*
+- ThreeJS is designed to be a graphics engine, its stops short of providing all the things games need:
+  - Asset management
+  - Input aggregation and abstraction
+  - User interfaces
+  - Physics
+  - Other utilities (eg. Character Controllers, A.I. Path Finding, etc.)
+
+Compared to the Three.js scene editor:
+- This allows you to compose and manage a game with multiple scenes
+- Allows you to generalize GameObjects into types (prefabs)
+- Externalizes and allows for re-use of assets like gltfs, textures, sounds, etc.
+- Allows you to control the physics characteristics of game engines.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+### The Vision
+
+* To provide a web-first game engine, for developers that love javascript/typescript (but with support for building desktop and mobile apps)
+* to offer a 100% free engine that can be used by anyone to build personal or comercial apps/games.
+* maintain source code that is highly readable, and extendable
+* to offer VR support
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -122,6 +136,15 @@ OR
 Use the online scene editor [here](https://wesunwin.github.io/three-game-engine/#/editor)
 
 ![Scene Editor](https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/scene_editor.png)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Architecture
+This game engine allows you to manage a Scene of GameObjects.
+Each GameObject controls a Group in the ThreeJS scene graph, and can optionally be associated with a Rapier RigidBody with colliders.
+
+![Screenshot](docs/images/three-game-engine-architecture.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
