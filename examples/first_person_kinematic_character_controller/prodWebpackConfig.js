@@ -1,13 +1,16 @@
+// to use this run:
+// npx webpack --config .\prodWebpackConfig.js
+
 const path = require('path');
 
 module.exports = {
   mode: 'production',
   entry: {
-      index: './examples/index.js'
+      index: './index.js'
   },
   output: {
-    filename: 'examples-app.js',
-    path: path.resolve(__dirname, '../docs/')
+    filename: 'first-person-kinematic-character-controller-example.js',
+    path: path.resolve(__dirname, '../../docs/examples')
   },
   module: {
       rules: [

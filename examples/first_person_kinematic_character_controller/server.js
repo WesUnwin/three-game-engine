@@ -1,6 +1,9 @@
+// to run:
+// node ./server.js
+
 const Webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
-const webpackConfig = require('./examplesWebpackConfig.js');
+const webpackConfig = require('./webpackConfig.js');
 
 const compiler = Webpack(webpackConfig);
 const devServerOptions = { ...webpackConfig.devServer, open: true };
