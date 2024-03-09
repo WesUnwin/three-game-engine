@@ -6,7 +6,7 @@ const baseURL = window.location.host === 'localhost' ? 'http://localhost:8080' :
 // definining your game, its scenes, settings, etc.
 const game = new Game(`${baseURL}/examples/first_person_kinematic_character_controller`, {
   rendererOptions: {
-    setupFullScreenCanvas: true
+    setupFullScreenCanvas: true // automatically create an HTML Canvas element, and stretch it to the size of the viewport
   },
   inputOptions: {
     mouseOptions: {
@@ -16,7 +16,8 @@ const game = new Game(`${baseURL}/examples/first_person_kinematic_character_cont
 });
 
 // We use the KinematicCharacterController class exported by three-game-engine by extending it.
-// KinematicCharacterController extends CharacterController which in turn extends the GameObject superclass.
+// GameObject classes must always extend either the GameObject class directly or some sub-class of it such as KinematicCharacterController.
+// Inheritance chain: ExampleCharacter => KinematicCharacterController => CharacterController => GameObject
 class ExampleCharacter extends KinematicCharacterController {
     constructor(parent, options) {
         super(parent,
@@ -37,17 +38,17 @@ class ExampleCharacter extends KinematicCharacterController {
         )
     }
 
+    // Called once when the game object (and all its assets) have been loaded into a scene
     afterLoaded() {
       super.afterLoaded() // so that KinematicCharacterController can still do its things
 
-      const scene = this.getScene();
-      const game = scene.game;     
+      const scene = this.getScene(); // gets the three-game-engine Scene object that parents this game object  
     
       // Make the threeJS camera a child of the player game object.
       // (each game object's threeJS objects are contained in a threejs group: gameObject.threeJSGroup)
       // The camera now sees things from the ExampleCharacters perspective, creating a first-person perspective.
       const player = scene.getGameObjectWithName('player');
-      const cam = game.renderer.getCamera();
+      const cam = scene.game.renderer.getCamera();
       player.threeJSGroup.add(cam);
 
       cam.position.set(0, 0.4, 0); // move the camera up 0.4 meters so its at eye level (the origin is in the center of the characters body)
@@ -56,6 +57,13 @@ class ExampleCharacter extends KinematicCharacterController {
     }
 }
 
-game.registerGameObjectClasses({ ExampleCharacter }); // This class will control all game objects of type: "ExampleCharacter"
+// KinematicCharacterController overrides beforeRender() to read input from the keyboard/mouse/game pads, and applies
+// movement to the game object accordingly.
 
-game.play();
+// Attach the ExampleCharacter javascript class to all game objects of type: "ExampleCharacter".
+// This allows us to add scripts to game objects.
+game.registerGameObjectClasses({ ExampleCharacter }); 
+
+// Starts the game rendering loop, the initial scene indicated by "initialScene" in your game.json file will be loaded.
+// You could later switch to other scenes using game.loadScene("sceneName").
+game.play(); 

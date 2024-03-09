@@ -9,17 +9,7 @@ The example creates a GameObject extending KinematicCharacterController imported
 
   class ExampleCharacter extends KinematicCharacterController {
     constructor(parent, options) {
-      super(parent,
-        { // GameObjectOptions
-          ...options
-        }, 
-        { // CharacterControllerOptions
-           ... see docs for options...
-        }, 
-        { // KinematicCharacterControllerOptions
-          ... see docs for options...
-        }
-      )
+      ...
     }
   }
 ```
