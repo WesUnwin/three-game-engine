@@ -1,11 +1,16 @@
 ## Getting started
-The best way to way to create a new project is by using the <a href="https://wesunwin.github.io/three-game-engine/#/editor">Scene Editor</a> and clicking "New Project" at the top of the right-hand sidebar. This will boilerplate a new project folder.
+The best way to way to create a new project is by using the scene editor to boilerplate a new project.
+The scene editor is not required, but makes it easy to configure your game, and create the various .json files defining scenes, game objects. etc.
 
+## The Scene Editor (Recommended)
 See the documentation on running the [scene editor](https://wesunwin.github.io/three-game-engine/#/docs/scene_editor).
+You can run the scene editor locally, or use the <a href="https://wesunwin.github.io/three-game-engine/#/editor">Online Scene Editor</a>: 
 
 Its recommended to the use git or git with large file storage (if needed) to version control and backup your project.
 
-## Manually Creating a New Project
+![Scene Editor](https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/scene_editor.png)
+
+## Manually Creating a New Project (Without the Scene Editor)
 Alternatively can choose not to use the scene editor, and manually set up a web app and directly use the three-game-engine npm package.
 
 ```
