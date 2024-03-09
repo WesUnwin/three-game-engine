@@ -54,6 +54,7 @@
     "@babel/preset-typescript": "^7.23.2",
     "@codemirror/lang-javascript": "^6.2.2",
     "@reduxjs/toolkit": "^1.9.7",
+    "@uiw/codemirror-theme-vscode": "^4.21.24",
     "@uiw/react-codemirror": "^4.21.24",
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.3",
