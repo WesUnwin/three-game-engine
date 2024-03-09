@@ -1,7 +1,9 @@
-import { Game, KinematicCharacterController } from "../../dist/index";
+import { Game, KinematicCharacterController } from "../../dist/index"; // to directly reference the lastest, local code (npm run build), OR import from "three-game-engine"
 
 const baseURL = window.location.host === 'localhost' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/WesUnwin/three-game-engine/main'
 
+// Create a game object pointing to the project folder, which must contain a game.json file
+// definining your game, its scenes, settings, etc.
 const game = new Game(`${baseURL}/examples/first_person_kinematic_character_controller`, {
   rendererOptions: {
     setupFullScreenCanvas: true
@@ -13,6 +15,8 @@ const game = new Game(`${baseURL}/examples/first_person_kinematic_character_cont
   }
 });
 
+// We use the KinematicCharacterController class exported by three-game-engine by extending it.
+// KinematicCharacterController extends CharacterController which in turn extends the GameObject superclass.
 class ExampleCharacter extends KinematicCharacterController {
     constructor(parent, options) {
         super(parent,
@@ -34,30 +38,24 @@ class ExampleCharacter extends KinematicCharacterController {
     }
 
     afterLoaded() {
-      super.afterLoaded();
+      super.afterLoaded() // so that KinematicCharacterController can still do its things
 
       const scene = this.getScene();
-      const game = scene.game;
+      const game = scene.game;     
     
+      // Make the threeJS camera a child of the player game object.
+      // (each game object's threeJS objects are contained in a threejs group: gameObject.threeJSGroup)
+      // The camera now sees things from the ExampleCharacters perspective, creating a first-person perspective.
       const player = scene.getGameObjectWithName('player');
-
-      game.renderer.setCameraPosition(-4, 5, 10);
-      game.renderer.makeCameraLookAt(0,0,0);
-    
       const cam = game.renderer.getCamera();
       player.threeJSGroup.add(cam);
 
-      cam.position.set(0, 0.4, 0);
-      cam.rotation.set(0, 0, 0);
+      cam.position.set(0, 0.4, 0); // move the camera up 0.4 meters so its at eye level (the origin is in the center of the characters body)
 
-      scene.showPhysics();
+      scene.showPhysics(); // Renders the outline of all physics colliders
     }
 }
 
-game.registerGameObjectClasses({ ExampleCharacter });
+game.registerGameObjectClasses({ ExampleCharacter }); // This class will control all game objects of type: "ExampleCharacter"
 
 game.play();
-
-window.game = game;
-
-export default runDemo
