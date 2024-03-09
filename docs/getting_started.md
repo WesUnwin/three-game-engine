@@ -26,7 +26,9 @@ You typically use this library by importing classes from the three-game-engine, 
 ```
 import { Game } from "three-game-engine";
 
-const baseURL = "https://your_project_folder" // can also use file:// to refer to a folder of local files, which would be useful for electron or cordova apps.
+// The base URL points to your project folder, and is used to load assets, scene JSON files. etc.
+// You can alternatively use a file:// URL to refer to local files (useful for electron and cordova apps.)
+const baseURL = "https://your_project_folder" 
 
 // Create a game object pointing to the project folder, which must contain a game.json file
 const game = new Game(baseURL, {
