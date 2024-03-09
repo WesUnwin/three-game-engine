@@ -100,6 +100,70 @@ body {
     margin: 0 auto;
 }
 
+.examples {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.examples-sidebar {
+    border-right: 1px solid lightslategray;
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.examples-sidebar__example {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.examples-sidebar__example-label {
+    text-align: center;
+    font-size: small;
+}
+
+.examples-sidebar__example.active .examples-sidebar__example-label {
+    font-weight: 600;
+}
+
+.examples-sidebar__example img {
+    object-fit: cover;
+    height: 180px;
+    margin: 10px auto;
+    max-width: 300px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.examples-sidebar__example.active img {
+    box-shadow: rgb(80 115 63) 0px 3px 8px;
+}
+
+.current-example {
+    text-align: center;
+    flex-grow: 5;
+}
+
+.current-example-iframe {
+    height: 55vh;
+    width: 50vw;
+}
+
+.current-example-footer {
+    text-align: left;
+    width: 50%;
+    margin: 5px auto;
+}
+
+.current-example-code {
+    margin: 1em;
+    text-align: left;
+    font-size: small;
+}
+
 .markdown pre {
     padding: 10px;
     background-color: rgba(230, 230, 230, 0.699);

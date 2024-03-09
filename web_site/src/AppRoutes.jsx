@@ -6,7 +6,7 @@ import {
 import About from './about/About.jsx';
 import Docs from "./docs/Docs.jsx";
 import Editor from './Editor.jsx';
-import Examples from './Examples.jsx';
+import Examples from './examples/Examples.jsx';
 
 const AppRoutes = () => {
   return (
