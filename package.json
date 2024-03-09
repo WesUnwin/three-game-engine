@@ -52,6 +52,7 @@
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.2",
+    "@codemirror/lang-javascript": "^6.2.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@uiw/react-codemirror": "^4.21.24",
     "babel-jest": "^29.7.0",
