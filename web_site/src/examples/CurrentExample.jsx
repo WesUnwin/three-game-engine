@@ -63,8 +63,8 @@ const CurrentExample = ({ currentExample }) => {
         }
 
         <div className="current-example-run-locally-instructions">
-          <h5>Want to run this example locally?</h5>
-          <p>You can run this example locally, allowing you to play around with the source code:</p>
+          <h5 style={{ textAlign: 'center' }}>Want to run this example locally?</h5>
+          <p style={{ textAlign: 'center' }}>You can run this example locally, allowing you to play around with the source code:</p>
           <ul>
             <li>Clone this repo (git clone git@github.com:WesUnwin/three-game-engine.git).</li>
             <li>Run "npm install" to install all dependencies.</li>

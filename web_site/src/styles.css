@@ -165,10 +165,6 @@ body {
     font-size: small;
 }
 
-.current-example-run-locally-instructions h5, p {
-    text-align: center;
-}
-
 .current-example-code {
     margin: 1em;
     text-align: left;
