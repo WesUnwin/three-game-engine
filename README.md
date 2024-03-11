@@ -88,7 +88,7 @@ Although a web-first game engine, you can very easily package and distribute app
 
 ### Why Use this Engine?
 
-This engine is open source, light weight, very readable (seriously check out the source code :) ), it's totally free and allows you to use tools and techniques that web developers are familiar with like javascript/typescript/webpack/json files/etc. Furthermore its very actively maintained and gaining momentum. It's great for rapid prototyping, and developers familiar with three.js and web tools will transition quickly into this quickly.
+This engine is open source, light weight, very readable (seriously check out the source code :) ), it's totally free and allows you to use tools and techniques that web developers are familiar with like javascript/typescript/webpack/json files/etc. Furthermore its very actively maintained and gaining momentum. It's great for rapid prototyping, and developers familiar with three.js and web tools will transition into this quickly.
 
 *Why not just use Three.js?*
 - ThreeJS is designed to be a graphics engine, its stops short of providing all the things games need:
