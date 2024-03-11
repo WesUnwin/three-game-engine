@@ -61,6 +61,18 @@ const CurrentExample = ({ currentExample }) => {
             />
           </div>
         }
+
+        <div className="current-example-run-locally-instructions">
+          <h5>Want to run this example locally?</h5>
+          <p>You can run this example locally, allowing you to play around with the source code:</p>
+          <ul>
+            <li>Clone this repo (git clone git@github.com:WesUnwin/three-game-engine.git).</li>
+            <li>Run "npm install" to install all dependencies.</li>
+            <li>Navigate to this examples folder: "cd examples/{currentExample.name}"</li>
+            <li>Run "node server.js"</li>
+            <li>A browser tab will automatically be opened (url: localhost:8080).</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

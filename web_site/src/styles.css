@@ -158,6 +158,17 @@ body {
     margin: 5px auto;
 }
 
+.current-example-run-locally-instructions {
+    text-align: left;
+    width: 50%;
+    margin: 2em auto; 
+    font-size: small;
+}
+
+.current-example-run-locally-instructions h5, p {
+    text-align: center;
+}
+
 .current-example-code {
     margin: 1em;
     text-align: left;
