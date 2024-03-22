@@ -6,11 +6,11 @@ class KeyboardHandler {
         this.pressedKeys = {};
         if (typeof window !== 'undefined') {
             window.addEventListener('keydown', event => {
-                this.pressedKeys[event.key] = true;
+                this.pressedKeys[event.key.toLowerCase()] = true;
                 this.shiftIsDown = event.shiftKey;
             });
             window.addEventListener('keyup', event => {
-                this.pressedKeys[event.key] = false;
+                this.pressedKeys[event.key.toLowerCase()] = false;
                 this.shiftIsDown = event.shiftKey;
             });
         }
