@@ -26,6 +26,10 @@ const modifyGameObjectTypeInMainArea = debounce(({ gameObjectType }) => {
     }
 }, 1000);
 
+let performRaycast = false
+let clickX = 0
+let clickY = 0
+
 // Note this does not actually span the main area currently, but it manages the rendering of the canvas in it
 const MainArea = ({ dirHandle }) => {
     const dispatch = useDispatch();
@@ -71,6 +75,16 @@ const MainArea = ({ dirHandle }) => {
 
                     if (orbitControlsRef.current) {
                         orbitControlsRef.current.update(deltaTimeInSec);
+                    }
+
+                    if (performRaycast) {
+                        const pointerPosition = new THREE.Vector2();
+
+                        pointerPosition.x = ( clickX / width ) * 2.0 - 1.0;
+                        pointerPosition.y = (-1 * ( clickY / height ) * 2.0) + 1.0;
+
+                        handleClick(pointerPosition);
+                        performRaycast = false
                     }
                 }
             }
@@ -154,13 +168,13 @@ const MainArea = ({ dirHandle }) => {
         }
     }, [dirHandle, canvasRef])
 
-    const onClick = event => {
-        const canvas = canvasRef.current;
-        const pointerPosition = new THREE.Vector2();
+    const onCanvasClick = event => {
+        performRaycast = true
+        clickX = event.pageX
+        clickY = event.pageY
+    };
 
-        pointerPosition.x = ( event.clientX / canvas.width ) * 2 - 1;
-        pointerPosition.y = - ( event.clientY / canvas.height ) * 2 + 1;
-
+    const handleClick = (pointerPosition) => {
         const raycaster = new THREE.Raycaster();
         if (game?.renderer) {
             const defaultCamera = game.renderer.getCamera();
@@ -393,7 +407,7 @@ const MainArea = ({ dirHandle }) => {
                     </div>
                 </div>
             ) : (
-                <canvas ref={canvasRef} onClick={onClick} onKeyDown={onKeyDown}/>
+                <canvas ref={canvasRef} onClick={onCanvasClick} onKeyDown={onKeyDown}/>
             )}
             <StatusBar />
         </div>
