@@ -7,7 +7,7 @@ import _KinematicCharacterController from "./util/KinematicCharacterController";
 
 import * as _THREE from 'three';
 import _RAPIER from '@dimforge/rapier3d-compat';
-import _ThreeMeshUI from 'three-mesh-ui'
+import * as _ThreeMeshUI from 'three-mesh-ui'
 
 // This file defines the API of this library.
 // Only export things that should be publicly/directly exposed to applications.

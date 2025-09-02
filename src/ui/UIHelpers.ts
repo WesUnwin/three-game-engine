@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import ThreeMeshUI from 'three-mesh-ui';
+import * as ThreeMeshUI from 'three-mesh-ui';
 import AssetStore from '../assets/AssetStore';
 
 const MESH_UI_ATTRIBUTE_NAMES = [
@@ -73,10 +73,10 @@ export interface UserInterfaceJSON {
     fontSupersampling?: number;
 }
 
-export const createUIComponent = async (userInterfaceJSON, parentObject3D: ThreeMeshUI.MeshUIComponent, assetStore: AssetStore) => {
+export const createUIComponent = async (userInterfaceJSON, parentObject3D: THREE.Object3D, assetStore: AssetStore) => {
     const { type, children, ...attributes } = userInterfaceJSON;
 
-    // Separate attributes into attributes for the MeshUIComponent constructor, vs
+    // Separate attributes into attributes for the Object3D constructor, vs
     // attributes that should be applied to the component (an Object3D) after construction.
     const meshUIAttributes: any = {};
     const object3DAttributes: any = {};
@@ -101,7 +101,7 @@ export const createUIComponent = async (userInterfaceJSON, parentObject3D: Three
     }
 
     if (!type) {
-        throw new Error(`createUIComponent: is required`);
+        throw new Error(`createUIComponent: type is required`);
     }
 
     const validComponentTypes = ['Text', 'Block', 'InlineBlock', 'Keyboard'];
@@ -109,7 +109,7 @@ export const createUIComponent = async (userInterfaceJSON, parentObject3D: Three
         throw new Error(`createUIComponent: invalid component type: ${type}`);
     }
 
-    const component: ThreeMeshUI.MeshUIComponent = new ThreeMeshUI[type](meshUIAttributes);
+    const component: THREE.Object3D = new ThreeMeshUI[type](meshUIAttributes);
 
     for (const objAttr in object3DAttributes) {
         component[objAttr] = object3DAttributes[objAttr];
@@ -120,7 +120,7 @@ export const createUIComponent = async (userInterfaceJSON, parentObject3D: Three
     }
 
     if (!parentObject3D) {
-        throw new Error(`createUIComponent: must provide a MeshUIComponent to parent this component`);
+        throw new Error(`createUIComponent: must provide an Object3D to parent this component`);
     }
 
     parentObject3D.add(component);

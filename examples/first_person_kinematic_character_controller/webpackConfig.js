@@ -5,11 +5,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     mode: 'development',
     entry: {
-        index: './index.js'
+        index: path.resolve(__dirname, 'index.js')
     },
     devtool: 'inline-source-map',
     devServer: {
-        static: './dist',
+        static: path.resolve(__dirname, 'dist'),
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -17,7 +17,9 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [ 
-                { from: './examples/', to: 'examples' } 
+                { from: path.resolve(__dirname, 'game_objects'), to: 'game_objects' },
+                { from: path.resolve(__dirname, 'models'), to: 'models' },
+                { from: path.resolve(__dirname, '*.json'), to: '[name][ext]' }
             ]
         })
     ],

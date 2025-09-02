@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import ThreeMeshUI from 'three-mesh-ui'
+import * as ThreeMeshUI from 'three-mesh-ui'
 
 import Game from './Game';
 import VRMode from './VR/VRMode';
@@ -7,7 +7,7 @@ import Logger from './Logger'
 import GameObject from './GameObject';
 import { RendererOptions } from './types';
 
-interface ThreeJSWebGL1RendererConstructorOptions {
+interface ThreeJSWebGLRendererConstructorOptions {
     antialias?: boolean;
     canvas?: HTMLCanvasElement;
 }
@@ -15,7 +15,7 @@ interface ThreeJSWebGL1RendererConstructorOptions {
 class Renderer {
     game: Game;
     options: RendererOptions;
-    threeJSRenderer: THREE.WebGL1Renderer;
+    threeJSRenderer: THREE.WebGLRenderer;
     threeJSCamera: THREE.Camera;
     threeJSCameraAudioListener: THREE.AudioListener;
     vrMode: VRMode;
@@ -25,7 +25,7 @@ class Renderer {
         this.game = game;
         this.options = options;
 
-        const threeJSRendererOptions: ThreeJSWebGL1RendererConstructorOptions = {
+        const threeJSRendererOptions: ThreeJSWebGLRendererConstructorOptions = {
             antialias: true
         };
         if (options.canvas) {
@@ -38,7 +38,7 @@ class Renderer {
             }
         }
 
-        this.threeJSRenderer = new THREE.WebGL1Renderer(threeJSRendererOptions);
+        this.threeJSRenderer = new THREE.WebGLRenderer(threeJSRendererOptions);
         this.threeJSRenderer.gammaOutput = true;
         this.threeJSRenderer.outputEncoding = THREE.sRGBEncoding;
         this.threeJSRenderer.shadowMap.enabled = true;

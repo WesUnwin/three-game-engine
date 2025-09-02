@@ -3,7 +3,8 @@
       "module": "CommonJS",
       "target": "es2019",
       "declaration": true,
-      "outDir": "./dist"
+      "outDir": "./dist",
+      "skipLibCheck": true
     },
     "include": [
       "src/**/*"
