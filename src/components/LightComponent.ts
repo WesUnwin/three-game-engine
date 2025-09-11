@@ -28,6 +28,7 @@ class LightComponent extends Component {
     setObject3DProps(light, objectProps);
 
     this.light = light;
+    this.gameObject.threeJSGroup.add(this.light);
   }
 }
 
