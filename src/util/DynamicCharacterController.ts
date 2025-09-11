@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 
 import CharacterController from './CharacterController';
+import RigidBodyComponent from '../components/RigidBodyComponent';
 
 const defaultCapsuleOptions = {
     halfHeight: 0.45,
@@ -33,11 +34,14 @@ class DynamicCharacterController extends CharacterController {
         const inputManager = this.getScene().game.inputManager;
         const keyboard = inputManager.keyboardHandler;
 
+        const rigidBodyComponent = this.getComponent(RigidBodyComponent) as RigidBodyComponent;
+        const rapierRigidBody = rigidBodyComponent.getRapierRigidBody();
+
         const yawAngle = this.getDesiredYaw();
         const pitchAngle = this.getDesiredPitch();
         const desiredRotation = new THREE.Quaternion();
         desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
-        this.rapierRigidBody.setRotation(desiredRotation, true);
+        rapierRigidBody.setRotation(desiredRotation, true);
 
         const desiredMovementVector = this.getDesiredTranslation(deltaTimeInSec);
 
@@ -45,14 +49,14 @@ class DynamicCharacterController extends CharacterController {
         desiredMovementVector.applyQuaternion(desiredRotation);
         
         desiredMovementVector.multiplyScalar(400);
-        this.rapierRigidBody.applyImpulse(desiredMovementVector, true);
+        rapierRigidBody.applyImpulse(desiredMovementVector, true);
 
         // Jump mechanics
         if (keyboard.isKeyDown(' ')) {
             const timeSinceLastJump = time - this.lastJumpTime;
             if (timeSinceLastJump > this.controllerOptions.jumpCooldown) {
-                const rapierWorld = this.getRapierWorld();
-                const currentPosition = this.rapierRigidBody.translation();
+                const rapierWorld = this.getScene().getRapierWorld();
+                const currentPosition = rapierRigidBody.translation();
 
                 // Point just below the capsulate collider
                 const rayOrigin = { 
@@ -65,10 +69,10 @@ class DynamicCharacterController extends CharacterController {
                 const ray = new RAPIER.Ray(rayOrigin, rayDirection);
                 const groundHit = rapierWorld.castRay(ray, 0.01, true);
 
-                const isFalling = this.rapierRigidBody.linvel().y < -0.1;
+                const isFalling = rapierRigidBody.linvel().y < -0.1;
                 if (groundHit && !isFalling) {
                     // There is ground below the character, so the player can indeed initate a jump
-                    this.rapierRigidBody.applyImpulse(new THREE.Vector3(0, this.jumpImpulse, 0), true);
+                    rapierRigidBody.applyImpulse(new THREE.Vector3(0, this.jumpImpulse, 0), true);
                     this.lastJumpTime = time;
                 }
             }

@@ -180,10 +180,6 @@ class Scene {
 
     advancePhysics() {
         this.rapierWorld.step();
-        this.forEachGameObject(gameObject => {
-            gameObject.syncWithRigidBody();
-            gameObject.afterPhysicsUpdate();
-        });
     }
 
     isActive(): boolean {
@@ -209,6 +205,10 @@ class Scene {
             gameObject.parent = null;
             this.threeJSScene.remove(gameObject.threeJSGroup);
         }
+    }
+
+    getRapierWorld() {
+        return this.rapierWorld;
     }
 
     getRootGameObjects() {
