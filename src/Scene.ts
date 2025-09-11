@@ -180,6 +180,9 @@ class Scene {
 
     advancePhysics() {
         this.rapierWorld.step();
+        this.forEachGameObject(gameObject => {
+            gameObject.syncWithRigidBody();
+        });
     }
 
     isActive(): boolean {

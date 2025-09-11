@@ -16,11 +16,6 @@ class RigidBodyComponent extends Component {
       throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
     }
 
-    if (this.rapierRigidBody) {
-      const scene = this.gameObject.getScene();
-      scene.rapierWorld.removeRigidBody(this.rapierRigidBody);
-    }
-
     const rigidBodyDesc: RAPIER.RigidBodyDesc = this._createRigidBodyDesc(this.jsonData.type);
   
     this.rapierRigidBody = scene.rapierWorld.createRigidBody(rigidBodyDesc);
@@ -150,10 +145,11 @@ class RigidBodyComponent extends Component {
   }
 
   beforeRender() {
-    const threeJSGroup = this.gameObject.threeJSGroup;
-    // TODO: set world position of threeJSGroup, not local
-    threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
-    threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
+    // console.log('==> syncing gameObjec with rigid body position')
+    // const threeJSGroup = this.gameObject.threeJSGroup;
+    // // TODO: set world position of threeJSGroup, not local
+    // threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
+    // threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
   }
 
   getRapierRigidBody() {

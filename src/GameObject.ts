@@ -352,6 +352,15 @@ class GameObject {
         return rigidBodyComponent?.getRapierRigidBody();
     }
 
+    syncWithRigidBody() {
+        const rapierRigidBody = this.getRapierRigidBody();
+        if (rapierRigidBody) {
+            // TODO: set world position of threeJSGroup, not local
+            this.threeJSGroup.position.copy(rapierRigidBody.translation() as THREE.Vector3);
+            this.threeJSGroup.quaternion.copy(rapierRigidBody.rotation() as THREE.Quaternion);
+        }
+    }
+
     resetForces(wakeUp: boolean) {
         this.getRapierRigidBody().resetForces(wakeUp);
     }
