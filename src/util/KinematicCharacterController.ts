@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
 
 import CharacterController from './CharacterController';
+import RigidBodyComponent from '../components/RigidBodyComponent';
 
 const defaultCapsuleOptions = {
     halfHeight: 0.45,
@@ -63,7 +64,7 @@ class KinematicCharacterController extends CharacterController {
     }
 
     afterLoaded(): void {
-        const rapierWorld = this.getRapierWorld();
+        const rapierWorld = this.getScene().getRapierWorld();
 
         const offset = this.kinematicChararacterControllerOptions.offset;
         this.rapierCharacterController = rapierWorld.createCharacterController(offset);
@@ -105,8 +106,11 @@ class KinematicCharacterController extends CharacterController {
         const desiredRotation = new THREE.Quaternion();
         desiredRotation.setFromEuler(new THREE.Euler(pitchAngle, yawAngle, 0, 'YXZ'));
 
+        const rigidBodyComponent = this.getComponent(RigidBodyComponent) as RigidBodyComponent;
+        const rapierRigidBody = rigidBodyComponent.getRapierRigidBody();
+
         const yawQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, yawAngle, 0));
-        this.rapierRigidBody.setRotation(yawQuaternion, true);
+        rapierRigidBody.setRotation(yawQuaternion, true);
 
         let camera = null;
         this.threeJSGroup.traverse(obj => {
@@ -138,7 +142,7 @@ class KinematicCharacterController extends CharacterController {
 
         //console.log(`isOnGround: ${isOnGround} vert velocity: ${this.verticalVelocity}, y: ${this.rapierRigidBody.translation().y}`);
 
-        const collider = this.rapierRigidBody.collider(0);
+        const collider = rapierRigidBody.collider(0);
         const computeMovementOptionalArgs = this.kinematicChararacterControllerOptions.computeColliderMovement;
         this.rapierCharacterController.computeColliderMovement(
             collider,
@@ -150,8 +154,8 @@ class KinematicCharacterController extends CharacterController {
 
         const correctedMovement = this.rapierCharacterController.computedMovement();
 
-        const translation = this.rapierRigidBody.translation();
-        this.rapierRigidBody.setNextKinematicTranslation({
+        const translation = rapierRigidBody.translation();
+        rapierRigidBody.setNextKinematicTranslation({
             x: translation.x + correctedMovement.x,
             y: translation.y + correctedMovement.y,
             z: translation.z + correctedMovement.z
