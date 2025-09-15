@@ -307,6 +307,7 @@ const MainArea = ({ dirHandle }) => {
         const scene = window.game?.scene
         if (scene?.jsonAssetPath === scenePath) {
             let gameObject = scene.getGameObjectByIndices(indices);
+            const json = gameObject.options;
             if (['position', 'scale', 'rotation'].includes(field[0])) {
                 // These fields are direct properties of the threeJSGroup
                 let obj = gameObject.threeJSGroup;
@@ -315,13 +316,17 @@ const MainArea = ({ dirHandle }) => {
                 }
                 obj[field[field.length - 1]] = value;
             } else if (field.length == 1 && field[0] === 'lights') {
-                gameObject.updateLights(value);
+                json.lights = value;
+                gameObject.reset(json);
             } else if (field.length == 1 && field[0] === 'rigidBody') {
-                gameObject.updateRigidBody(value);
+                json.rigidBody = value;
+                gameObject.reset(json);
             } else if (field.length == 1 && field[0] === 'models') {
-                gameObject.updateModels(value);
+                json.models = value;
+                gameObject.reset(json);
             } else if (field.length == 1 && field[0] === 'sounds') {
-                gameObject.updateSounds(value);
+                json.sounds = value;
+                gameObject.reset(json);
             } else if (field.length == 1 && field[0] === 'name') {
                 gameObject.setName(value);
             } else {

@@ -33,10 +33,9 @@ class GameObject {
         }
         this.id = Util.getUUID();
         this.parent = parent;
-        this.options = options;
         this.loadPromise = Promise.resolve();
 
-        this.reset();
+        this.reset(options);
     }
 
     getScene(): Scene {
@@ -58,7 +57,11 @@ class GameObject {
     };
 
     // Resets/sets the state of this gameObject to the GameObjectOptions and it's type's options
-    reset() {
+    reset(json = null) {
+        if (json) {
+            this.options = json;
+        }
+
         this.components = [];
 
         const scene = this.getScene();
