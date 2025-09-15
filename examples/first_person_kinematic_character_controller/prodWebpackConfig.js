@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
   mode: 'production',
   entry: {
-      index: './index.js'
+      index: './examples/first_person_kinematic_character_controller/index.js'
   },
   output: {
     filename: 'first-person-kinematic-character-controller-example.js',
