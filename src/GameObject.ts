@@ -9,8 +9,12 @@ import * as UIHelpers from './ui/UIHelpers';
 import { GameObjectOptions, LightData, ModelData, RigidBodyData, GameObjectSoundData } from './types';
 import { UserInterfaceJSON } from './ui/UIHelpers';
 import Util from './Util';
-import { createLight, createPositionalAudio, setObject3DProps } from './util/ThreeJSHelpers';
-import SoundAsset from './assets/SoundAsset';
+import Component from './Component';
+import RigidBodyComponent from './components/RigidBodyComponent';
+import ModelComponent from './components/ModelComponent';
+import LightComponent from './components/LightComponent';
+import SoundComponent from './components/SoundComponent';
+
 
 class GameObject {
     id: string;
@@ -29,6 +33,22 @@ class GameObject {
     rapierRigidBody: RAPIER.RigidBody | null;
     userInterfacesData: UserInterfaceJSON[];
     options: GameObjectOptions;
+
+    components: Component[];
+
+    gameObjects: GameObject[];
+
+    static componentClassForType = {
+        model: ModelComponent,
+        rigidBody: RigidBodyComponent,
+        light: LightComponent,
+        sound: SoundComponent,
+        userInterface: UserInterfaceComponent
+    };
+
+    static registerClassForComponentType(type: string, klass) {
+        GameObject.componentClassForType[type] = klass;
+    }
 
     constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
@@ -123,10 +143,12 @@ class GameObject {
         const rotOrder = allOptions.rotation?.order || 'XYZ';
         this.setRotation(rotX, rotY, rotZ, rotOrder);
 
-        this.rigidBodyData = allOptions.rigidBody || null;
+        (allOptions.components || []).forEach(json => {
+            const ComponentClass = GameObject.componentClassForType[json.type];
+            const component = new ComponentClass(this, json);
+            this.components.push(component);
+        });
 
-        this.userInterfacesData = allOptions.userInterfaces || [];
-        
         this.parent.addGameObject(this);
     }
 
