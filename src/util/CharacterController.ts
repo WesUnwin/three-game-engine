@@ -3,6 +3,7 @@ import RAPIER from '@dimforge/rapier3d-compat';
 
 import GameObject from "../GameObject"
 import { CharacterControllerOptions } from '../types';
+import RigidBodyComponent from '../components/RigidBodyComponent';
 
 const defaultControllerOptions: CharacterControllerOptions = {
     walkingSpeed: 2,
@@ -67,8 +68,11 @@ class CharacterController extends GameObject {
     }
 
     rayCastToGround(): RAPIER.RayColliderToi {
-        const rapierWorld = this.getRapierWorld();
-        const currentPosition = this.rapierRigidBody.translation();
+        const rapierWorld = this.getScene().getRapierWorld();
+
+        const rigidBodyComponent = this.getComponent(RigidBodyComponent) as RigidBodyComponent;
+        const rapierRigidBody = rigidBodyComponent.getRapierRigidBody();
+        const currentPosition = rapierRigidBody.translation();
 
         const capsuleHalfHeight = 0.45 + 0.4 //this.controllerOptions.capsule.halfHeight - this.controllerOptions.capsule.radius
 

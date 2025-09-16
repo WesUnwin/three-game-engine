@@ -21,6 +21,7 @@ class LightComponent extends Component {
       RectAreaLight: THREE.RectAreaLight,
       SpotLight: THREE.SpotLight
     };
+<<<<<<< HEAD
     const LightClass = lightTypes[this.jsonData.lightType];
     if (LightClass) {
       light = new LightClass();
@@ -31,6 +32,18 @@ class LightComponent extends Component {
 
     const objectProps = { ...this.jsonData };
     delete objectProps.lightType;
+=======
+    const LightClass = lightTypes[this.jsonData.type];
+    if (LightClass) {
+      light = new LightClass();
+      light.name = this.jsonData.type.toLowerCase();
+    } else {
+      throw new Error(`GameObject: error creating ThreeJS light: unknown light type: ${this.jsonData.type}`);
+    }
+
+    const objectProps = { ...this.jsonData };
+    delete objectProps.type;
+>>>>>>> main
     setObject3DProps(light, objectProps);
 
     this.light = light;

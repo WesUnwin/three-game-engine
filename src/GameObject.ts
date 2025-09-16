@@ -1,13 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier3d-compat';
-import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
-
 import Scene from './Scene';
-import GLTFAsset from './assets/GLTFAsset';
-import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import * as UIHelpers from './ui/UIHelpers';
-import { GameObjectOptions, LightData, ModelData, RigidBodyData, GameObjectSoundData } from './types';
-import { UserInterfaceJSON } from './ui/UIHelpers';
+import { GameObjectOptions } from './types';
 import Util from './Util';
 import Component from './Component';
 import RigidBodyComponent from './components/RigidBodyComponent';
@@ -23,15 +17,10 @@ class GameObject {
     tags: string[];
     threeJSGroup: THREE.Group;
     parent: Scene | GameObject;
-    gameObjects: GameObject[];
-    models: ModelData[];
-    lights: LightData[];
-    sounds: GameObjectSoundData[];
+
     loaded: boolean;
     loadPromise: Promise<void>;
-    rigidBodyData: RigidBodyData | null;
-    rapierRigidBody: RAPIER.RigidBody | null;
-    userInterfacesData: UserInterfaceJSON[];
+
     options: GameObjectOptions;
 
     components: Component[];
@@ -56,9 +45,9 @@ class GameObject {
         }
         this.id = Util.getUUID();
         this.parent = parent;
-        this.options = options;
         this.loadPromise = Promise.resolve();
-        this.reset();
+
+        this.reset(options);
     }
 
     getScene(): Scene {
@@ -74,18 +63,19 @@ class GameObject {
         }
     }
 
-    getRapierWorld() {
-        const scene = this.getScene();
-        return scene.rapierWorld;
-    }
-
     onGameObjectTypeChange = () => {
         this.reset();
         this.load(); // asnychronous
     };
 
     // Resets/sets the state of this gameObject to the GameObjectOptions and it's type's options
-    reset() {
+    reset(json = null) {
+        if (json) {
+            this.options = json;
+        }
+
+        this.components = [];
+
         const scene = this.getScene();
 
         let allOptions;
@@ -108,11 +98,6 @@ class GameObject {
         this.tags = allOptions.tags || [];
 
         this.gameObjects = [];
-
-        this.models = allOptions.models || [];
-        this.lights = allOptions.lights || [];
-
-        this.sounds = allOptions.sounds || [];
 
         this.loaded = false;
 
@@ -156,31 +141,6 @@ class GameObject {
         this.threeJSGroup.name = name;
     }
 
-    async updateLights(updatedLights: LightData[]) {
-        this.lights = updatedLights;
-        await this.loadLights();
-    }
-
-    async updateUserInterfaces(updatedUserInterfances: UserInterfaceJSON[]) {
-        this.userInterfacesData = updatedUserInterfances;
-        await this.loadUserInterfaces();
-    }
-
-    async updateRigidBody(rigidBodyData: RigidBodyData | null) {
-        this.rigidBodyData = rigidBodyData;
-        await this.loadRigidBody();
-    }
-
-    async updateModels(updatedModels: ModelData[]) {
-        this.models = updatedModels;
-        await this.loadModels();
-    }
-
-    async updateSounds(updatedSounds: GameObjectSoundData[]) {
-        this.sounds = updatedSounds;
-        await this.loadSounds();
-    }
-
     // Constructs this GameObject's child ThreeJS Object3Ds as specified by the options passed to the constructor.
     // The GameObject must be part of a scene that is loaded into a game.
     // This will dynamically fetch any asset that is not already loaded into the game's asset store along the way.
@@ -190,11 +150,10 @@ class GameObject {
     }
 
     async _load() {
-        await this.loadLights();
-        await this.loadUserInterfaces();
-        await this.loadRigidBody();
-        await this.loadModels();
-        await this.loadSounds();
+        // Load components seriallly (TODO: determine if components can be loaded in parralel)
+        for (let c of this.components) {
+            await c.load();
+        }
 
         for(let i = 0; i<this.gameObjects.length; i++) {
             const childGameObject = this.gameObjects[i];
@@ -204,83 +163,16 @@ class GameObject {
         this.loaded = true;
     }
 
-    async loadLights() {
-        const existingLights = this.threeJSGroup.children.filter(child => child instanceof THREE.Light);
-        existingLights.forEach(existingLight => this.threeJSGroup.remove(existingLight));
-
-        this.lights.forEach(lightData => {
-            const light = createLight(lightData);
-            this.threeJSGroup.add(light);
-        });
-    }
-
-    async loadUserInterfaces() {
-        const existingUI = this.threeJSGroup.children.filter(child => {
-            // TODO fill in logic here to detect children that are UI related
-        });
-        existingUI.forEach(ui => ui.remove());
-
-        const scene = this.getScene();
-        for (let uiData of this.userInterfacesData) {
-            await UIHelpers.createUIComponent(uiData, this.threeJSGroup, scene.game.assetStore);
-        }
-    }
-
-    async loadRigidBody() {
-        PhysicsHelpers.setupGameObjectPhysics(this);
-    }
-
-    async loadModels() {
-        // Remove existing model related objects (objects with userData.model = true)
-        const modelRelatedObjects = this.threeJSGroup.children.filter(child => child.userData.model);
-        modelRelatedObjects.forEach(m => this.threeJSGroup.remove(m));
-
-        const scene = this.getScene();
-        for (let i = 0; i<this.models.length; i++) {
-            const modelData = this.models[i];
-            const asset = await scene.game.loadAsset(modelData.assetPath);
-            if (!(asset instanceof GLTFAsset)) {
-                throw new Error(`GameObject: asset found at ${modelData.assetPath} in AssetStore should be a GLTFAsset`);
-            }
-            const clonedModel = clone(asset.data.scene);
-            clonedModel.children.forEach(object3D => {
-                const objectProps = { ...modelData };
-                delete objectProps.assetPath;
-                setObject3DProps(object3D, objectProps);
-                object3D.userData.model = true;
-                this.threeJSGroup.add(object3D);
-            });
-        }
-    }
-
-    async loadSounds() {
-        // Remove existing sound related objects
-        const soundObjects = this.threeJSGroup.children.filter(child => {
-            return child instanceof THREE.PositionalAudio
-        });
-        soundObjects.forEach(m => this.threeJSGroup.remove(m));
-
-        const scene = this.getScene();
-        for (let i = 0; i<this.sounds.length; i++) {
-            const soundData = this.sounds[i];
-            const asset = await scene.game.loadAsset(soundData.assetPath);
-            if (!(asset instanceof SoundAsset)) {
-                throw new Error(`GameObject: asset found at ${soundData.assetPath} in AssetStore should be a SoundAsset`);
-            }
-            const audioBuffer = asset.getData() as AudioBuffer;
-            const audioListener = scene.game.renderer.getCameraAudioListener();
-            const name = soundData.name || `sound_${i}`;
-            const positionalAudio = createPositionalAudio(soundData, audioBuffer, audioListener, name);
-            this.threeJSGroup.add(positionalAudio);
-        }
-    }
-
     isLoaded(): boolean {
         return this.loaded;
     }
 
     hasTag(tag: string) {
         return this.tags.some(t => t === tag);
+    }
+
+    getComponent(componentClass) {
+        return this.components.find(c => c instanceof componentClass);
     }
 
     addGameObject(gameObject: GameObject) {
@@ -356,27 +248,16 @@ class GameObject {
         this.parent = null;
     }
 
-    syncWithRigidBody() {
-        if (this.rapierRigidBody) {
-            // TODO: set world position of threeJSGroup, not local
-            this.threeJSGroup.position.copy(this.rapierRigidBody.translation() as THREE.Vector3);
-            this.threeJSGroup.quaternion.copy(this.rapierRigidBody.rotation() as THREE.Quaternion);
-        }
-    }
-
-    afterPhysicsUpdate() {
-        // Optional: override and handle this event
-    }
-
     // Called after the scene and all its GameObjects have
     // been succesfully loaded.
     afterLoaded() {
         // Optional: override and handle this event
     }
 
-    // Called on the scene and all its GameObjecte immediately
+    // Called on the scene and all its GameObjects immediately
     // before threeJS renders everything.
     beforeRender({ deltaTimeInSec }) {
+        this.components.forEach(c => c.beforeRender({ deltaTimeInSec }));
         // Optional: override and handle this event
     }
 
@@ -462,72 +343,81 @@ class GameObject {
         this.threeJSGroup.traverseAncestors(callback);
     }
 
+    getRapierRigidBody() {
+        const rigidBodyComponent = this.getComponent(RigidBodyComponent) as RigidBodyComponent;
+        return rigidBodyComponent?.getRapierRigidBody();
+    }
+
+    syncWithRigidBody() {
+        const rapierRigidBody = this.getRapierRigidBody();
+        if (rapierRigidBody) {
+            // TODO: set world position of threeJSGroup, not local
+            this.threeJSGroup.position.copy(rapierRigidBody.translation() as THREE.Vector3);
+            this.threeJSGroup.quaternion.copy(rapierRigidBody.rotation() as THREE.Quaternion);
+        }
+    }
+
     resetForces(wakeUp: boolean) {
-        this.rapierRigidBody.resetForces(wakeUp);
+        this.getRapierRigidBody().resetForces(wakeUp);
     }
 
     resetTorques(wakeUp: boolean) {
-        this.rapierRigidBody.resetTorques(wakeUp);
+        this.getRapierRigidBody().resetTorques(wakeUp);
     }
 
     addForce(vector: RAPIER.Vector, wakeUp: boolean) {
-        this.rapierRigidBody.addForce(vector, wakeUp);
+        this.getRapierRigidBody().addForce(vector, wakeUp);
     }
 
     addForceAtPoint(force: RAPIER.Vector, point: RAPIER.Vector, wakeUp: boolean) {
-        this.rapierRigidBody.addForceAtPoint(force, point, wakeUp);
+        this.getRapierRigidBody().addForceAtPoint(force, point, wakeUp);
     }
 
     addTorque(vector: RAPIER.Vector, wakeUp: boolean) {
-        this.rapierRigidBody.addTorque(vector, wakeUp);
+        this.getRapierRigidBody().addTorque(vector, wakeUp);
     }
 
     applyImpulse(impulse: RAPIER.Vector, wakeUp: boolean) {
-        this.rapierRigidBody.applyImpulse(impulse, wakeUp);
+        this.getRapierRigidBody().applyImpulse(impulse, wakeUp);
     }
 
     applyImpulseAtPoint(impulse: RAPIER.Vector, point: RAPIER.Vector, wakeUp: boolean) {
-        this.rapierRigidBody.applyImpulseAtPoint(impulse, point, wakeUp);
+        this.getRapierRigidBody().applyImpulseAtPoint(impulse, point, wakeUp);
     }
 
     lockTranslations(locked: boolean, wakeUp: boolean) {
-        this.rapierRigidBody.lockTranslations(locked, wakeUp);
+        this.getRapierRigidBody().lockTranslations(locked, wakeUp);
     }
 
     lockRotations(locked: boolean, wakeUp: boolean) {
-        this.rapierRigidBody.lockRotations(locked, wakeUp);
+        this.getRapierRigidBody().lockRotations(locked, wakeUp);
     }
 
     setEnabledRotations(enableX: boolean, enableY: boolean, enableZ: boolean, wakeUp: boolean) {
-        this.rapierRigidBody.setEnabledRotations(enableX, enableY, enableZ, wakeUp);
+        this.getRapierRigidBody().setEnabledRotations(enableX, enableY, enableZ, wakeUp);
     }
 
     setLinearDamping(factor: number) {
-        this.rapierRigidBody.setLinearDamping(factor);
+        this.getRapierRigidBody().setLinearDamping(factor);
     }
 
     setAngularDamping(factor: number) {
-        this.rapierRigidBody.setAngularDamping(factor);
+        this.getRapierRigidBody().setAngularDamping(factor);
     }
 
     setDominanceGroup(group: number) {
-        this.rapierRigidBody.setDominanceGroup(group);
+        this.getRapierRigidBody().setDominanceGroup(group);
     }
 
     enableCcd(enabled: boolean) {
-        this.rapierRigidBody.enableCcd(enabled);
+        this.getRapierRigidBody().enableCcd(enabled);
     }
 
     playSound(name: string, delayInSec: number = 0, detune: number | null = null) {
-        const positionalAudio = this.threeJSGroup.children.find(c => c.name === name && c instanceof THREE.PositionalAudio);
-        if (positionalAudio) {
-            if (positionalAudio.isPlaying) {
-                positionalAudio.pause(); // elsewise nothing will happen
-            }
-            positionalAudio.play(delayInSec);
-            if (detune !== null) {
-                positionalAudio.setDetune(detune); // set this here, rather than when creating the positionalAudio as setDetune can't be called till playback (where audio.source is set)
-            }
+        const component = this.components.find(c => c instanceof SoundComponent && c.jsonData.name === name);
+        if (component) {
+            const soundComponent = component as SoundComponent;
+            soundComponent.playSound(delayInSec, detune);
         } else {
             throw new Error(`gameObject.playSound(): game object ${this.name || this.id} has no sound with name: ${name}`);
         }
