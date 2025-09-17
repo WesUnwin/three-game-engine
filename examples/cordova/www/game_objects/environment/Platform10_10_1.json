@@ -1,11 +1,15 @@
 {
-  "models": [
-      { "assetPath": "models/platform_10_10_1.glb" }
-  ],
-  "rigidBody": {
-      "type": "fixed",
+  "components": [
+    {
+      "type": "model",
+      "assetPath": "models/platform_10_10_1.glb"
+    },
+    {
+      "type": "rigidBody",
+      "rigidBodyType": "fixed",
       "colliders": [
-          { "type": "cuboid", "hx": 5, "hy": 0.5, "hz": 5 }
+        { "type": "cuboid", "hx": 5, "hy": 0.5, "hz": 5 }
       ]
-  }
+    }
+  ]
 }

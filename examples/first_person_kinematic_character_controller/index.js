@@ -1,10 +1,10 @@
 import { Game, KinematicCharacterController } from "../../dist/index"; // to directly reference the lastest, local code (npm run build), OR import from "three-game-engine"
 
-const baseURL = window.location.host === 'localhost' ? 'http://localhost:8080' : 'https://raw.githubusercontent.com/WesUnwin/three-game-engine/main'
+const baseURL = window.location.host.includes('localhost') ? `http://${window.location.host}` : 'https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/examples/first_person_kinematic_character_controller'
 
 // Create a game object pointing to the project folder, which must contain a game.json file
 // definining your game, its scenes, settings, etc.
-const game = new Game(`${baseURL}/examples/first_person_kinematic_character_controller`, {
+const game = new Game(`${baseURL}`, {
   rendererOptions: {
     setupFullScreenCanvas: true // automatically create an HTML Canvas element, and stretch it to the size of the viewport
   },
@@ -20,11 +20,9 @@ const game = new Game(`${baseURL}/examples/first_person_kinematic_character_cont
 // Inheritance chain: ExampleCharacter => KinematicCharacterController => CharacterController => GameObject
 class ExampleCharacter extends KinematicCharacterController {
     constructor(parent, options) {
-        super(parent,
-          { // GameObjectOptions
-            models: [],
-            ...options
-          }, 
+        super(
+          parent,
+          options, // GameObjectOptions
           { // CharacterControllerOptions
           }, 
           { // KinematicCharacterControllerOptions
@@ -67,3 +65,5 @@ game.registerGameObjectClasses({ ExampleCharacter });
 // Starts the game rendering loop, the initial scene indicated by "initialScene" in your game.json file will be loaded.
 // You could later switch to other scenes using game.loadScene("sceneName").
 game.play(); 
+
+window.game = game;

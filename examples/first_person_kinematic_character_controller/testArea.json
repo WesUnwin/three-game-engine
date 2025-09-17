@@ -6,11 +6,15 @@
       "position": { "x": -3, "y": 3, "z": 3 }
     },
     {
-        "type": "Platform10_10_1",
-        "position": { "x": 0, "y": -0.25, "z": 0 },
-        "lights": [
-            { "type": "AmbientLight", "intensity": 0.5 }
-        ]
+      "type": "Platform10_10_1",
+      "position": { "x": 0, "y": -0.25, "z": 0 },
+      "components": [
+        {
+          "type": "light",
+          "lightType": "AmbientLight",
+          "intensity": 0.5
+        }
+      ]
     },
     {
       "type": "Platform10_10_1",
@@ -175,59 +179,75 @@
     },
     {
       "name": "bale",
-      "models": [
-        { "assetPath": "models/bale_of_hay.glb" }
-      ],
-      "rigidBody": {
-        "type": "dynamic",
-        "colliders": [
-          { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
-        ]
-      },
       "position": { "x": 7, "y": 6, "z": -8 },
-      "rotation": { "x": 31, "y": 90, "z": 11 }
+      "rotation": { "x": 31, "y": 90, "z": 11 },
+      "components": [
+        {
+          "type": "model",
+          "assetPath": "models/bale_of_hay.glb"
+        },
+        {
+          "type": "rigidBody",
+          "rigidBodyType": "dynamic",
+          "colliders": [
+            { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
+          ]
+        }
+      ]
     },
     {
       "name": "bale2",
-      "models": [
-        { "assetPath": "models/bale_of_hay.glb" }
-      ],
-      "rigidBody": {
-        "type": "dynamic",
-        "colliders": [
-          { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
-        ]
-      },
       "position": { "x": 12, "y": 6, "z": -8 },
-      "rotation": { "x": 5, "y": 90, "z": 11 }
+      "rotation": { "x": 5, "y": 90, "z": 11 },
+      "components": [
+        {
+          "type": "model",
+          "assetPath": "models/bale_of_hay.glb"
+        },
+        {
+          "type": "rigidBody",
+          "rigidBodyType": "dynamic",
+          "colliders": [
+            { "type": "cuboid", "hx": 0.5, "hy": 0.5, "hz": 1 }
+          ]
+        }
+      ]
     },
     {
       "name": "barrel",
-      "models": [
-        { "assetPath": "models/barrel.glb" }
-      ],
-      "rigidBody": {
-        "type": "dynamic",
-        "colliders": [
-          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
-        ]
-      },
       "position": { "x": 14, "y": 6, "z": -5 },
-      "rotation": { "x": 5, "y": 90, "z": 11 }
+      "rotation": { "x": 5, "y": 90, "z": 11 },
+      "components": [
+        {
+          "type": "model",
+          "assetPath": "models/barrel.glb"
+        },
+        {
+          "type": "rigidBody",
+          "rigidBodyType": "dynamic",
+          "colliders": [
+          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
+          ]
+        }
+      ]
     },
     {
       "name": "barrel2",
-      "models": [
-        { "assetPath": "models/barrel.glb" }
-      ],
-      "rigidBody": {
-        "type": "dynamic",
-        "colliders": [
-          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
-        ]
-      },
       "position": { "x": 14, "y": 6, "z": -11 },
-      "rotation": { "x": 5, "y": 90, "z": 11 }
+      "rotation": { "x": 5, "y": 90, "z": 11 },
+      "components": [
+        {
+          "type": "model",
+          "assetPath": "models/barrel.glb"
+        },
+        {
+          "type": "rigidBody",
+          "rigidBodyType": "dynamic",
+          "colliders": [
+          { "type": "cylinder", "halfHeight": 0.5, "radius": 0.5 }
+          ]
+        }
+      ]
     }
   ]
 }
