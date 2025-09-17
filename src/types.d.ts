@@ -13,7 +13,7 @@ interface GameJSON {
 interface SceneJSON {
     background?: null;
     fog?: null | FogJSON;
-    lights?: LightData[];
+    lights?: SceneLightJSON[];
     sounds?: SceneSoundJSON[];
     gameObjects?: GameObjectJSON[];
     gravity?: Vector3Data;
@@ -23,6 +23,11 @@ interface FogJSON {
     color: string;
     near: number;
     far: number;
+}
+
+interface SceneLightJSON {
+    type?: string;
+    position?: Vector3Data;
 }
 
 interface SceneSoundJSON {

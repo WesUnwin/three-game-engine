@@ -43,16 +43,19 @@ class KinematicCharacterController extends CharacterController {
 
     constructor(parent, options, controllerOptions, kinematicChararacterControllerOptions) {
         super(parent, {
-            rigidBody: {
-                type: 'kinematicPositionBased',
-                colliders: [
-                    { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
-                ],
-                enabledRotations: { x: false, y: true, z: false }
-            },
-            ...options // merge with any passed in GameObjectOptions
+            ...options,
+            components: [
+                {
+                    type: 'rigidBody',
+                    rigidBodyType: 'kinematicPositionBased',
+                    colliders: [
+                        { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
+                    ],
+                    enabledRotations: { x: false, y: true, z: false }
+                },
+                ...(options.components || [])
+            ],
         }, controllerOptions);
-
 
         this.kinematicChararacterControllerOptions = Object.assign(
             {},

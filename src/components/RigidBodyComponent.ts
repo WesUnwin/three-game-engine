@@ -80,7 +80,7 @@ class RigidBodyComponent extends Component {
       throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
     }
 
-    const rigidBodyDesc: RAPIER.RigidBodyDesc = this._createRigidBodyDesc(this.jsonData.type);
+    const rigidBodyDesc: RAPIER.RigidBodyDesc = this._createRigidBodyDesc(this.jsonData.rigidBodyType);
   
     this.rapierRigidBody = scene.rapierWorld.createRigidBody(rigidBodyDesc);
 

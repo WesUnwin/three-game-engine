@@ -16,9 +16,7 @@ class CharacterController extends GameObject {
     lastJumpTime: number = 0;
 
     constructor(parent, options, controllerOptions = defaultControllerOptions) {
-        super(parent, {
-            ...options // merge with any passed in GameObjectOptions
-        })
+        super(parent, options);
         this.controllerOptions = Object.assign({}, defaultControllerOptions, controllerOptions);
         this.lastJumpTime = 0;
     }

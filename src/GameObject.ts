@@ -8,7 +8,7 @@ import RigidBodyComponent from './components/RigidBodyComponent';
 import ModelComponent from './components/ModelComponent';
 import LightComponent from './components/LightComponent';
 import SoundComponent from './components/SoundComponent';
-
+import UserInterfaceComponent from './components/UserInterfaceComponent';
 
 class GameObject {
     id: string;
@@ -86,6 +86,7 @@ class GameObject {
             gameObjectTypeJSONAsset.once('change', this.onGameObjectTypeChange);
 
             allOptions = Object.assign({}, gameObjectTypeJSONAsset.data, this.options);
+            allOptions.components = [...(gameObjectTypeJSONAsset.data.components || []), ...(this.options.components || [])]
         } else {
             allOptions = { ...this.options };
         }
