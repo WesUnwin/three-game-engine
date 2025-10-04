@@ -2,12 +2,8 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import fileDataSlice, { getFile } from '../../Redux/FileDataSlice.js';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
-import Models from './Models.jsx';
-import Lights from './Lights.jsx';
-import Physics from './Physics.jsx';
-import PropertyList from './PropertyList.jsx';
 import * as FileHelpers from '../../util/FileHelpers.js'
-import GameObjectSounds from './GameObjectSounds.jsx';
+import Components from './Components.jsx';
 
 const GameObjectTypeProperties = ({ dirHandle, type }) => {
     const dispatch = useDispatch();
@@ -34,60 +30,16 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
         });
     };
 
-    const onChangePhysics = rigidBodyData => {
-        changeProperty(['rigidBody'], rigidBodyData);
+    // const onChangePhysics = rigidBodyData => {
+    //     changeProperty(['rigidBody'], rigidBodyData);
+    // };
+
+    const addComponent = () => {
+
     };
 
-    const addModel = () => {
-        dispatch(currentModalSlice.actions.openModal({
-            type: 'AddModelModal',
-            params: {
-                gameObjectType: type
-            }
-        }));
-    };
+    const removeComponent = () => {
 
-    const removeModel = modelIndex => {
-        dispatch(fileDataSlice.actions.removeModelFromGameObjectType({
-            gameObjectType: type,
-            modelIndex
-        }));
-
-        window.postMessage({
-            eventName: 'modifyGameObjectTypeInMainArea',
-            gameObjectType: type
-        });
-    };
-
-    const onAddLight = () => {
-        const params = {
-            gameObjectType: type
-        };
-        dispatch(currentModalSlice.actions.openModal({ type: 'AddLightModal', params }));
-    };
-
-    const addCollider = () => {
-        const params = {
-            gameObjectType: type
-        };
-        dispatch(currentModalSlice.actions.openModal({ type: 'AddColliderModal', params }));
-    };
-
-    const addSound = () => {
-        dispatch(currentModalSlice.actions.openModal({
-            type: 'AddSoundModal',
-            params: {
-                gameObjectType: type,
-                existingSounds: gameObjectTypeFile.data.sounds || []
-            }
-        }));
-    };
-
-    const removeSound = soundIndex => {
-        const existingSounds = gameObjectTypeFile.data.sounds || [];
-        const updatedSounds = [...existingSounds];
-        updatedSounds.splice(soundIndex, 1);
-        changeProperty(['sounds'], updatedSounds);
     };
 
     if (!gameObjectTypeFile?.data) {
@@ -95,28 +47,11 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
     }
 
     return (
-        <PropertyList>    
-            <Models
-                models={gameObjectTypeFile.data.models || []}
-                addModel={addModel}
-                removeModel={removeModel}
-            />
-            <Lights
-                lights={gameObjectTypeFile.data.lights || []}
-                onChange={lights => changeProperty(['lights'], lights)}
-                onAdd={onAddLight}
-            />
-            <Physics
-                rigidBody={gameObjectTypeFile.data.rigidBody}
-                onChange={onChangePhysics}
-                addCollider={addCollider}
-            />
-            <GameObjectSounds
-                sounds={gameObjectTypeFile.data.sounds || []}
-                onChange={sounds => changeProperty(['sounds'], sounds)}
-                onAdd={addSound}
-            />
-        </PropertyList>
+        <Components
+            componentsJSON={gameObjectTypeFile.data.components || []}
+            addComponent={addComponent}
+            removeComponent={removeComponent}
+        />
     );
 };
 
