@@ -53,8 +53,9 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
             gameObjectIndices: indices,
             existingComponents: gameObjectJSON.components || []
         };
+        debugger;
         dispatch(currentModalSlice.actions.openModal({
-            type: 'AddComponent',
+            type: 'AddComponentModal',
             params
         }));
     };

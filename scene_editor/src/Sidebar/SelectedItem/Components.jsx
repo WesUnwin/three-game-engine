@@ -27,10 +27,16 @@ const Components = ({ componentsJSON, addComponent, removeComponent }) => {
       {componentsJSON.map((componentJSON, index) => {
         const ReactComponent = reactComponentForComponentType[componentJSON.type];
 
+        if (!ReactComponent) {
+          throw new Error(`No React component found for component type: ${componentJSON.type}`);
+        }
+
         return (
           <ReactComponent
+            key={index}
             componentIndex={index}
             componentJSON={componentJSON}
+            removeComponent={removeComponent}
           />
         );
       })}

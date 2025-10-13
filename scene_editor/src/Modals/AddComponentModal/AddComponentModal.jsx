@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import Modal from './Modal.jsx';
+import Modal from '../Modal.jsx';
 import { useDispatch } from 'react-redux';
-import currentModalSlice from '../Redux/CurrentModalSlice.js';
-import fileDataSlice from '../Redux/FileDataSlice.js';
+import currentModalSlice from '../../Redux/CurrentModalSlice.js';
+import fileDataSlice from '../../Redux/FileDataSlice.js';
+import AddModel from './AddModel.jsx';
 
 const reactComponentForComponentType = {
-  'model': null
+  'model': AddModel
 };
 
 const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingComponents }) => {
   const dispatch = useDispatch();
 
-  const [componentType, setComponentType] = useState(Object.keys(reactComponentForComponentType)[0]);
-  const [componentJSON, setComponentJSON] = useState({});
+  const [componentJSON, setComponentJSON] = useState({ type: 'model' });
+
+  const [isValid, setIsValid] = useState(false);
 
   const closeModal = () => {
       dispatch(currentModalSlice.actions.closeModal());
@@ -20,7 +22,7 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
 
   const onSubmit = async () => {
     if (gameObjectType) {
-      dispatch(fileDataSlice.actions.addComponentToGameObjectType({
+      dispatch(fileDataSlice.actions.addComponentToGameObectType({
         gameObjectType,
         component: componentJSON
       }));
@@ -51,7 +53,7 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
     closeModal();
   };
 
-  const ReactComponent = reactComponentForComponentType[componentType];
+  const ReactComponent = reactComponentForComponentType[componentJSON.type];
 
   return (
     <Modal
@@ -63,14 +65,14 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
             Cancel
           </button>
 
-          <button type="submit" onClick={onSubmit} disabled={true}>
+          <button type="submit" onClick={onSubmit} disabled={!isValid}>
             Add Component
           </button>
         </>
       }
     >
       <div className='row'>
-        <select value={componentJSON?.type} onChange={event => setComponentType(event.target.value)}>
+        <select value={componentJSON.type} onChange={event => setComponentJSON({ type: event.target.value })}>
           {Object.keys(reactComponentForComponentType).map(componentType => (
             <option key={componentType} value={componentType}>
               {componentType}
@@ -78,11 +80,17 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
           ))}
         </select>
       </div>
+
+      <br />
+
       <div className="row">
         {ReactComponent &&
           <ReactComponent
             componentJSON={componentJSON}
             setComponentJSON={setComponentJSON}
+            isValid={isValid}
+            setIsValid={setIsValid}
+            dirHandle={dirHandle}
           />
         }        
       </div>

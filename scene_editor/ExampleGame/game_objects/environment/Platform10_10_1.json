@@ -1,15 +1,24 @@
 {
-  "components": [
-    {
-      "type": "model",
-      "assetPath": "models/platform_10_10_1.glb"
-    },
-    {
-      "type": "rigidBody",
-      "rigidBodyType": "fixed",
-      "colliders": [
-        { "type": "cuboid", "hx": 5, "hy": 0.5, "hz": 5 }
-      ]
-    }
-  ]
+    "components": [
+        {
+            "type": "model",
+            "assetPath": "models/platform_10_10_1.glb"
+        },
+        {
+            "type": "rigidBody",
+            "rigidBodyType": "fixed",
+            "colliders": [
+                {
+                    "type": "cuboid",
+                    "hx": 5,
+                    "hy": 0.5,
+                    "hz": 5
+                }
+            ]
+        },
+        {
+            "type": "model",
+            "assetPath": "models/barrel.glb"
+        }
+    ]
 }

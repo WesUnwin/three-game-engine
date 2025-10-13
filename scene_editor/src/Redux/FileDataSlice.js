@@ -163,6 +163,17 @@ const fileDataSlice = createSlice({
             delete gameFile.data.scenes[sceneName];
             gameFile.modified = true;
         },
+        addComponentToGameObectType: (state, action) => {
+            const { gameObjectType, component } = action.payload;
+            const gameFile = state.files.find(f => f.path === 'game.json');
+            const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];
+            const gameObjectTypeFile = state.files.find(f => f.path === gameObjectTypeFilePath);
+            if (!gameObjectTypeFile.data.components) {
+                gameObjectTypeFile.data.components = [];
+            }
+            gameObjectTypeFile.data.components.push(component);
+            gameObjectTypeFile.modified = true;
+        },
         addModelToGameObjectType: (state, action) => {
             const { gameObjectType, model } = action.payload;
             const gameFile = state.files.find(f => f.path === 'game.json');

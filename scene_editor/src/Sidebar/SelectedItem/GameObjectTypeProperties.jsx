@@ -13,6 +13,8 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
     const gameObjectTypeFilePath = gameFile?.data?.gameObjectTypes[type];
     const gameObjectTypeFile = useSelector(getFile(gameObjectTypeFilePath || null));
 
+    const components = gameObjectTypeFile?.data?.components || [];
+
     useEffect(() => {
         FileHelpers.loadFile(dirHandle, gameObjectTypeFilePath, dispatch, { type: 'gameObjectTypeJSON' })
     }, [gameObjectTypeFilePath]);
@@ -35,7 +37,14 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
     // };
 
     const addComponent = () => {
-
+        const params = {
+            gameObjectType: type,
+            existingComponents: components
+        };
+        dispatch(currentModalSlice.actions.openModal({
+            type: 'AddComponentModal',
+            params
+        }));
     };
 
     const removeComponent = () => {
@@ -48,7 +57,7 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
 
     return (
         <Components
-            componentsJSON={gameObjectTypeFile.data.components || []}
+            componentsJSON={components}
             addComponent={addComponent}
             removeComponent={removeComponent}
         />

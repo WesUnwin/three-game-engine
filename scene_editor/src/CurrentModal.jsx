@@ -13,6 +13,7 @@ import DeleteGameObjectTypeModal from './Modals/DeleteGameObjectTypeModal.jsx';
 import SettingsModal from './Modals/SettingsModal/SettingsModal.jsx';
 import LoadingModal from './Modals/LoadingModal.jsx';
 import AddSoundModal from './Modals/AddSoundModal.jsx';
+import AddComponentModal from './Modals/AddComponentModal/AddComponentModal.jsx';
 
 const modalClasses = {
     CreateProjectModal,
@@ -26,7 +27,8 @@ const modalClasses = {
     DeleteGameObjectTypeModal,
     SettingsModal,
     LoadingModal,
-    AddSoundModal
+    AddSoundModal,
+    AddComponentModal
 };
 
 const CurrentModal = ({ dirHandle, setDirHandle }) => {
