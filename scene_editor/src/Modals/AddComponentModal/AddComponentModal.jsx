@@ -4,9 +4,11 @@ import { useDispatch } from 'react-redux';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
 import AddModel from './AddModel.jsx';
+import AddLight from './AddLight.jsx';
 
 const reactComponentForComponentType = {
-  'model': AddModel
+  'model': AddModel,
+  'light': AddLight,
 };
 
 const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingComponents }) => {
