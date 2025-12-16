@@ -8,12 +8,8 @@ import Property from './Property.jsx';
 import PropertyList from './PropertyList.jsx';
 import GameObjectTypeProperties from './GameObjectTypeProperties.jsx';
 import Divider from '../Divider.jsx';
-import Models from './Models.jsx';
-import Lights from './Lights.jsx';
-import Physics from './Physics.jsx';
 import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
-import Sounds from './GameObjectSounds.jsx';
 import Components from './Components.jsx';
 
 const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {

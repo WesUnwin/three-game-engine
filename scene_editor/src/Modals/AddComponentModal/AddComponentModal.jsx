@@ -12,9 +12,9 @@ const reactComponentForComponentType = {
 const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingComponents }) => {
   const dispatch = useDispatch();
 
-  const [componentJSON, setComponentJSON] = useState({ type: 'model' });
-
-  const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState([]);
+  
+  const [componentJSON, setComponentJSON] = useState({ type: 'model', assetPath: null });
 
   const closeModal = () => {
       dispatch(currentModalSlice.actions.closeModal());
@@ -22,7 +22,7 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
 
   const onSubmit = async () => {
     if (gameObjectType) {
-      dispatch(fileDataSlice.actions.addComponentToGameObectType({
+      dispatch(fileDataSlice.actions.addComponentToGameObjectType({
         gameObjectType,
         component: componentJSON
       }));
@@ -65,7 +65,7 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
             Cancel
           </button>
 
-          <button type="submit" onClick={onSubmit} disabled={!isValid}>
+          <button type="submit" onClick={onSubmit} disabled={errors.length > 0}>
             Add Component
           </button>
         </>
@@ -80,16 +80,13 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
           ))}
         </select>
       </div>
-
       <br />
-
       <div className="row">
         {ReactComponent &&
           <ReactComponent
             componentJSON={componentJSON}
             setComponentJSON={setComponentJSON}
-            isValid={isValid}
-            setIsValid={setIsValid}
+            setErrors={setErrors}
             dirHandle={dirHandle}
           />
         }        

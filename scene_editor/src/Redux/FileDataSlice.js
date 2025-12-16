@@ -163,7 +163,7 @@ const fileDataSlice = createSlice({
             delete gameFile.data.scenes[sceneName];
             gameFile.modified = true;
         },
-        addComponentToGameObectType: (state, action) => {
+        addComponentToGameObjectType: (state, action) => {
             const { gameObjectType, component } = action.payload;
             const gameFile = state.files.find(f => f.path === 'game.json');
             const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];

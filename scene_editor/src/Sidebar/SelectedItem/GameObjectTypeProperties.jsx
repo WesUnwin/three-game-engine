@@ -38,8 +38,7 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
 
     const addComponent = () => {
         const params = {
-            gameObjectType: type,
-            existingComponents: components
+            gameObjectType: type
         };
         dispatch(currentModalSlice.actions.openModal({
             type: 'AddComponentModal',
@@ -47,8 +46,16 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
         }));
     };
 
-    const removeComponent = () => {
+    const removeComponent = (componentIndex) => {
+        dispatch(fileDataSlice.actions.removeComponentFromGameObjectType({
+            gameObjectType: type,
+            componentIndex
+        }));
 
+        window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType: type
+        });
     };
 
     if (!gameObjectTypeFile?.data) {

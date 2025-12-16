@@ -21,6 +21,7 @@ const modalClasses = {
     AddGameObjectTypeModal,
     DeleteSceneModal,
     AddGameObjectModal,
+    AddComponentModal,
     AddModelModal,
     AddLightModal,
     AddColliderModal,
