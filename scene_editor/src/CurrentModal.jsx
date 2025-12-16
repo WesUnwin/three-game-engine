@@ -6,7 +6,6 @@ import DeleteSceneModal from './Modals/DeleteSceneModal.jsx';
 import AddGameObjectModal from './Modals/AddGameObjectModal.jsx';
 import CreateProjectModal from './Modals/CreateProjectModal.jsx';
 import AddGameObjectTypeModal from './Modals/AddGameObjectTypeModal.jsx';
-import AddModelModal from './Modals/AddModelModal.jsx';
 import AddLightModal from './Modals/AddLightModal.jsx';
 import AddColliderModal from './Modals/AddColliderModal.jsx';
 import DeleteGameObjectTypeModal from './Modals/DeleteGameObjectTypeModal.jsx';
@@ -22,7 +21,6 @@ const modalClasses = {
     DeleteSceneModal,
     AddGameObjectModal,
     AddComponentModal,
-    AddModelModal,
     AddLightModal,
     AddColliderModal,
     DeleteGameObjectTypeModal,
