@@ -5,10 +5,12 @@ import currentModalSlice from '../../Redux/CurrentModalSlice.js';
 import fileDataSlice from '../../Redux/FileDataSlice.js';
 import AddModel from './AddModel.jsx';
 import AddLight from './AddLight.jsx';
+import AddSound from './AddSound.jsx';
 
 const reactComponentForComponentType = {
   'model': AddModel,
   'light': AddLight,
+  'sound': AddSound
 };
 
 const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingComponents }) => {
@@ -83,16 +85,15 @@ const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHa
         </select>
       </div>
       <br />
-      <div className="row">
-        {ReactComponent &&
-          <ReactComponent
-            componentJSON={componentJSON}
-            setComponentJSON={setComponentJSON}
-            setErrors={setErrors}
-            dirHandle={dirHandle}
-          />
-        }        
-      </div>
+
+      {ReactComponent &&
+        <ReactComponent
+          componentJSON={componentJSON}
+          setComponentJSON={setComponentJSON}
+          setErrors={setErrors}
+          dirHandle={dirHandle}
+        />
+      }
     </Modal>
   );
 }

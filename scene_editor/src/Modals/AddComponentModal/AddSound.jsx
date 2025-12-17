@@ -16,21 +16,31 @@ const AddSoundModal = ({ componentJSON, setComponentJSON, setErrors, dirHandle  
     event.preventDefault();
     event.stopPropagation();
 
-    const fileHandle = await window.showOpenFilePicker({
-        multiple: false,
-        types: [
-            {
-                description: 'Sound File',
-                accept: {
-                    "audio/x-wav": ['.wav'],
-                    "audio/mpeg": ['.mp3'],
-                    "application/ogg": ['.ogg'],
-                    "audio/x-aiff": ['.aifc'],
-                    "audio/x-aiff": ['.aiff'],
-                }
-            }
-        ]
-    })
+    let fileHandle;
+    try {
+      fileHandle = await window.showOpenFilePicker({
+          multiple: false,
+          types: [
+              {
+                  description: 'Sound File',
+                  accept: {
+                      "audio/x-wav": ['.wav'],
+                      "audio/mpeg": ['.mp3'],
+                      "application/ogg": ['.ogg'],
+                      "audio/x-aiff": ['.aifc'],
+                      "audio/x-aiff": ['.aiff'],
+                  }
+              }
+          ]
+      });
+    } catch(Error) {
+      if (Error.name === 'AbortError') {
+        console.debug('AddModel: user aborted picking a model file');
+        return;
+      } else {
+        throw Error;
+      }
+    }
 
     const path = await dirHandle.resolve(fileHandle[0]);
     if (path === null) {
@@ -39,6 +49,14 @@ const AddSoundModal = ({ componentJSON, setComponentJSON, setErrors, dirHandle  
     }
     setAssetPath(path.join('/'));
   };
+
+  useEffect(() => {
+    const errors = [];
+    if (!componentJSON.assetPath) {
+      errors.push('A sound assetPath is required');
+    }
+    setErrors(errors);
+  }, [componentJSON.assetPath]);
 
   return (
     <>
