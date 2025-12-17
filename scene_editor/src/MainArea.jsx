@@ -315,20 +315,11 @@ const MainArea = ({ dirHandle }) => {
                     obj = obj[field[i]];
                 }
                 obj[field[field.length - 1]] = value;
-            } else if (field.length == 1 && field[0] === 'lights') {
-                json.lights = value;
-                gameObject.reset(json);
-            } else if (field.length == 1 && field[0] === 'rigidBody') {
-                json.rigidBody = value;
-                gameObject.reset(json);
-            } else if (field.length == 1 && field[0] === 'models') {
-                json.models = value;
-                gameObject.reset(json);
-            } else if (field.length == 1 && field[0] === 'sounds') {
-                json.sounds = value;
-                gameObject.reset(json);
             } else if (field.length == 1 && field[0] === 'name') {
                 gameObject.setName(value);
+            } else if (field.length == 1 && field[0] === 'components') {
+                json.components = value;
+                gameObject.reset(json);
             } else {
                 throw new Error(`No logic defined to update game object property: ${field}`);
             }

@@ -46,12 +46,11 @@ const lightProperties = {
   ]
 };
 
-const LightComponent = ({ componentJSON, onRemove }) => {
+const LightComponent = ({ componentJSON, onChange, onRemove }) => {
   const isValidType = componentJSON.lightType in lightProperties;
 
   const onChangeProperty = (field, value) => {
-    //onChange({ ...light, [field]: value });
-    debugger
+    onChange({ ...componentJSON, [field]: value });
   };
 
   return (
