@@ -56,6 +56,12 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
         }));
     };
 
+    const modifyComponent = (componentIndex, componentJSON) => {
+        const updatedComponents = [...gameObjectJSON.components];
+        updatedComponents[componentIndex] = componentJSON;
+        changeProperty('components', updatedComponents);
+    };
+
     const removeComponent = componentIndex => {
         const updateComponents = [...(gameObjectJSON.components || [])];
         updateComponents.splice(componentIndex, 1);
@@ -169,6 +175,7 @@ const GameObjectProperties = ({ filePath, sceneJSON, indices, dirHandle }) => {
                 <Components
                     componentsJSON={gameObjectJSON.components || []}
                     addComponent={addComponent}
+                    modifyComponent={modifyComponent}
                     removeComponent={removeComponent}
                 />
             )}

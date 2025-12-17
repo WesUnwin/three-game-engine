@@ -6,11 +6,13 @@ import fileDataSlice from '../../Redux/FileDataSlice.js';
 import AddModel from './AddModel.jsx';
 import AddLight from './AddLight.jsx';
 import AddSound from './AddSound.jsx';
+import AddRigidBody from './AddRigidBody.jsx';
 
 const reactComponentForComponentType = {
   'model': AddModel,
   'light': AddLight,
-  'sound': AddSound
+  'sound': AddSound,
+  'rigidBody': AddRigidBody
 };
 
 const AddComponentModal = ({ gameObjectType, scenePath, gameObjectIndices, dirHandle, existingComponents }) => {

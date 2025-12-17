@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal.jsx';
-import { useDispatch, useSelector } from 'react-redux';
-import fileDataSlice, { getFile } from '../Redux/FileDataSlice.js';
+import { useDispatch } from 'react-redux';
 import currentModalSlice from '../Redux/CurrentModalSlice.js';
 import { commonProperties, colliderProperties } from '../RapierColliderProps.js';
 
@@ -15,14 +14,10 @@ const colliderTypes = [
   'roundCylinder'
 ];
 
-const AddColliderModal = ({ gameObjectType, scenePath, gameObjectIndices, rigidBody }) => {
+const AddColliderModal = () => {
     const dispatch = useDispatch();
 
     const [type, setType] = useState('cuboid');
-
-    const gameFile = useSelector(getFile('game.json'));
-    const gameObjectTypeFilePath = gameFile.data.gameObjectTypes[gameObjectType];
-    const gameObjectTypeFile = useSelector(getFile(gameObjectTypeFilePath || null));
 
     const closeModal = () => {
         dispatch(currentModalSlice.actions.closeModal());
@@ -36,49 +31,14 @@ const AddColliderModal = ({ gameObjectType, scenePath, gameObjectIndices, rigidB
           newCollider[prop.name] = prop.default;
         });
 
-        if (gameObjectType) {
-          const existingColliders = gameObjectTypeFile.data.rigidBody.colliders || [];
-          const updatedColliders = existingColliders.concat([newCollider]);
-
-          dispatch(fileDataSlice.actions.modifyFileData({
-              path: gameObjectTypeFilePath,
-              field: ['rigidBody', 'colliders'],
-              value: updatedColliders
-          }));
-
-          window.postMessage({
-            eventName: 'modifyGameObjectTypeInMainArea',
-            gameObjectType
-          });
-        } else {
-          const updatedRigidBody = JSON.parse(JSON.stringify(rigidBody));
-          if (!Array.isArray(updatedRigidBody.colliders)) {
-            updatedRigidBody.colliders = [];
-          }
-          updatedRigidBody.colliders.push(newCollider);
-
-          dispatch(fileDataSlice.actions.modifyGameObject({
-            scenefilePath: scenePath,
-            gameObjectIndices,
-            field: ['rigidBody'],
-            value: updatedRigidBody
-          }));
-
-          window.postMessage({
-            eventName: 'modifyGameObjectInMainArea',
-            scenePath,
-            indices: gameObjectIndices,
-            field: ['rigidBody'],
-            value: updatedRigidBody
-          });
-        }
+        window.onAddCollider(newCollider);
 
         closeModal();
     };
   
     return (
         <Modal
-          title={`Add Collider to ${gameObjectType ? `GameObject Type: ${gameObjectType}` : `GameObject`}`}
+          title={`Add Collider to RigidBody`}
           onSubmit={onSubmit}
           footer={
             <>

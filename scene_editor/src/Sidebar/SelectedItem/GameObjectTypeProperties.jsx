@@ -32,10 +32,6 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
         });
     };
 
-    // const onChangePhysics = rigidBodyData => {
-    //     changeProperty(['rigidBody'], rigidBodyData);
-    // };
-
     const addComponent = () => {
         const params = {
             gameObjectType: type
@@ -44,6 +40,19 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
             type: 'AddComponentModal',
             params
         }));
+    };
+
+    const modifyComponent = (componentIndex, componentJSON) => {
+        dispatch(fileDataSlice.actions.modifyComponentOfGameObjectType({
+            gameObjectType: type,
+            componentIndex,
+            componentJSON
+        }));
+
+        window.postMessage({
+            eventName: 'modifyGameObjectTypeInMainArea',
+            gameObjectType: type
+        });
     };
 
     const removeComponent = (componentIndex) => {
@@ -66,6 +75,7 @@ const GameObjectTypeProperties = ({ dirHandle, type }) => {
         <Components
             componentsJSON={components}
             addComponent={addComponent}
+            modifyComponent={modifyComponent}
             removeComponent={removeComponent}
         />
     );
