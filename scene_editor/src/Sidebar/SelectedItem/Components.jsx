@@ -7,7 +7,7 @@ import LightComponent from './Components/LightComponent.jsx';
 import RigidBodyComponent from './Components/RigidBodyComponent.jsx';
 import SoundComponent from './Components/SoundComponent.jsx';
 
-const Components = ({ componentsJSON, addComponent, removeComponent }) => {
+const Components = ({ componentsJSON, addComponent, modifyComponent, removeComponent }) => {
   const reactComponentForComponentType = {
     model: ModelComponent,
     light: LightComponent,
@@ -34,9 +34,9 @@ const Components = ({ componentsJSON, addComponent, removeComponent }) => {
         return (
           <ReactComponent
             key={index}
-            componentIndex={index}
             componentJSON={componentJSON}
-            removeComponent={removeComponent}
+            onChange={(newComponentJSON) => modifyComponent(index, newComponentJSON)}
+            onRemove={() => removeComponent(index)}
           />
         );
       })}
