@@ -1,7 +1,13 @@
-import Component from "../Component";
+import Component, { ComponentJSON } from "../Component";
 import GLTFAsset from "../assets/GLTFAsset";
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 import { setObject3DProps } from "../util/ThreeJSHelpers";
+import { Vector3Data } from "../types";
+
+export interface ModelComponentJSON extends ComponentJSON {
+  assetPath: string;
+  position?: Vector3Data;
+}
 
 class ModelComponent extends Component {
   async load() {

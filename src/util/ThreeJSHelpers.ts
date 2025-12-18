@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GameObjectSoundData, LightData, SceneSoundJSON } from "../types";
+import { SceneLightJSON, SceneSoundJSON } from "../types";
 
 export const setObject3DProps = (object3D, props) => {
     for (const prop in props) {
@@ -50,7 +50,7 @@ export const setObject3DProps = (object3D, props) => {
     }
 };
 
-export const createLight = (lightData: LightData) => {
+export const createLight = (lightData: SceneLightJSON) => {
     let light = null;
     const lightTypes = {
         AmbientLight: THREE.AmbientLight,
@@ -97,48 +97,4 @@ export const createAudio = (soundData: SceneSoundJSON, audioBuffer: AudioBuffer,
     // is when positionalAudio.source is established (not during setBuffer)
 
     return audio;
-}
-
-export const createPositionalAudio = (soundData: GameObjectSoundData, audioBuffer: AudioBuffer, audioListener: THREE.AudioListener, name: string) => {
-    const positionalAudio = new THREE.PositionalAudio(audioListener);
-    positionalAudio.name = name;
-    positionalAudio.setBuffer(audioBuffer);
-
-    if (typeof soundData.loop === 'boolean') {
-        positionalAudio.setLoop(soundData.loop);
-    }
-    if (typeof soundData.autoplay === 'boolean') {
-        positionalAudio.autoplay = soundData.autoplay;
-    }
-    if (typeof soundData.volume === 'number') {
-        positionalAudio.setVolume(soundData.volume);
-    }
-    if (typeof soundData.playbackRate === 'number') {
-        positionalAudio.setPlaybackRate(soundData.playbackRate);
-    }
-
-    // NOTE: detune can not be set until until the sound is played as that
-    // is when positionalAudio.source is established (not during setBuffer)
-
-    if (typeof soundData.refDistance === 'number') {
-        positionalAudio.setRefDistance(soundData.refDistance);
-    }
-    if (typeof soundData.rolloffFactor === 'number') {
-        positionalAudio.setRolloffFactor(soundData.rolloffFactor);
-    }
-    if (typeof soundData.distanceModel === 'string') {
-        positionalAudio.setDistanceModel(soundData.distanceModel);
-    }
-    if (typeof soundData.maxDistance === 'number') {
-        positionalAudio.setMaxDistance (soundData.maxDistance);
-    }
-    if (typeof soundData.directionalCone === 'object') {
-        positionalAudio.setDirectionalCone(
-            soundData.directionalCone.coneInnerAngle,
-            soundData.directionalCone.coneOuterAngle,
-            soundData.directionalCone.coneOuterGain
-        );
-    }
-
-    return positionalAudio;
 }

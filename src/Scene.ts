@@ -4,7 +4,7 @@ import RAPIER from '@dimforge/rapier3d-compat';
 import Game from './Game';
 import GameObject from './GameObject';
 import * as PhysicsHelpers from './physics/PhysicsHelpers';
-import { FogJSON, GameObjectJSON, LightData, SceneSoundJSON } from './types';
+import { FogJSON, GameObjectJSON, SceneLightJSON, SceneSoundJSON } from './types';
 import JSONAsset from './assets/JSONAsset';
 import { createAudio, createLight } from './util/ThreeJSHelpers';
 import SoundAsset from './assets/SoundAsset';
@@ -19,7 +19,7 @@ class Scene {
     sceneJSONAsset: null | JSONAsset;
     initialGravity: { x: number, y: number, z: number };
     rapierWorld: RAPIER.World;
-    lights: LightData[];
+    lights: SceneLightJSON[];
 
     constructor(game, jsonAssetPath?: string) {
         this.game = game;
@@ -95,11 +95,11 @@ class Scene {
         }
     }
 
-    setLights(lights: LightData[]) {
+    setLights(lights: SceneLightJSON[]) {
         const existingLights = this.threeJSScene.children.filter(child => child instanceof THREE.Light);
         existingLights.forEach(existingLight => this.threeJSScene.remove(existingLight));
 
-        lights.forEach((lightData: LightData) => {
+        lights.forEach((lightData: SceneLightJSON) => {
             const light = createLight(lightData);
             this.threeJSScene.add(light);
         });

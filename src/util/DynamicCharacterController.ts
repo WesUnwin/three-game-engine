@@ -14,16 +14,24 @@ class DynamicCharacterController extends CharacterController {
     jumpImpulse: number = 1300;
 
     constructor(parent, options, controllerOptions) {
-        super(parent, {
-            rigidBody: {
-                type: 'dynamic',
-                colliders: [
-                    { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
+        super(
+            parent,
+            {
+                ...options,
+                components: [
+                    {
+                        type: 'rigidBody',
+                        rigidBodyType: 'dynamic',
+                        colliders: [
+                            { type: 'capsule', ...Object.assign({}, defaultCapsuleOptions, ((controllerOptions || {}).capsule || {})) }
+                        ],
+                        enabledRotations: { x: false, y: true, z: false }
+                    },
+                    ...(options.components || [])
                 ],
-                enabledRotations: { x: false, y: true, z: false }
             },
-            ...options // merge with any passed in GameObjectOptions
-        }, controllerOptions)
+            controllerOptions
+        );
     }
 
     afterLoaded(): void {

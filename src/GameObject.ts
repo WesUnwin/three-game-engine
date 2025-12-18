@@ -8,7 +8,7 @@ import RigidBodyComponent from './components/RigidBodyComponent';
 import ModelComponent from './components/ModelComponent';
 import LightComponent from './components/LightComponent';
 import SoundComponent from './components/SoundComponent';
-
+import UserInterfaceComponent from './components/UserInterfaceComponent';
 
 class GameObject {
     id: string;
@@ -26,6 +26,18 @@ class GameObject {
     components: Component[];
 
     gameObjects: GameObject[];
+
+    static componentClassForType = {
+        model: ModelComponent,
+        rigidBody: RigidBodyComponent,
+        light: LightComponent,
+        sound: SoundComponent,
+        userInterface: UserInterfaceComponent
+    };
+
+    static registerClassForComponentType(type: string, klass) {
+        GameObject.componentClassForType[type] = klass;
+    }
 
     constructor(parent: Scene | GameObject, options: GameObjectOptions = {}) {
         if (!(parent instanceof Scene || parent instanceof GameObject)) {
@@ -74,6 +86,7 @@ class GameObject {
             gameObjectTypeJSONAsset.once('change', this.onGameObjectTypeChange);
 
             allOptions = Object.assign({}, gameObjectTypeJSONAsset.data, this.options);
+            allOptions.components = [...(gameObjectTypeJSONAsset.data.components || []), ...(this.options.components || [])]
         } else {
             allOptions = { ...this.options };
         }
@@ -116,28 +129,9 @@ class GameObject {
         const rotOrder = allOptions.rotation?.order || 'XYZ';
         this.setRotation(rotX, rotY, rotZ, rotOrder);
 
-        (allOptions.models || []).forEach(json => {
-            const component = new ModelComponent(this, json);
-            this.components.push(component);
-        });
-
-        (allOptions.lights || []).forEach(json => {
-            const component = new LightComponent(this, json);
-            this.components.push(component);
-        });
-
-        (allOptions.sounds || []).forEach(json => {
-            const component = new SoundComponent(this, json);
-            this.components.push(component);
-        });
-
-        if (allOptions.rigidBody) {
-            const rigidBodyComponent = new RigidBodyComponent(this, allOptions.rigidBody);
-            this.components.push(rigidBodyComponent);
-        }
-
-        (allOptions.userInterfaces || []).forEach(json => {
-            const component = new SoundComponent(this, json);
+        (allOptions.components || []).forEach(json => {
+            const ComponentClass = GameObject.componentClassForType[json.type];
+            const component = new ComponentClass(this, json);
             this.components.push(component);
         });
 

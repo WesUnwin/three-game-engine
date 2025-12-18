@@ -1,6 +1,70 @@
-import Component from "../Component";
+import Component, { ComponentJSON } from "../Component";
 import RAPIER from "@dimforge/rapier3d-compat";
-import * as THREE from 'three';
+
+export interface RigidBodyComponentJSON extends ComponentJSON {
+  rigidBodyType: 'dynamic' | 'fixed' | 'kinematicPositionBased' | 'kinematicVelocityBased';
+  enabledTranslations?: {
+      x: boolean,
+      y: boolean,
+      z: boolean,  
+  },
+  enabledRotations?: {
+      x: boolean,
+      y: boolean,
+      z: boolean,
+  },
+  colliders: ColliderData[];
+}
+
+export interface ColliderData {
+  type: 
+      'ball' | 
+      'capsule' | 
+      'cone' | 
+      'convexHull' |
+      'convexMesh' |
+      'cuboid' | 
+      'cylinder' |
+      'polyline' |
+      'roundCone' |
+      'roundConvexHull' |
+      'roundConvexMesh' |
+      'roundCuboid' |
+      'roundCylinder' |
+      'roundTriangle' |
+      'trimesh' | 
+      'heightfield';
+
+  density?: number; // default 1.0
+  friction?: number; // default 0.5
+  sensor?: boolean; // if true this is a sensor collider (for detecting things that enter its 3D volume) not a solid collider.
+
+  // For a cuboid
+  hx: number; // half length along x-axis
+  hy: number; // half length along y-axis
+  hz: number; // half length along z-axis
+
+  halfHeight: number; // for a capsule
+  radius: number; // for a ball or capsule
+
+  borderRadius: number; // for a roundCone
+
+  vertices: Float32Array; // for a trimesh
+  indices: Uint32Array; // for a trimesh
+
+  points: Float32Array;
+
+  // For a heightfield
+  nrows: number;
+  ncols: number;
+  heights: Float32Array;
+  scale: RAPIER.Vector;
+
+  // For a roundTriangle
+  a: RAPIER.Vector;
+  b: RAPIER.Vector;
+  c: RAPIER.Vector;
+}
 
 class RigidBodyComponent extends Component {
   rapierRigidBody: RAPIER.RigidBody;
@@ -16,7 +80,7 @@ class RigidBodyComponent extends Component {
       throw new Error('setupPhysicsForGameObject: must be called on a GameObject that is attached to a scene, with a Rapier world associated with it');
     }
 
-    const rigidBodyDesc: RAPIER.RigidBodyDesc = this._createRigidBodyDesc(this.jsonData.type);
+    const rigidBodyDesc: RAPIER.RigidBodyDesc = this._createRigidBodyDesc(this.jsonData.rigidBodyType);
   
     this.rapierRigidBody = scene.rapierWorld.createRigidBody(rigidBodyDesc);
 
