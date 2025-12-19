@@ -21,12 +21,7 @@
 
 ![Logo](https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/logo.png)
 
-<br />
-
 <div align="center">
-
-  <h3 align="center">three-game-engine</h3>
-
   <p align="center">
     The ThreeJS game engine, featuring the Rapier physics engine.
     <br />
