@@ -19,9 +19,11 @@
 [license-shield]: https://img.shields.io/github/license/WesUnwin/three-game-engine.svg?style=for-the-badge
 [license-url]: https://github.com/WesUnwin/three-game-engine/blob/main/LICENSE.txt
 
-<br />
-<div align="center">
 ![Logo](https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/logo.png)
+
+<br />
+
+<div align="center">
 
   <h3 align="center">three-game-engine</h3>
 
