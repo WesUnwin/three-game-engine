@@ -1,7 +1,7 @@
 GAME ENGINE:
 =========================
 
-Rename game engine?
+- Rename game engine?
   Possible names:
   - Blitz (package name blitz taken, but could use blitz-js or blitz-3d)
   - PolyWhirl
@@ -12,6 +12,8 @@ Rename game engine?
   - Paragon
   - Vortex
   - Fusion Engine
+
+- Nav Mesh and/or Path Finding
 
 SCENE EDITOR:
 =========================
