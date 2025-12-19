@@ -21,7 +21,7 @@
 
 <br />
 <div align="center">
-![Screenshot](docs/images/logo.png)
+![Logo](https://raw.githubusercontent.com/WesUnwin/three-game-engine/main/docs/images/logo.png)
 
   <h3 align="center">three-game-engine</h3>
 
