@@ -85,6 +85,9 @@ const CreateProjectModal = ({ setDirHandle }) => {
               <p>
                 This will create a new project in a folder of your choosing, including creating a game.json file, and other initial files to help you get started.
               </p>
+              <p>
+                It's recommended to create a new folder locally on your computer, then select that folder and click "Create".
+              </p>
 
               <div className='row'>
                   <input
