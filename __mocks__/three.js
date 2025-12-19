@@ -31,26 +31,27 @@ class Euler {
 
 class Object3D {
     constructor() {
-        this.childObjects = [];
+        this.children = [];
         this.position = new Vector3(0,0,0);
         this.scale = new Vector3(0,0,0);
         this.rotation = new Euler(0,0,0);
+        this.userData = {};
     }
 
     add(object3D) {
-        this.childObjects.push(object3D);
+        this.children.push(object3D);
     }
 
     remove(object3D) {
-        this.childObjects = this.childObjects.filter(obj => obj !== object3D);
+        this.children = this.children.filter(obj => obj !== object3D);
     }
 
     clear() {
-        this.childObjects = [];
+        this.children = [];
     }
 
     children() {
-        return this.childObjects;
+        return this.children;
     }
 }
 
@@ -110,11 +111,16 @@ class AudioListener extends Object3D {
 
 }
 
+class Fog {
+
+}
+
 module.exports = {
     Group,
     Scene,
     Color,
     Light,
+    Fog,
     AmbientLight,
     WebGL1Renderer,
     PerspectiveCamera,
