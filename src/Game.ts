@@ -34,7 +34,7 @@ class Game {
 
         this.gameOptions = gameOptions || {};
 
-        if ((typeof baseURLorDirHandle !== 'string') && !(baseURLorDirHandle instanceof FileSystemDirectoryHandle)) {
+        if ((typeof baseURLorDirHandle !== 'string') && ('FileSystemDirectoryHandle' in window ? baseURLorDirHandle instanceof FileSystemDirectoryHandle : true)) {
             throw new Error('Game: first argument to Game constructor must be either a string or a FileSystemDirectoryHandle');
         }
 
