@@ -1,0 +1,29 @@
+let currentShape = 'sphere';
+const videoElement = document.getElementById('input_video');
+
+const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+hands.onResults((results) => {
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const hand = results.multiHandLandmarks[0];
+        
+        // Logic: Distance between thumb tip (4) and pinky tip (20)
+        const dx = hand[4].x - hand[20].x;
+        const dy = hand[4].y - hand[20].y;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+
+        // Gesture Switching
+        if (distance < 0.1) currentShape = 'heart';
+        else if (distance > 0.4) currentShape = 'saturn';
+        else currentShape = 'sphere';
+
+        // Move particle system to follow palm (landmark 9)
+        particleSystem.position.x = (hand[9].x - 0.5) * -10;
+        particleSystem.position.y = (hand[9].y - 0.5) * -10;
+    }
+});
+
+const camera = new Camera(videoElement, {
+    onFrame: async () => { await hands.send({image: videoElement}); },
+    width: 640, height: 480
+});
+camera.start();
