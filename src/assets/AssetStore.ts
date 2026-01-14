@@ -3,13 +3,15 @@ import TextureAsset from './TextureAsset'
 import SoundAsset from './SoundAsset'
 import JSONAsset from './JSONAsset'
 import Asset from './Asset';
+import { AssetOptions } from '../types';
 
 class AssetStore {
   baseURL: string | null;
   dirHandle: FileSystemDirectoryHandle | null;
   loadedAssets: any;
+  assetOptions: AssetOptions;
 
-  constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle) {
+  constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, assetOptions: AssetOptions) {
     if (typeof baseURLorDirHandle === 'string') {
       this.baseURL = baseURLorDirHandle;
       if (this.baseURL.endsWith('/')) {
@@ -20,6 +22,8 @@ class AssetStore {
       this.baseURL = null;
       this.dirHandle = baseURLorDirHandle;
     }
+
+    this.assetOptions = assetOptions || {};
 
     this.loadedAssets = {}; // key/value pairs  (url is key, asset is value) all files currently loaded
   }
@@ -50,7 +54,7 @@ class AssetStore {
   async load(path: string): Promise<Asset> {
     if (!this.loadedAssets[path]) {
       const AssetSubclass = AssetStore._getAssetSubclass(path);
-      const asset = new AssetSubclass(this.baseURL || this.dirHandle, path);
+      const asset = new AssetSubclass(this.baseURL || this.dirHandle, path, this);
       await asset.load();
       this.loadedAssets[path] = asset;
       console.log(`AssetStore: successfully loaded asset: ${path}`);

@@ -1,6 +1,9 @@
 import EventEmitter from "../util/EventEmitter";
+import AssetStore from "./AssetStore";
 
 class Asset {
+    assetStore: AssetStore;
+
     baseURL: string | null;
     dirHandle: FileSystemDirectoryHandle | null;
 
@@ -11,7 +14,9 @@ class Asset {
 
     eventEmitter: EventEmitter;
 
-    constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, path: string) {
+    constructor(baseURLorDirHandle: string | FileSystemDirectoryHandle, path: string, assetStore: AssetStore) {
+        this.assetStore = assetStore;
+
         if (typeof baseURLorDirHandle === 'string') {
             this.baseURL = baseURLorDirHandle;
             if (this.baseURL.endsWith('/')) {
