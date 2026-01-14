@@ -73,6 +73,13 @@ interface CameraOptions {
 
 interface AssetOptions {
     baseURL?: string;
+    dracoLoaderOptions?: DracoLoaderOptions;
+}
+
+interface DracoLoaderOptions {
+    path: string;
+    decoderConfig: Object;
+    workerLimit?: number;
 }
 
 interface InputOptions {

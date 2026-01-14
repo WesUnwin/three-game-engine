@@ -61,7 +61,7 @@ class Game {
         }
         console.log('Game: reading game.json file to initialize game...');
 
-        this.assetStore = new AssetStore(this.baseURL || this.dirHandle);
+        this.assetStore = new AssetStore(this.baseURL || this.dirHandle, this.gameOptions?.assetOptions);
 
         this.gameJSONAsset = await this.assetStore.load('game.json');
  
